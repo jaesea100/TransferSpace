@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TransferSpace | About</title>
+<meta name="description" content="TransferSpace is a desktop workspace for transfer students managing schools, deadlines, documents, essays, and applications." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,650;1,9..144,500&family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  color-scheme: light;
+  --ink: oklch(22% 0.014 85);
+  --muted: oklch(47% 0.018 85);
+  --soft: oklch(66% 0.018 85);
+  --line: oklch(88% 0.013 85);
+  --paper: oklch(97.5% 0.01 82);
+  --panel: oklch(99% 0.006 82);
+  --wash: oklch(94% 0.02 82);
+  --blue: oklch(55% 0.19 265);
+  --blue-dark: oklch(36% 0.17 265);
+  --warm: oklch(58% 0.15 55);
+  --green: oklch(48% 0.12 165);
+  --shadow: 0 22px 70px color-mix(in srgb, var(--ink) 11%, transparent);
+  --sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --serif: "Fraunces", Georgia, serif;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--sans);
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top right, color-mix(in srgb, var(--blue) 12%, transparent), transparent 32rem),
+    linear-gradient(180deg, var(--paper), oklch(95% 0.013 82));
+}
+a { color: inherit; text-decoration: none; }
+.shell { min-height: 100vh; }
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem clamp(1.25rem, 4vw, 4rem);
+  background: color-mix(in srgb, var(--paper) 86%, transparent);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 74%, transparent);
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: .65rem;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+.mark {
+  width: 2.25rem;
+  height: 2.25rem;
+  display: grid;
+  place-items: center;
+  border-radius: .7rem;
+  color: var(--blue);
+  background: color-mix(in srgb, var(--blue) 10%, var(--panel));
+  border: 1px solid color-mix(in srgb, var(--blue) 18%, var(--line));
+  font-weight: 800;
+}
+.navlinks {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  color: var(--muted);
+  font-size: .92rem;
+}
+.navlinks a:hover { color: var(--ink); }
+.actions { display: flex; align-items: center; gap: .7rem; }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.55rem;
+  padding: 0 1rem;
+  border-radius: .72rem;
+  border: 1px solid var(--line);
+  font-weight: 650;
+  background: var(--panel);
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--panel) 80%, transparent);
+}
+.btn.primary {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: oklch(98% 0.006 265);
+}
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.02fr) minmax(22rem, .78fr);
+  gap: clamp(2.5rem, 6vw, 7rem);
+  align-items: center;
+  padding: clamp(4rem, 8vw, 8rem) clamp(1.25rem, 4vw, 4rem) 4rem;
+}
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  color: var(--blue-dark);
+  font-size: .74rem;
+  font-weight: 750;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.dot {
+  width: .5rem;
+  height: .5rem;
+  border-radius: 50%;
+  background: var(--warm);
+}
+h1 {
+  margin: 1rem 0 1.15rem;
+  max-width: 11ch;
+  font-family: var(--serif);
+  font-size: clamp(4.2rem, 10vw, 9.2rem);
+  line-height: .88;
+  letter-spacing: 0;
+}
+h1 em { color: var(--blue); font-style: italic; }
+.lede {
+  max-width: 68ch;
+  color: var(--muted);
+  font-size: clamp(1.05rem, 1.5vw, 1.32rem);
+  line-height: 1.6;
+}
+.hero-actions { display: flex; gap: .8rem; flex-wrap: wrap; margin-top: 2rem; }
+.panel {
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--panel) 86%, transparent);
+  border-radius: 1.2rem;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.mini-app {
+  min-height: 28rem;
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: 4.2rem 1fr;
+  gap: .85rem;
+}
+.rail {
+  border-radius: .9rem;
+  background: oklch(24% 0.025 255);
+  padding: .7rem;
+  display: flex;
+  flex-direction: column;
+  gap: .65rem;
+}
+.rail span {
+  width: 2.1rem;
+  height: 2.1rem;
+  display: grid;
+  place-items: center;
+  border-radius: .65rem;
+  color: oklch(78% 0.11 260);
+  background: color-mix(in srgb, oklch(98% 0.006 260) 8%, transparent);
+  font-size: .75rem;
+  font-weight: 700;
+}
+.workspace { display: grid; gap: .85rem; }
+.stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: .65rem; }
+.stat, .school, .task {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: .85rem;
+  padding: .85rem;
+}
+.stat b { display: block; font-size: 1.55rem; margin-bottom: .35rem; }
+.stat span, .school span, .task span { color: var(--muted); font-size: .82rem; }
+.school-list { display: grid; gap: .65rem; }
+.school {
+  display: grid;
+  grid-template-columns: 3rem 1fr auto;
+  gap: .8rem;
+  align-items: center;
+}
+.thumb {
+  width: 3rem;
+  height: 3rem;
+  border-radius: .7rem;
+  background: linear-gradient(135deg, var(--blue), var(--green));
+}
+.school strong { display: block; margin-bottom: .18rem; }
+.days { color: var(--warm); font-weight: 800; }
+.progress {
+  height: .38rem;
+  border-radius: 99px;
+  background: var(--wash);
+  overflow: hidden;
+  margin-top: .55rem;
+}
+.progress i { display: block; height: 100%; width: 64%; background: var(--blue); border-radius: inherit; }
+.sections {
+  padding: 2rem clamp(1.25rem, 4vw, 4rem) 5rem;
+  display: grid;
+  gap: 1rem;
+}
+.section {
+  display: grid;
+  grid-template-columns: .55fr 1fr;
+  gap: clamp(1.5rem, 4vw, 5rem);
+  align-items: start;
+  padding: clamp(2rem, 4vw, 4rem) 0;
+  border-top: 1px solid var(--line);
+}
+h2 {
+  margin: .65rem 0 0;
+  font-family: var(--serif);
+  font-size: clamp(2.1rem, 4vw, 4.2rem);
+  line-height: 1;
+  letter-spacing: 0;
+}
+.section p { color: var(--muted); line-height: 1.65; font-size: 1rem; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .9rem;
+}
+.item {
+  min-height: 10rem;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  border-radius: 1rem;
+  padding: 1.15rem;
+}
+.item strong { display: block; font-size: 1.05rem; margin-bottom: .5rem; }
+.number {
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: .65rem;
+  margin-bottom: .9rem;
+  color: var(--blue-dark);
+  background: color-mix(in srgb, var(--blue) 10%, var(--panel));
+  font-weight: 800;
+}
+.cta {
+  margin-top: 2rem;
+  border-radius: 1.4rem;
+  padding: clamp(2rem, 4vw, 4rem);
+  background: oklch(25% 0.034 255);
+  color: oklch(96% 0.01 255);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+.cta p { color: oklch(78% 0.025 255); max-width: 55ch; }
+.cta .btn { background: oklch(98% 0.006 255); color: oklch(23% 0.03 255); border-color: transparent; }
+.footer {
+  padding: 2rem clamp(1.25rem, 4vw, 4rem);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--soft);
+  border-top: 1px solid var(--line);
+  font-size: .9rem;
+}
+
+@media (max-width: 900px) {
+  .navlinks { display: none; }
+  .hero, .section { grid-template-columns: 1fr; }
+  .grid { grid-template-columns: 1fr; }
+  .cta { align-items: flex-start; flex-direction: column; }
+}
+
+@media (max-width: 560px) {
+  .actions .btn:not(.primary) { display: none; }
+  .mini-app { grid-template-columns: 1fr; }
+  .rail { flex-direction: row; }
+  .stat-row { grid-template-columns: 1fr; }
+  h1 { font-size: 4.2rem; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav class="nav">
+    <a class="brand" href="info.html" aria-label="TransferSpace home">
+      <span class="mark">TS</span>
+      <span>TransferSpace</span>
+    </a>
+    <div class="navlinks" aria-label="Page sections">
+      <a href="#product">Product</a>
+      <a href="#workflow">Workflow</a>
+      <a href="#transfer">Transfer fit</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="actions">
+      <a class="btn" href="index.html">Open app</a>
+      <a class="btn primary" href="index.html">Launch workspace</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div>
+        <span class="eyebrow"><span class="dot"></span> For transfer applicants</span>
+        <h1>Built by transfers, <em>for transfers.</em></h1>
+        <p class="lede">TransferSpace is a desktop workspace for students managing schools, deadlines, documents, essays, recommendations, and decisions in one calm place.</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="index.html">Open the app</a>
+          <a class="btn" href="#workflow">See the workflow</a>
+        </div>
+      </div>
+
+      <div class="panel" aria-label="TransferSpace app preview">
+        <div class="mini-app">
+          <div class="rail" aria-hidden="true">
+            <span>TS</span><span>Ex</span><span>Ap</span><span>Do</span><span>Ti</span>
+          </div>
+          <div class="workspace">
+            <div class="stat-row">
+              <div class="stat"><b>9</b><span>schools tracked</span></div>
+              <div class="stat"><b>5</b><span>due this week</span></div>
+              <div class="stat"><b>1</b><span>submitted</span></div>
+            </div>
+            <div class="school-list">
+              <div class="school">
+                <div class="thumb"></div>
+                <div><strong>Berkeley</strong><span>Transfer regular</span><div class="progress"><i></i></div></div>
+                <div class="days">2d</div>
+              </div>
+              <div class="school">
+                <div class="thumb" style="background:linear-gradient(135deg,var(--warm),var(--blue));"></div>
+                <div><strong>UCLA</strong><span>Essays and transcript left</span><div class="progress"><i style="width:58%;"></i></div></div>
+                <div class="days">2d</div>
+              </div>
+              <div class="school">
+                <div class="thumb" style="background:linear-gradient(135deg,var(--green),var(--blue));"></div>
+                <div><strong>Stanford</strong><span>Submitted</span><div class="progress"><i style="width:100%;"></i></div></div>
+                <div class="days" style="color:var(--green);">Done</div>
+              </div>
+            </div>
+            <div class="task"><strong>Suggested next step</strong><br><span>Send your official transcript to schools still missing it.</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="sections">
+      <section class="section" id="product">
+        <div>
+          <span class="eyebrow">Product</span>
+          <h2>The application cycle, gathered.</h2>
+        </div>
+        <div class="grid">
+          <div class="item"><span class="number">1</span><strong>Explore schools</strong><p>Filter by transfer GPA, deadline, platform, region, acceptance rate, cost, and major signals.</p></div>
+          <div class="item"><span class="number">2</span><strong>Track applications</strong><p>Keep every school tied to its stage, progress, materials, deadline, and next step.</p></div>
+          <div class="item"><span class="number">3</span><strong>Manage documents</strong><p>Essays, transcripts, recommendations, score reports, and activity files live beside the schools that need them.</p></div>
+          <div class="item"><span class="number">4</span><strong>Watch the calendar</strong><p>Deadlines use your local date at midnight so today, overdue, and upcoming states stay understandable.</p></div>
+        </div>
+      </section>
+
+      <section class="section" id="workflow">
+        <div>
+          <span class="eyebrow">Workflow</span>
+          <h2>Less tab hopping. More finishing.</h2>
+        </div>
+        <div class="grid">
+          <div class="item"><strong>Build the list</strong><p>Start in Explore, save schools, then move the strongest options into Applications.</p></div>
+          <div class="item"><strong>Fill the gaps</strong><p>The workspace highlights missing essays, transcripts, fees, and recommendations before they become emergencies.</p></div>
+          <div class="item"><strong>Plan by deadline</strong><p>Timeline turns scattered school dates into a simple ordered view of what needs attention next.</p></div>
+          <div class="item"><strong>Submit with confidence</strong><p>Everything important has a visible status, a school, and a next action.</p></div>
+        </div>
+      </section>
+
+      <section class="section" id="transfer">
+        <div>
+          <span class="eyebrow">Transfer fit</span>
+          <h2>Built for the weird parts of transfer admissions.</h2>
+        </div>
+        <div class="grid">
+          <div class="item"><strong>Profile-aware filters</strong><p>Your GPA, major, home state, current school, and credit profile can shape best-fit recommendations.</p></div>
+          <div class="item"><strong>Different deadline types</strong><p>Regular, priority, spring, rolling, and direct applications are treated as different workflows.</p></div>
+          <div class="item"><strong>Major context</strong><p>Search can account for school names, states, common major names, and program signals.</p></div>
+          <div class="item"><strong>Document reality</strong><p>LORs, mid-term reports, official transcripts, activity resumes, and essays all belong in the same system.</p></div>
+        </div>
+      </section>
+
+      <section class="section" id="faq">
+        <div>
+          <span class="eyebrow">FAQ</span>
+          <h2>Quick answers.</h2>
+        </div>
+        <div class="grid">
+          <div class="item"><strong>Is this separate from the app now?</strong><p>Yes. This file is only the public info page. The workspace lives in index.html.</p></div>
+          <div class="item"><strong>Do I need this page open?</strong><p>No. It is just the explanation page. Use the app file for day-to-day work.</p></div>
+          <div class="item"><strong>Does this change my data?</strong><p>No. The app logic and local data structures stay in the workspace file.</p></div>
+          <div class="item"><strong>Can I get back here?</strong><p>Yes. The TransferSpace logo in the app sidebar links back to this info page.</p></div>
+        </div>
+      </section>
+
+      <section class="cta">
+        <div>
+          <h2>Ready to work?</h2>
+          <p>Open the actual app when you want the dashboard, applications panel, documents, timeline, resources, profile, and settings.</p>
+        </div>
+        <a class="btn" href="index.html">Open TransferSpace</a>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <span>TransferSpace</span>
+    <span>Info page split from the app workspace.</span>
+  </footer>
+</div>
+</body>
+</html>
