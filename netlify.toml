@@ -1,0 +1,70 @@
+[build]
+  publish = "."
+
+# Landing page at root
+[[redirects]]
+  from = "/"
+  to = "/info.html"
+  status = 200
+
+# Block server-side files from public access
+[[redirects]]
+  from = "/TransferSpace_Backend/*"
+  to = "/"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/Common_Data_Sets_2025/*"
+  to = "/"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/supabase/*"
+  to = "/"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/tests/*"
+  to = "/"
+  status = 404
+  force = true
+
+# Security headers on all pages
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# HTML — always revalidate so deploys are instant
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+# CSS + JS — 1 hour (no content hashing in this build)
+[[headers]]
+  for = "/styles.css"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/app.js"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/schools-data.js"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+# Images — 1 week
+[[headers]]
+  for = "/College_images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800, immutable"
