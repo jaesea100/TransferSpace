@@ -937,16 +937,6 @@ h4 { font-size: 1.05rem; font-weight: 500; }
   border-bottom: 1px solid var(--border);
   flex-wrap: wrap;
 }
-.page-title-row h1 {
-  font-family: var(--font-body);
-  font-size: .72rem;
-  font-weight: 600;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin: 0;
-  line-height: 1.2;
-}
 .page-title-row .p-sub { color: var(--text-secondary); font-size: .95rem; margin-top: .35rem; }
 
 /* Card primitive */
@@ -4192,14 +4182,6 @@ html[data-theme="dark"] {
   margin-bottom: 1.15rem;
   padding-bottom: 1rem;
 }
-.page-title-row h1 {
-  font-family: var(--font-sans);
-  font-size: 1.35rem;
-  font-weight: 650;
-  letter-spacing: 0;
-  text-transform: none;
-  color: var(--ink-primary);
-}
 .page-title-row .p-sub {
   max-width: 70ch;
   font-size: .92rem;
@@ -5731,11 +5713,7 @@ html[data-theme="light"] {
   display: none;
 }
 
-#page-dashboard .card-head h3,
-#page-applications .page-title-row h1,
-#page-timeline .page-title-row h1,
-#page-profile .page-title-row h1,
-#page-settings .page-title-row h1 {
+#page-dashboard .card-head h3 {
   font-family: var(--font-sans);
 }
 
@@ -7854,12 +7832,22 @@ html[data-theme="dark"] .sticky-next-steps .suggest-item::before {
 .page .apps-command-header h1,
 .page .os-workspace-hero .greeting h2 {
   margin: 0 !important;
-  font-family: var(--font-serif, "Fraunces", Georgia, serif) !important;
+  font-family: var(--font-serif, "Fraunces", Georgia, serif);
   font-size: clamp(1.7rem, 2.6vw, 2.2rem) !important;
   font-weight: 500 !important;
   line-height: 1.1 !important;
   letter-spacing: -.005em !important;
   color: var(--text-primary);
+}
+
+/* Utility pages: sans heading feels more appropriate than editorial serif */
+#page-applications .apps-command-header h1,
+#page-timeline .page-title-row h1,
+#page-resources .page-title-row h1,
+#page-profile .page-title-row h1,
+#page-settings .page-title-row h1 {
+  font-family: var(--font-sans);
+  letter-spacing: -.02em;
 }
 
 /* Subtitle */
