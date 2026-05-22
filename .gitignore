@@ -1,0 +1,6 @@
+.env
+.DS_Store
+*.backup_*
+.claude/
+skills-lock.json
+alternating_bits_fsm.py
