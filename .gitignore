@@ -4,3 +4,7 @@
 .claude/
 skills-lock.json
 alternating_bits_fsm.py
+node_modules/
+playwright-report/
+test-results/
+.auth/

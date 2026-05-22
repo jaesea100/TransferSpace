@@ -11,6 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
 <link rel="stylesheet" href="styles.css" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%232563EB'/><path d='M7 9.5h18M16 7v18M10 22.5h12' stroke='%23fff' stroke-width='2.5' stroke-linecap='round'/><path d='M22 7h3v3' stroke='%23fff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/></svg>" />
 
 </head>
 <body>
@@ -72,18 +73,18 @@
 
       <div class="sb-spacer"></div>
 
-      <div class="sb-user" id="sbUser" onclick="toggleUserMenu(event)" style="cursor:pointer;" title="Account menu">
-        <div class="avatar" id="sbAvatar">TS</div>
+      <button class="sb-user" id="sbUser" onclick="toggleUserMenu(event)" aria-haspopup="true" aria-expanded="false" aria-controls="sbUserMenu" title="Account menu">
+        <div class="avatar" id="sbAvatar" aria-hidden="true">TS</div>
         <div class="u-info">
           <span class="u-name" id="sbUserName">Not signed in</span>
           <span class="u-sub" id="sbUserSub">Sign in to sync</span>
         </div>
-      </div>
-      <div class="sb-user-menu" id="sbUserMenu">
-        <button type="button" onclick="goto('profile'); closeUserMenu();">Profile</button>
-        <button type="button" onclick="goto('settings'); setSettingsTab('account'); closeUserMenu();">Account settings</button>
-        <button type="button" id="sbMenuSignIn" onclick="showAuthModal(false); closeUserMenu();">Sign in</button>
-        <button type="button" class="danger" id="sbMenuSignOut" onclick="signOut(); closeUserMenu();" style="display:none;">Log out</button>
+      </button>
+      <div class="sb-user-menu" id="sbUserMenu" role="menu" aria-label="Account menu">
+        <button type="button" role="menuitem" onclick="goto('profile'); closeUserMenu();">Profile</button>
+        <button type="button" role="menuitem" onclick="goto('settings'); setSettingsTab('account'); closeUserMenu();">Account settings</button>
+        <button type="button" role="menuitem" id="sbMenuSignIn" onclick="showAuthModal(false); closeUserMenu();">Sign in</button>
+        <button type="button" role="menuitem" class="danger" id="sbMenuSignOut" onclick="signOut(); closeUserMenu();" style="display:none;">Log out</button>
       </div>
     </aside>
 
@@ -169,7 +170,7 @@
                 <div class="card-head">
                   <h3>Calendar</h3>
                   <div class="nav-arrows">
-                    <button onclick="changeCalMonth(-1)">‹</button><button onclick="changeCalMonth(1)">›</button>
+                    <button onclick="changeCalMonth(-1)" aria-label="Previous month">‹</button><button onclick="changeCalMonth(1)" aria-label="Next month">›</button>
                   </div>
                 </div>
                 <div class="mini-cal-head"><h4 id="calMonth"></h4></div>

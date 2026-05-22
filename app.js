@@ -60,11 +60,14 @@ function updateAuthUI() {
 function toggleUserMenu(event) {
   event?.stopPropagation();
   const menu = document.getElementById('sbUserMenu');
+  const trigger = document.getElementById('sbUser');
   if (!menu) return;
-  menu.classList.toggle('active');
+  const isOpen = menu.classList.toggle('active');
+  trigger?.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
 }
 function closeUserMenu() {
   document.getElementById('sbUserMenu')?.classList.remove('active');
+  document.getElementById('sbUser')?.setAttribute('aria-expanded', 'false');
 }
 document.addEventListener('click', function(event) {
   const menu = document.getElementById('sbUserMenu');
@@ -5691,10 +5694,11 @@ async function loadSchoolsFromDB() {
   let source = 'Supabase';
   SCHOOLS_LOADING = true;
   renderSchoolGrid();
+  const allowedIds = (window.TRANSFERSPACE_SCHOOL_DATA || []).map(s => s.id).filter(Boolean);
   try {
     const { data, error } = await sb.from('schools_full')
       .select('*')
-      .not('acceptance_rate_transfer', 'is', null)
+      .in('id', allowedIds)
       .order('name', { ascending: true });
     if (error) throw error;
     rows = data || [];
