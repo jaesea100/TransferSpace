@@ -103,6 +103,21 @@
           </div>
           <button class="btn btn-ghost btn-sm" id="topSignInBtn" onclick="showAuthModal(false)">Sign in</button>
           <button class="btn btn-ghost btn-sm" id="topSignOutBtn" onclick="signOut()" style="display:none;">Log out</button>
+          <div class="notif-wrap" id="notifWrap">
+            <button class="icon-btn notif-bell" id="notifBell" onclick="toggleNotifPanel()" title="Notifications" aria-label="Notifications" aria-haspopup="true" aria-expanded="false">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+              <span class="notif-badge" id="notifBadge" hidden aria-label="unread notifications">0</span>
+            </button>
+            <div class="notif-panel" id="notifPanel" hidden role="dialog" aria-label="Notifications">
+              <div class="notif-panel-head">
+                <span class="notif-panel-title">Notifications</span>
+                <button class="btn btn-ghost btn-xs" onclick="markAllNotifsRead()">Mark all read</button>
+              </div>
+              <div class="notif-list" id="notifList">
+                <div class="notif-empty">No notifications yet.</div>
+              </div>
+            </div>
+          </div>
           <button class="icon-btn" title="Help" onclick="openHelpModal()">
             <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r="1" fill="currentColor" stroke="none"/></svg>
           </button>
@@ -1093,6 +1108,10 @@
                   <div class="switch-row">
                     <div><div class="sr-title">Deadline SMS alerts</div><div class="sr-sub">Text when a deadline is within 24 hours.</div></div>
                     <span class="switch-pill" data-notif="sms" onclick="toggleNotifSetting(this)"></span>
+                  </div>
+                  <div style="margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border);">
+                    <button class="btn btn-ghost btn-sm" onclick="sendTestNotification()">Send test email</button>
+                    <span class="sr-sub" style="margin-left:.75rem;" id="notifTestStatus"></span>
                   </div>
                 </div>
                 <div class="settings-card">

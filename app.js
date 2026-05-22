@@ -176,6 +176,9 @@ async function signOut() {
     return;
   }
   CURRENT_USER = null;
+  if (NOTIF_CHANNEL) { sb.removeChannel(NOTIF_CHANNEL); NOTIF_CHANNEL = null; }
+  NOTIFS = [];
+  updateNotifBadge();
   resetPersonalWorkspace();
   renderWorkspaceViews();
   goto('today');
@@ -203,9 +206,13 @@ async function onAuthSuccess() {
   loadBookmarks();
   loadDecisions().then(() => patchKanbanCards());
   loadProfile();
-  // Pre-fill the Fit Estimator's major dropdown so it's ready on first Schools visit
   populateFitMajorOptions();
   maybeShowFirstLoginHelp();
+  // Notifications
+  syncNotifPrefs();
+  loadNotifications();
+  subscribeNotifications();
+  setTimeout(checkAndSendDeadlineEmails, 3000); // run after school data loads
 }
 
 // --- Documents Data Layer ---
@@ -1875,8 +1882,196 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-/* =============== notifications removed — stubs for compatibility =============== */
-function renderNotifs() {}
+/* =============== Notifications =============== */
+
+let NOTIF_CHANNEL = null;
+let NOTIFS = [];
+
+// ── Sync prefs to Supabase ────────────────────────────────────────────────
+async function syncNotifPrefs() {
+  if (!CURRENT_USER) return;
+  const s = getNotifSettings();
+  const days = JSON.parse(localStorage.getItem('ts-deadline-reminders') || '[30]').map(Number);
+  await sb.from('user_notification_prefs').upsert({
+    user_id: CURRENT_USER.id,
+    email_on: s.email !== false,
+    inapp_on: s.inapp !== false,
+    digest_on: s.digest !== false,
+    lor_on: s.lor !== false,
+    sms_on: !!s.sms,
+    deadline_days: days,
+    updated_at: new Date().toISOString(),
+  }, { onConflict: 'user_id' });
+}
+
+// ── Load & render in-app notifications ───────────────────────────────────
+async function loadNotifications() {
+  if (!CURRENT_USER) return;
+  const { data } = await sb
+    .from('notifications')
+    .select('*')
+    .eq('user_id', CURRENT_USER.id)
+    .order('created_at', { ascending: false })
+    .limit(30);
+  NOTIFS = data || [];
+  renderNotifPanel();
+  updateNotifBadge();
+}
+
+function renderNotifPanel() {
+  const list = document.getElementById('notifList');
+  if (!list) return;
+  if (!NOTIFS.length) {
+    list.innerHTML = '<div class="notif-empty">No notifications yet.</div>';
+    return;
+  }
+  list.innerHTML = NOTIFS.map(n => {
+    const icon = n.type === 'warning' ? '⚠' : n.type === 'success' ? '✓' : '•';
+    const age = relativeTime(n.created_at);
+    return `<div class="notif-item${n.read ? '' : ' unread'}" onclick="markNotifRead('${n.id}')">
+      <div class="notif-icon ${n.type}">${icon}</div>
+      <div class="notif-item-body">
+        <div class="notif-item-title">${escapeHtml(n.title)}</div>
+        ${n.body ? `<div class="notif-item-sub">${escapeHtml(n.body)}</div>` : ''}
+        <div class="notif-item-time">${age}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateNotifBadge() {
+  const badge = document.getElementById('notifBadge');
+  if (!badge) return;
+  const count = NOTIFS.filter(n => !n.read).length;
+  badge.textContent = count > 9 ? '9+' : String(count);
+  badge.hidden = count === 0;
+}
+
+function toggleNotifPanel() {
+  const panel = document.getElementById('notifPanel');
+  const bell = document.getElementById('notifBell');
+  if (!panel) return;
+  const open = panel.hidden;
+  panel.hidden = !open;
+  bell?.setAttribute('aria-expanded', open ? 'true' : 'false');
+  if (open) markAllNotifsRead();
+}
+
+async function markNotifRead(id) {
+  await sb.from('notifications').update({ read: true }).eq('id', id);
+  const n = NOTIFS.find(x => x.id === id);
+  if (n) n.read = true;
+  renderNotifPanel();
+  updateNotifBadge();
+}
+
+async function markAllNotifsRead() {
+  if (!CURRENT_USER || !NOTIFS.some(n => !n.read)) return;
+  await sb.from('notifications').update({ read: true }).eq('user_id', CURRENT_USER.id).eq('read', false);
+  NOTIFS.forEach(n => { n.read = true; });
+  renderNotifPanel();
+  updateNotifBadge();
+}
+
+function subscribeNotifications() {
+  if (!CURRENT_USER) return;
+  if (NOTIF_CHANNEL) sb.removeChannel(NOTIF_CHANNEL);
+  NOTIF_CHANNEL = sb
+    .channel(`notifs-${CURRENT_USER.id}`)
+    .on('postgres_changes', {
+      event: 'INSERT',
+      schema: 'public',
+      table: 'notifications',
+      filter: `user_id=eq.${CURRENT_USER.id}`,
+    }, payload => {
+      NOTIFS.unshift(payload.new);
+      renderNotifPanel();
+      updateNotifBadge();
+      // Show toast for warnings
+      if (payload.new.type === 'warning') toast(payload.new.title);
+    })
+    .subscribe();
+}
+
+// ── Deadline emails (triggered on login after schools load) ───────────────
+async function checkAndSendDeadlineEmails() {
+  if (!CURRENT_USER) return;
+  const s = getNotifSettings();
+  if (s.email === false) return;
+
+  const days = JSON.parse(localStorage.getItem('ts-deadline-reminders') || '[30]').map(Number);
+  const upcoming = [];
+
+  for (const app of USER_APPS) {
+    const school = SCHOOLS.find(sc => sc.id === app.id);
+    if (!school) continue;
+    const dateStr = compactDeadlineDate(school);
+    if (!dateStr) continue;
+    const d = daysTo(dateStr);
+    const matched = days.filter(threshold => d > 0 && d <= threshold);
+    if (!matched.length) continue;
+    const bestMatch = Math.min(...matched);
+    upcoming.push({
+      schoolId: school.id,
+      school: school.name,
+      term: compactDeadlineType(school),
+      daysLeft: d,
+      date: fmtDate(dateStr),
+      threshold: bestMatch,
+    });
+  }
+
+  if (!upcoming.length) return;
+
+  try {
+    await sb.functions.invoke('notify', { body: { type: 'deadline', deadlines: upcoming } });
+  } catch (e) {
+    console.warn('Deadline notification failed:', e);
+  }
+}
+
+// ── Test notification (Settings panel button) ─────────────────────────────
+async function sendTestNotification() {
+  const status = document.getElementById('notifTestStatus');
+  if (!CURRENT_USER) {
+    if (status) status.textContent = 'Sign in first.';
+    return;
+  }
+  if (status) status.textContent = 'Sending…';
+  try {
+    await sb.functions.invoke('notify', { body: { type: 'test' } });
+    if (status) status.textContent = 'Sent! Check your inbox.';
+  } catch {
+    if (status) status.textContent = 'Failed — check RESEND_API_KEY secret.';
+  }
+  setTimeout(() => { if (status) status.textContent = ''; }, 5000);
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────
+function relativeTime(iso) {
+  const diff = Date.now() - new Date(iso).getTime();
+  const m = Math.floor(diff / 60000);
+  if (m < 1) return 'just now';
+  if (m < 60) return `${m}m ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}h ago`;
+  return `${Math.floor(h / 24)}d ago`;
+}
+function escapeHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function renderNotifs() {} // legacy stub — kept for compatibility
+
+document.addEventListener('click', e => {
+  const panel = document.getElementById('notifPanel');
+  const wrap = document.getElementById('notifWrap');
+  if (panel && !panel.hidden && wrap && !wrap.contains(e.target)) {
+    panel.hidden = true;
+    document.getElementById('notifBell')?.setAttribute('aria-expanded', 'false');
+  }
+});
+
 function openDrawer() {}
 function closeDrawer() {}
 
@@ -5213,6 +5408,7 @@ function toggleNotifSetting(el) {
   const settings = getNotifSettings();
   settings[key] = el.classList.contains('on');
   saveNotifSettings(settings);
+  syncNotifPrefs(); // persist to Supabase
   toast(el.classList.contains('on') ? 'Enabled' : 'Disabled');
 }
 
@@ -5222,6 +5418,7 @@ function toggleDeadlineReminder(chip) {
   document.querySelectorAll('#deadlineReminderChips .chip.active').forEach(c => active.push(c.dataset.days));
   localStorage.setItem('ts-deadline-reminders', JSON.stringify(active));
   updateReminderOverview(active);
+  syncNotifPrefs(); // persist to Supabase
   toast('Reminder updated');
 }
 
