@@ -10,6 +10,7 @@ create table if not exists public.user_notification_prefs (
   updated_at    timestamptz not null default now()
 );
 alter table public.user_notification_prefs enable row level security;
+drop policy if exists "user owns prefs" on public.user_notification_prefs;
 create policy "user owns prefs"
   on public.user_notification_prefs for all
   using (auth.uid() = user_id);
@@ -25,6 +26,7 @@ create table if not exists public.notifications (
   created_at timestamptz not null default now()
 );
 alter table public.notifications enable row level security;
+drop policy if exists "user owns notifications" on public.notifications;
 create policy "user owns notifications"
   on public.notifications for all
   using (auth.uid() = user_id);
@@ -40,7 +42,7 @@ create table if not exists public.email_log (
   unique (user_id, email_type, ref_key)
 );
 alter table public.email_log enable row level security;
--- Users can read their own log; only service role writes
+drop policy if exists "user reads own email log" on public.email_log;
 create policy "user reads own email log"
   on public.email_log for select
   using (auth.uid() = user_id);
