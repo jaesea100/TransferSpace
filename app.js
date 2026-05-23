@@ -181,7 +181,7 @@ async function signOut() {
   updateNotifBadge();
   resetPersonalWorkspace();
   renderWorkspaceViews();
-  goto('today');
+  goto('applications');
   toast('Signed out.');
 }
 async function checkSession() {
@@ -199,7 +199,7 @@ async function onAuthSuccess() {
   loadCurrentUserWorkspace();
   await loadSchoolsFromDB();
   renderWorkspaceViews();
-  goto('today');
+  goto('applications');
   updateAuthUI();
   toast(`Welcome back${CURRENT_USER.email ? ', ' + CURRENT_USER.email.split('@')[0] : ''}!`);
   loadAllDocumentsData();
@@ -231,8 +231,6 @@ async function loadAllDocumentsData() {
   DB_DOCUMENTS = docsRes.data || [];
   DB_LORS = lorsRes.data || [];
   renderDocumentsPage();
-  renderSuggestions();
-  renderRecentActivity();
 }
 
 // --- Essay CRUD ---
@@ -816,6 +814,37 @@ async function createNotebookFromPicker() {
   if (essay) openEssayEditor(essay.id);
 }
 
+function classifyTranscriptDoc(doc) {
+  const name = (doc.name || doc.file_name || '').toLowerCase();
+  if (/midterm|mid.term|mid.report|semester.grade/i.test(name)) return 'midterm';
+  if (/sat|act|test.?score|exam.?score|standardized/i.test(name)) return 'testscores';
+  if (/transcript|official/i.test(name)) return 'transcript';
+  return null;
+}
+
+function syncRequiredDocs() {
+  const transcripts = DB_DOCUMENTS.filter(d => d.category === 'transcripts');
+  const detected = { transcript: false, midterm: false, testscores: false };
+  transcripts.forEach(doc => {
+    const type = classifyTranscriptDoc(doc);
+    if (type) detected[type] = true;
+  });
+  // Any unclassified transcript upload counts as an official transcript
+  if (transcripts.length > 0 && !detected.transcript && !detected.midterm && !detected.testscores) {
+    detected.transcript = true;
+  }
+  ['transcript', 'midterm', 'testscores'].forEach(type => {
+    const card = document.querySelector(`#requiredDocsList .vault-card[data-doc="${type}"]`);
+    if (!card) return;
+    const icon = card.querySelector('.vc-icon');
+    const isNow = detected[type];
+    const was = card.classList.contains('verified');
+    if (isNow === was) return;
+    card.classList.toggle('verified', isNow);
+    if (icon) { icon.classList.toggle('pending-icon', !isNow); icon.classList.toggle('verified-icon', isNow); }
+  });
+}
+
 function renderDocumentCards() {
   // Render transcripts
   const tGrid = document.querySelector('[data-docs-section="transcripts"] .doc-grid');
@@ -824,11 +853,12 @@ function renderDocumentCards() {
   if (tGrid) {
     if (tCount) tCount.textContent = transcripts.length;
     if (transcripts.length === 0) {
-      tGrid.innerHTML = '<div style="color:var(--text-muted); font-size:.9rem; padding:1rem 0;">No transcripts uploaded yet.</div>';
+      tGrid.innerHTML = '<div class="transcript-empty-hint">Upload transcripts above — they\'ll appear here.</div>';
     } else {
       tGrid.innerHTML = transcripts.map(d => docCardHTML(d, 'transcripts')).join('');
     }
   }
+  syncRequiredDocs();
   // Render activities
   const aGrid = document.querySelector('[data-docs-section="activities"] .doc-grid');
   const aCount = document.querySelector('[data-docs-section="activities"] .ds-count');
@@ -1607,12 +1637,6 @@ function renderWorkspaceViews() {
   updateAuthUI();
   syncSidebarFromProfile();
   updateProfilePreview();
-  renderGreeting();
-  renderSuggestions();
-  renderRecentActivity();
-  renderDeadlineRow();
-  renderProgress();
-  renderMiniCal();
   populateFitMajorOptions();
   renderTabs();
   renderSchoolGrid();
@@ -1682,13 +1706,12 @@ const greeting = () => {
 
 /* =============== routing =============== */
 const ROUTE_ALIASES = {
-  dashboard: 'today',
+  dashboard: 'applications',
   explore: 'schools',
   resources: 'resources',
   stats: 'schools',
   gpachart: 'schools',
   documents: 'materials',
-  today: 'today',
   schools: 'schools',
   applications: 'applications',
   materials: 'materials',
@@ -1697,7 +1720,6 @@ const ROUTE_ALIASES = {
   settings: 'settings'
 };
 const ROUTE_PAGE_IDS = {
-  today: 'dashboard',
   schools: 'explore',
   resources: 'resources',
   applications: 'applications',
@@ -1725,14 +1747,6 @@ function activatePage(pageId, activeRoute) {
   window.scrollTo({top: 0, behavior: 'auto'});
 }
 function runRouteEntry(route) {
-  if (route === 'today') {
-    renderGreeting();
-    renderSuggestions();
-    renderRecentActivity();
-    renderDeadlineRow();
-    renderProgress();
-    renderMiniCal();
-  }
   if (route === 'materials') {
     renderDocumentsPage();
     refreshDocsCounts();
@@ -1775,7 +1789,7 @@ function enterApp() {
   hideAuthModal();
   app?.classList.add('active', 'app-entering');
   document.documentElement.classList.add('in-app');
-  goto('today');
+  goto('applications');
   populateFitMajorOptions();
   setTimeout(() => app?.classList.remove('app-entering'), 420);
 }
@@ -1817,7 +1831,6 @@ function renderCmdK() {
   const q = document.getElementById('cmdkInput').value.toLowerCase().trim();
   const list = document.getElementById('cmdkList');
   const nav = [
-    { type:'Navigate', label:'Today', action: ()=>{goto('today');closeCmdK();}, icon:'TO' },
     { type:'Navigate', label:'Schools', action: ()=>{goto('schools');closeCmdK();}, icon:'SC' },
     { type:'Navigate', label:'Resources', action: ()=>{goto('resources');closeCmdK();}, icon:'RE' },
     { type:'Navigate', label:'Applications', action: ()=>{goto('applications');closeCmdK();}, icon:'AP' },
@@ -2075,62 +2088,6 @@ document.addEventListener('click', e => {
 function openDrawer() {}
 function closeDrawer() {}
 
-/* FAB Flyout: Open */
-function openFab() {
-  const flyout = document.getElementById('fabFlyout');
-  const input = document.getElementById('fabSearchInput');
-  flyout.classList.add('active');
-  input.focus();
-  input.value = '';
-  renderFabResults();
-}
-
-/* FAB Flyout: Close */
-function closeFab() {
-  const flyout = document.getElementById('fabFlyout');
-  flyout.classList.remove('active');
-}
-
-/* FAB Flyout: Render results */
-function renderFabResults() {
-  const q = document.getElementById('fabSearchInput').value.toLowerCase().trim();
-  const resultsContainer = document.getElementById('fabResults');
-
-  const filtered = SCHOOLS.filter(s => {
-    const searchText = (s.name + ' ' + s.state).toLowerCase();
-    return !q || searchText.includes(q);
-  }).slice(0, 5);
-
-  if (filtered.length === 0) {
-    resultsContainer.innerHTML = '<div style="padding:1rem; text-align:center; color:var(--text-muted); font-size:.85rem;">No schools found</div>';
-    return;
-  }
-
-  resultsContainer.innerHTML = filtered.map(s => {
-    const isAdded = USER_APPS.some(a => a.id === s.id);
-    return `<div class="fab-result-item">
-      <div class="fab-result-info">
-        <div class="fab-result-name">${s.name}</div>
-        <div class="fab-result-meta">${s.state} · ${formatAcceptance(s)} acceptance</div>
-      </div>
-      <button class="fab-result-action${isAdded ? ' added' : ''}"
-        onclick="addSchoolToListFromFab('${s.id}')"
-        ${isAdded ? 'disabled' : ''}>
-        ${isAdded ? 'Added ✓' : 'Add'}
-      </button>
-    </div>`;
-  }).join('');
-}
-
-/* Add school from FAB and update UI */
-function addSchoolToListFromFab(schoolId) {
-  const isAlreadyAdded = USER_APPS.some(a => a.id === schoolId);
-  if (!isAlreadyAdded) {
-    addSchoolToList(schoolId);
-  }
-  renderFabResults();
-}
-
 /* =============== toast =============== */
 function toast(msg) {
   const stack = document.getElementById('toastStack');
@@ -2186,12 +2143,6 @@ function updateProfile(field, val) {
       s.classList.toggle('selected', s.dataset.color === val);
     });
   }
-  if (field === 'major') {
-    renderSuggestions();
-  }
-  if (field === 'name' || field === 'major') {
-    renderGreeting();
-  }
 }
 
 function syncSidebarFromProfile() {
@@ -2234,383 +2185,6 @@ function updateProfilePreview() {
       <div><b>${firstName(USER_PROFILE.name)}</b> · ${USER_PROFILE.currentSchool} · ${abbrMajor(USER_PROFILE.major)}</div>
     </div>`;
 }
-
-/* dashboard "Suggested next steps" — dynamic from real data */
-function buildSuggestions() {
-  const items = [];
-  const active = USER_APPS.filter(a => {
-    const s = byId(a.id);
-    return s && hasUpcomingSchoolDeadline(s) && a.status !== 'Researching' && a.status !== 'Submitted' && !a.materials?.submitted;
-  });
-
-  // 1. Missing transcripts
-  const needTranscript = active.filter(a => a.materials?.transcriptReq && !a.materials?.transcriptSent);
-  if (needTranscript.length > 0) {
-    const names = needTranscript.slice(0, 3).map(a => byId(a.id)?.short || a.id).join(', ');
-    items.push({ tone: 'primary', title: 'Send your official transcript.', body: `Required by ${names}${needTranscript.length > 3 ? ` and ${needTranscript.length - 3} more` : ''}.`, cta: 'Go →', go: 'documents' });
-  }
-
-  // 2. Incomplete essays (from DB_ESSAYS)
-  const draftEssays = DB_ESSAYS.filter(e => e.status === 'draft' || !e.status);
-  draftEssays.forEach(e => {
-    const wc = e.body?.trim() ? e.body.trim().split(/\s+/).length : 0;
-    const target = e.target_words || 500;
-    if (wc < target * 0.9) {
-      items.push({ tone: 'primary', title: `Finish "${e.title}".`, body: `Currently ${wc}/${target} words — ${Math.round((target - wc))} to go.`, cta: 'Open →', go: 'documents' });
-    }
-  });
-
-  // 3. Missing essays per app
-  active.forEach(a => {
-    const s = byId(a.id);
-    if (!s) return;
-    if (a.materials?.essay1 === false) {
-      items.push({ tone: '', title: `Start your essay for ${s.short}.`, body: 'No essay draft found yet.', cta: 'Open →', go: 'documents' });
-    }
-  });
-
-  // 4. Missing LORs
-  const needLor = active.filter(a => a.materials?.lor1 === true && a.materials?.lor2 === false);
-  if (needLor.length > 0) {
-    const names = needLor.slice(0, 2).map(a => byId(a.id)?.short || a.id).join(' & ');
-    items.push({ tone: '', title: 'Request a second letter of recommendation.', body: `${names} ${needLor.length > 2 ? `and ${needLor.length - 2} more ` : ''}still need a second LOR.`, cta: 'Go →', go: 'documents' });
-  }
-
-  // 5. Pending LOR requests (from DB_LORS)
-  const pendingLors = DB_LORS.filter(l => l.status === 'requested' || l.status === 'pending');
-  pendingLors.forEach(l => {
-    const daysSince = l.created_at ? Math.floor((Date.now() - new Date(l.created_at).getTime()) / 86400000) : 0;
-    if (daysSince >= 7) {
-      items.push({ tone: 'primary', title: `Follow up on LOR from ${l.recommender_name || 'your recommender'}.`, body: `Requested ${daysSince} days ago — a polite nudge helps.`, cta: 'Email →', go: 'documents' });
-    }
-  });
-
-  // 6. Unpaid fees
-  const needFee = active.filter(a => a.materials?.feePaid === false);
-  if (needFee.length > 0) {
-    const urgent = needFee.filter(a => { const s = byId(a.id); return s && schoolDeadlineDays(s) <= 14; });
-    if (urgent.length > 0) {
-      const names = urgent.map(a => byId(a.id)?.short).join(', ');
-      items.push({ tone: 'primary', title: 'Pay application fees soon.', body: `${names} — deadline within 2 weeks.`, cta: 'Go →', go: 'applications' });
-    } else {
-      items.push({ tone: '', title: `Pay application fees for ${needFee.length} school${needFee.length > 1 ? 's' : ''}.`, body: 'Get this out of the way early.', cta: 'Go →', go: 'applications' });
-    }
-  }
-
-  // 7. Approaching deadlines (apps not submitted)
-  active.forEach(a => {
-    const s = byId(a.id);
-    if (!s) return;
-    const deadlineDate = compactDeadlineDate(s);
-    const d = daysTo(deadlineDate);
-    if (d > 0 && d <= 10 && a.progress < 90) {
-      items.push({ tone: 'primary', title: `${s.short} ${compactDeadlineType(s)} deadline ${deadlinePhrase(deadlineDate)}.`, body: `You're at ${a.progress}% — push to finish.`, cta: 'Go →', go: 'applications' });
-    }
-  });
-
-  // 8. Schools still in Researching — encourage action
-  const researching = USER_APPS.filter(a => a.status === 'Researching');
-  if (researching.length > 0) {
-    const s = byId(researching[0].id);
-    if (s) {
-      items.push({ tone: '', title: `Start your application for ${s.short}.`, body: `You saved it — ready to begin?`, cta: 'View →', go: 'applications' });
-    }
-  }
-
-  // Deduplicate by title and cap at 6
-  const seen = new Set();
-  return items.filter(it => {
-    if (seen.has(it.title)) return false;
-    seen.add(it.title);
-    return true;
-  }).slice(0, 6);
-}
-
-function renderSuggestions() {
-  const list = document.getElementById('suggestList');
-  const badge = document.getElementById('suggestCount');
-  if (!list) return;
-  const items = buildSuggestions();
-  if (items.length === 0) {
-    list.innerHTML = '<div class="suggest-item"><span class="s-num">✓</span><div><b>You\'re caught up.</b> No urgent action items right now.</div></div>';
-    if (badge) badge.textContent = '0 items';
-    return;
-  }
-  list.innerHTML = items.map((s, i) => {
-    const n = String(i + 1).padStart(2, '0');
-    return `<div class="suggest-item ${s.tone}">
-      <span class="s-num">${n}</span>
-      <div><b>${s.title}</b> ${s.body || ''}</div>
-      <a href="#" class="s-go" onclick="goto('${s.go}'); return false;">${s.cta}</a>
-    </div>`;
-  }).join('');
-  if (badge) badge.textContent = `${items.length} item${items.length !== 1 ? 's' : ''}`;
-}
-
-/* dashboard "Recent activity" — dynamic from real data */
-function renderRecentActivity() {
-  const container = document.getElementById('activityList');
-  if (!container) return;
-
-  const events = [];
-  const fmtTime = ts => {
-    if (!ts) return '';
-    const d = new Date(ts);
-    const now = new Date();
-    const diffMs = now - d;
-    const diffDays = Math.floor(diffMs / 86400000);
-    const time = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-    if (diffDays === 0) return `Today · ${time}`;
-    if (diffDays === 1) return `Yesterday · ${time}`;
-    return `${d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} · ${time}`;
-  };
-
-  // Essays — created or updated
-  DB_ESSAYS.forEach(e => {
-    const wc = e.body?.trim() ? e.body.trim().split(/\s+/).length : 0;
-    if (e.updated_at && e.updated_at !== e.created_at) {
-      events.push({ time: e.updated_at, tone: '', html: `Essay draft saved — <b>${e.title}</b> (v${e.version || 1}, ${wc} words)` });
-    }
-    if (e.created_at) {
-      events.push({ time: e.created_at, tone: '', html: `New essay started — <b>${e.title}</b>` });
-    }
-  });
-
-  // Documents — uploaded
-  DB_DOCUMENTS.forEach(d => {
-    if (d.created_at) {
-      events.push({ time: d.created_at, tone: 'success', html: `Document uploaded — <b>${d.name || d.file_name || 'File'}</b>` });
-    }
-  });
-
-  // LORs — requested or received
-  DB_LORS.forEach(l => {
-    if (l.status === 'received' && l.updated_at) {
-      events.push({ time: l.updated_at, tone: 'success', html: `LOR received from <b>${l.recommender_name || 'Recommender'}</b>` });
-    }
-    if (l.created_at) {
-      events.push({ time: l.created_at, tone: 'warm', html: `LOR request sent to <b>${l.recommender_name || 'Recommender'}</b>` });
-    }
-  });
-
-  // Decisions — recorded
-  Object.entries(DB_DECISIONS).forEach(([schoolId, d]) => {
-    const s = byId(schoolId);
-    if (!s) return;
-    const label = d.result === 'accepted' ? 'Accepted' : d.result === 'waitlisted' ? 'Waitlisted' : 'Denied';
-    const tone = d.result === 'accepted' ? 'success' : d.result === 'denied' ? 'warm' : '';
-    events.push({ time: d.created_at || d.updated_at, tone, html: `Decision: <b>${s.short}</b> — ${label}` });
-  });
-
-  // Submitted apps
-  USER_APPS.filter(a => a.materials?.submitted).forEach(a => {
-    const s = byId(a.id);
-    if (!s) return;
-    events.push({ time: null, tone: 'success', html: `You marked <b>${s.short}</b> as Submitted`, fallbackOrder: 1 });
-  });
-
-  // Upcoming deadlines are date-based reminders, not timestamped activity.
-  USER_APPS.filter(a => a.status !== 'Submitted' && a.status !== 'Researching').forEach(a => {
-    const s = byId(a.id);
-    if (!s) return;
-    const deadlineDate = compactDeadlineDate(s);
-    const d = daysTo(deadlineDate);
-    if (d > 0 && d <= 7) {
-      events.push({
-        time: localDayStart(deadlineDate).toISOString(),
-        sortTime: localDayStart(deadlineDate).getTime(),
-        tone: 'warm',
-        html: `${compactDeadlineType(s)} ${deadlinePhrase(deadlineDate)}: <b>${s.short}</b>`,
-        meta: `Due ${fmtDate(deadlineDate)}`
-      });
-    }
-  });
-
-  // Sort by time descending, nulls last
-  events.sort((a, b) => {
-    const ta = a.sortTime || (a.time ? new Date(a.time).getTime() : 0);
-    const tb = b.sortTime || (b.time ? new Date(b.time).getTime() : 0);
-    return tb - ta;
-  });
-
-  // Deduplicate by html text (keep first/most recent)
-  const seen = new Set();
-  const unique = events.filter(e => {
-    if (seen.has(e.html)) return false;
-    seen.add(e.html);
-    return true;
-  });
-
-  const display = unique.slice(0, 8);
-
-  if (display.length === 0) {
-    container.innerHTML = '<div class="activity-item"><div class="a-dot"></div><div>No recent activity yet. Start by adding a school or uploading a document!</div></div>';
-    return;
-  }
-
-  container.innerHTML = display.map(e => `
-    <div class="activity-item ${e.tone || ''}">
-      <div class="a-dot"></div>
-      <div>${e.html}
-      <span class="a-time">${e.meta || (e.time ? fmtTime(e.time) : '')}</span></div>
-    </div>
-  `).join('');
-
-  // Update timeframe label
-  const tf = document.getElementById('activityTimeframe');
-  if (tf && display.length > 0 && display[display.length - 1].time) {
-    const oldest = new Date(display[display.length - 1].time);
-    const daysDiff = Math.ceil((Date.now() - oldest.getTime()) / 86400000);
-    tf.textContent = daysDiff <= 1 ? 'Today' : daysDiff <= 7 ? 'Last 7 days' : `Last ${daysDiff} days`;
-  }
-}
-
-/* =============== dashboard renders =============== */
-function renderDeadlineRow() {
-  // Render upcoming deadlines as clean text cards
-  const container = document.getElementById('upcomingDeadlines');
-  if (!container) return;
-  const active = USER_APPS
-    .map(a => ({...a, school: byId(a.id)}))
-    .filter(a => a.school && isUpcomingDeadline(a.school.deadline) && a.status !== 'Submitted')
-    .sort((a,b) => daysTo(a.school.deadline) - daysTo(b.school.deadline));
-
-  if (active.length === 0) {
-    container.innerHTML = '';
-    return;
-  }
-
-  container.innerHTML = active.map(a => {
-    const deadlineDate = compactDeadlineDate(a.school);
-    const d = daysTo(deadlineDate);
-    const urgent = d <= 14;
-    const dayClass = d <= 7 ? 'warn' : 'ok';
-    return `<div class="udl-card${urgent ? ' urgent' : ''}" onclick="goto('timeline')">
-      <div class="udl-topline">
-        <div class="udl-type">${compactDeadlineType(a.school)}</div>
-        <span class="udl-status">${a.status || 'Tracking'}</span>
-      </div>
-      <div class="udl-school">${a.school.short || a.school.name}</div>
-      <div class="udl-bottom">
-        <div class="udl-days ${dayClass}">${d} day${d === 1 ? '' : 's'}</div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function renderProgress() {
-  const grid = document.getElementById('progressGrid');
-  const active = USER_APPS.filter(a => a.status !== 'Researching');
-  grid.innerHTML = active.map(a => {
-    const s = byId(a.id);
-    if (!s) return '';
-    const progress = computeProgress(a);
-    const deadlineDate = compactDeadlineDate(s);
-    const d = daysTo(deadlineDate);
-    const deadlineText = d >= 0 ? `${d}d` : 'Past';
-    return `<div class="progress-item" onclick="goto('applications')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goto('applications')}" role="button" tabindex="0" aria-label="Open ${s.short} application">
-      <div class="progress-item-main">
-        <div class="progress-school-line">
-          <span class="progress-percent">${progress}%</span>
-          <span class="p-name">${s.short}</span>
-        </div>
-        <div class="p-sub">${a.status} · ${a.label}</div>
-        <div class="progress-track" aria-hidden="true"><span style="width:${progress}%"></span></div>
-      </div>
-      <div class="progress-deadline">
-        <span>${deadlineText}</span>
-        <small>${compactDeadlineType(s)}</small>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-var CAL_YEAR, CAL_MONTH; // 0-indexed month
-(function initCalDate() {
-  var now = new Date();
-  CAL_YEAR = now.getFullYear();
-  CAL_MONTH = now.getMonth();
-})();
-
-function changeCalMonth(delta) {
-  CAL_MONTH += delta;
-  if (CAL_MONTH > 11) { CAL_MONTH = 0; CAL_YEAR++; }
-  if (CAL_MONTH < 0) { CAL_MONTH = 11; CAL_YEAR--; }
-  renderMiniCal();
-}
-
-function renderMiniCal() {
-  var cal = document.getElementById('miniCal');
-  var calLabel = document.getElementById('calMonth');
-  var detailEl = document.getElementById('calDayDetail');
-  if (!cal) return;
-
-  var monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-  if (calLabel) calLabel.textContent = monthNames[CAL_MONTH] + ' ' + CAL_YEAR;
-
-  var dow = ['S','M','T','W','T','F','S'];
-  var first = new Date(CAL_YEAR, CAL_MONTH, 1);
-  var startDow = first.getDay();
-  var daysInMonth = new Date(CAL_YEAR, CAL_MONTH + 1, 0).getDate();
-
-  // Build event map: day -> [school names]
-  var eventMap = {};
-  USER_APPS.forEach(function(a) {
-    var s = byId(a.id);
-    if (!s) return;
-    var deadlineDate = compactDeadlineDate(s);
-    if (!isUpcomingDeadline(deadlineDate) && a.status !== 'Submitted') return;
-    var d = localDayStart(deadlineDate);
-    if (d.getFullYear() === CAL_YEAR && d.getMonth() === CAL_MONTH) {
-      var day = d.getDate();
-      if (!eventMap[day]) eventMap[day] = [];
-      eventMap[day].push(s.short + ' — ' + (a.status === 'Submitted' ? 'Submitted' : `${compactDeadlineType(s)} · ${fmtDate(deadlineDate)}`));
-    }
-  });
-
-  var now = new Date();
-  var todayDay = (now.getFullYear() === CAL_YEAR && now.getMonth() === CAL_MONTH) ? now.getDate() : -1;
-
-  var html = dow.map(function(d) { return '<div class="dow">' + d + '</div>'; }).join('');
-  for (var i = 0; i < startDow; i++) html += '<div class="day muted"></div>';
-  for (var d = 1; d <= daysInMonth; d++) {
-    var isToday = d === todayDay;
-    var hasEv = !!eventMap[d];
-    html += '<div class="day ' + (isToday ? 'today' : '') + ' ' + (hasEv ? 'has-event' : '') + '"'
-      + (hasEv ? ' onclick="showCalDayDetail(' + d + ')" style="cursor:pointer" title="' + eventMap[d].length + ' deadline' + (eventMap[d].length > 1 ? 's' : '') + '"' : '')
-      + '>' + d + '</div>';
-  }
-  cal.innerHTML = html;
-
-  // Store event map for detail display
-  cal._eventMap = eventMap;
-  if (detailEl) detailEl.innerHTML = '';
-}
-
-function showCalDayDetail(day) {
-  var cal = document.getElementById('miniCal');
-  var detailEl = document.getElementById('calDayDetail');
-  if (!detailEl || !cal || !cal._eventMap || !cal._eventMap[day]) return;
-  var items = cal._eventMap[day];
-  detailEl.innerHTML = '<div style="color:var(--accent-primary); font-weight:600; font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; margin-bottom:.2rem;">'
-    + new Date(CAL_YEAR, CAL_MONTH, day).toLocaleDateString('en-US', {weekday:'long', month:'short', day:'numeric'})
-    + '</div>'
-    + items.map(function(s) { return '<div style="padding:.15rem 0; color:var(--text-secondary);">' + s + '</div>'; }).join('');
-}
-
-function renderGreeting() {
-  const gl = document.getElementById('greetLine');
-  const gs = document.getElementById('greetSub');
-  if (gl) gl.innerHTML = CURRENT_USER ? `${greeting()}, <em>${firstName(USER_PROFILE.name)}</em>.` : `${greeting()}.`;
-  const count = USER_APPS.filter(a => {
-    const s = byId(a.id);
-    return s && a.status !== 'Submitted' && schoolDeadlineDays(s) <= 14 && hasUpcomingSchoolDeadline(s);
-  }).length;
-  if (gs) gs.textContent = CURRENT_USER
-    ? `You have ${count} deadline${count === 1 ? '' : 's'} in the next two weeks.`
-    : 'Sign in to start a private transfer workspace.';
-}
-
 /* =============== explore =============== */
 function profileMajorTokens() {
   const major = (USER_PROFILE.major || '').toLowerCase();
@@ -3982,11 +3556,6 @@ function toggleFav(id) {
   renderKanban();
   renderAppList();
   renderAppStats();
-  renderProgress();
-  renderDeadlineRow();
-  renderGreeting();
-  renderSuggestions();
-  renderRecentActivity();
   renderTimeline();
 }
 
@@ -4252,8 +3821,6 @@ function onDrop(e, col) {
   DRAG_ID = null;
   renderKanban();
   renderAppList();
-  renderProgress();
-  renderDeadlineRow();
 }
 
 /* =============== remove app =============== */
@@ -4271,10 +3838,6 @@ function removeApp(id) {
   renderKanban();
   renderAppList();
   renderAppStats();
-  renderProgress();
-  renderDeadlineRow();
-  renderSuggestions();
-  renderRecentActivity();
 }
 
 /* =============== app view toggle =============== */
@@ -4496,11 +4059,6 @@ function addSchoolToList(id, options = {}) {
   // Re-render everything that depends on USER_APPS
   renderKanban();
   renderAppList();
-  renderProgress();
-  renderDeadlineRow();
-  renderGreeting();
-  renderSuggestions();
-  renderRecentActivity();
   renderTimeline();
   renderSchoolGrid();
   // Swap from detail modal to tracking modal
@@ -4605,8 +4163,6 @@ function setAppStage(id, stage) {
   saveUserApps();
   renderKanban();
   renderAppList();
-  renderProgress();
-  renderDeadlineRow();
   openAppModal(id);
   toast(`${byId(id).short} stage set to ${stage}`);
 }
@@ -4621,7 +4177,6 @@ function toggleMaterial(id, key, val) {
   openAppModal(id);
   renderKanban();
   renderAppList();
-  renderProgress();
 }
 function advanceStage(id) {
   const app = USER_APPS.find(a => a.id === id);
@@ -5617,7 +5172,6 @@ async function loadProfile() {
     hydrateProfilePage();
     syncSidebarFromProfile();
     updateProfilePreview();
-    renderGreeting();
     renderTabs();
     renderSchoolGrid();
   } else {
@@ -5626,7 +5180,6 @@ async function loadProfile() {
     hydrateProfilePage();
     syncSidebarFromProfile();
     updateProfilePreview();
-    renderGreeting();
   }
 }
 
@@ -5806,7 +5359,6 @@ function syncProfileFromForm() {
   USER_PROFILE.transferTerm = val('pf-term') || USER_PROFILE.transferTerm;
   USER_PROFILE.major = val('pf-major') || USER_PROFILE.major;
   syncSidebarFromProfile();
-  renderGreeting();
   renderProfileCard();
   renderProfileImpact();
 }
@@ -6061,7 +5613,6 @@ async function loadDecisions() {
   if (!CURRENT_USER) return;
   const { data } = await sb.from('decisions').select('*').eq('user_id', CURRENT_USER.id);
   (data || []).forEach(d => { DB_DECISIONS[d.school_id] = d; });
-  renderRecentActivity();
 }
 
 function openDecisionForm(schoolId) {
@@ -6105,7 +5656,6 @@ async function recordDecision(schoolId, result) {
   closeAppModal();
   renderKanban();
   renderAppList();
-  renderProgress();
   const s = byId(schoolId);
   if (result === 'accepted') {
     toast(s.short + ' — Accepted! Congratulations!');

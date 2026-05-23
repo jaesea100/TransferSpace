@@ -37,10 +37,6 @@
       </div>
 
       <nav class="nav">
-        <button class="nav-item active" data-page="today" onclick="goto('today')" aria-label="Today workspace">
-          <span class="nav-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1h-5v-7H9v7H4a1 1 0 01-1-1V9.5z"/></svg></span>
-          <span class="nav-label">Today</span>
-        </button>
         <button class="nav-item" data-page="schools" onclick="goto('schools')" aria-label="Schools workspace">
           <span class="nav-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-5-5"/></svg></span>
           <span class="nav-label">Schools</span>
@@ -49,7 +45,7 @@
           <span class="nav-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M4 19.5V5a2 2 0 012-2h11a1 1 0 011 1v16a1 1 0 00-1-1H6a2 2 0 00-2 2"/><path d="M8 7h6M8 11h6"/></svg></span>
           <span class="nav-label">Resources</span>
         </button>
-        <button class="nav-item" data-page="applications" onclick="goto('applications')" aria-label="Applications">
+        <button class="nav-item active" data-page="applications" onclick="goto('applications')" aria-label="Applications">
           <span class="nav-icon"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg></span>
           <span class="nav-label">Applications</span>
         </button>
@@ -124,124 +120,23 @@
         </div>
       </div>
 
-      <!-- TODAY -->
-      <section class="page active" id="page-dashboard">
-        <div class="page-wrap">
-
-          <div class="page-title-row">
-            <div>
-              <span class="workspace-kicker">Today</span>
-              <h1 id="greetLine">Good morning.</h1>
-              <p class="p-sub" id="greetSub">Sign in to start a private transfer workspace.</p>
-            </div>
-          </div>
-
-          <!-- HERO BAND: deadlines as the centerpiece -->
-          <section class="today-deadlines-hero" aria-label="Upcoming deadlines">
-            <div class="today-section-head">
-              <div>
-                <span class="workspace-kicker">Upcoming deadlines</span>
-                <h2 class="today-section-title">What's due soon</h2>
-              </div>
-              <span class="today-section-hint">Scroll to review tracked schools</span>
-            </div>
-            <div class="upcoming-dl" id="upcomingDeadlines"></div>
-          </section>
-
-          <!-- MAIN GRID: progress + recent (left) | sticky-note + calendar (right) -->
-          <div class="today-main-grid">
-            <div class="today-main-col">
-
-              <div class="card">
-                <div class="card-head">
-                  <h3>Application progress</h3>
-                  <a href="#" class="more" onclick="goto('applications'); return false;">View all →</a>
-                </div>
-                <div class="progress-grid" id="progressGrid"></div>
-              </div>
-
-              <div class="card">
-                <div class="card-head">
-                  <h3>Recent activity</h3>
-                  <span class="more" id="activityTimeframe">Last 7 days</span>
-                </div>
-                <div class="activity" id="activityList"></div>
-              </div>
-
-            </div>
-
-            <aside class="today-side-col">
-
-              <section class="sticky-next-steps" aria-label="Suggested next steps">
-                <div class="sticky-tape" aria-hidden="true"></div>
-                <div class="card-head">
-                  <h3>Next steps</h3>
-                  <span class="tag primary" id="suggestCount">5 items</span>
-                </div>
-                <div class="suggest" id="suggestList"></div>
-              </section>
-
-              <div class="card">
-                <div class="card-head">
-                  <h3>Calendar</h3>
-                  <div class="nav-arrows">
-                    <button onclick="changeCalMonth(-1)" aria-label="Previous month">‹</button><button onclick="changeCalMonth(1)" aria-label="Next month">›</button>
-                  </div>
-                </div>
-                <div class="mini-cal-head"><h4 id="calMonth"></h4></div>
-                <div class="mini-cal" id="miniCal"></div>
-                <div id="calDayDetail" style="margin-top:.6rem; font-size:.82rem; min-height:1.4em;"></div>
-                <div class="mt-2" style="font-size:.78rem; color:var(--text-muted); display:flex; gap:1rem;">
-                  <span><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent-warm);margin-right:.3rem;"></span>Deadline</span>
-                  <span>Today highlighted</span>
-                </div>
-              </div>
-
-            </aside>
-          </div>
-
-          <!-- Quick actions footer -->
-          <div class="quick-actions today-footer-actions">
-            <button class="qa-btn" onclick="openFab()">
-              <span class="qa-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span>
-              Add a school
-            </button>
-            <button class="qa-btn" onclick="goto('materials')">
-              <span class="qa-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/><path d="M5 21h14"/></svg></span>
-              Upload document
-            </button>
-            <button class="qa-btn" onclick="goto('timeline'); setTimeout(openAddTaskForm, 200)">
-              <span class="qa-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></span>
-              Log a task
-            </button>
-            <button class="qa-btn" onclick="goto('timeline')">
-              <span class="qa-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/><circle cx="7" cy="6" r="1.5"/><circle cx="14" cy="12" r="1.5"/><circle cx="10" cy="18" r="1.5"/></svg></span>
-              View timeline
-            </button>
-          </div>
-
-        </div>
-      </section>
-
       <!-- SCHOOLS -->
       <section class="page" id="page-explore">
         <div class="page-wrap">
           <div class="page-title-row schools-title-row">
             <div class="schools-title-copy">
-              <span class="workspace-kicker">Schools</span>
-              <h1>Catalogue</h1>
-              <p class="p-sub">Search and compare transfer schools with sourced admissions data, fit signals, and upcoming deadlines.</p>
+              <h1>Schools</h1>
               <div class="schools-action-cluster" aria-label="School catalogue actions">
                 <button class="btn btn-ghost btn-sm" onclick="gotoLegacy('gpachart')">
-                  <svg class="icon icon-sm" viewBox="0 0 24 24" style="width:14px;height:14px;"><path d="M3 5h12M3 10h18M3 15h8M3 20h14"/></svg>
+                  <svg class="control-icon" viewBox="0 0 24 24"><path d="M3 5h12M3 10h18M3 15h8M3 20h14"/></svg>
                   GPA chart
                 </button>
                 <button class="btn btn-ghost btn-sm" onclick="gotoLegacy('stats')">
-                  <svg class="icon icon-sm" viewBox="0 0 24 24" style="width:14px;height:14px;"><rect x="4" y="11" width="3" height="8" rx="1"/><rect x="10.5" y="5" width="3" height="14" rx="1"/><rect x="17" y="8" width="3" height="11" rx="1"/></svg>
+                  <svg class="control-icon" viewBox="0 0 24 24"><rect x="4" y="11" width="3" height="8" rx="1"/><rect x="10.5" y="5" width="3" height="14" rx="1"/><rect x="17" y="8" width="3" height="11" rx="1"/></svg>
                   Stats
                 </button>
                 <button class="btn btn-ghost btn-sm" onclick="openCsvImportModal()">
-                  <svg class="icon icon-sm" viewBox="0 0 24 24" style="width:14px;height:14px;"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+                  <svg class="control-icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
                   Import CSV
                 </button>
               </div>
@@ -260,8 +155,8 @@
           <div class="explore-layout">
             <!-- filters -->
             <aside class="filter-panel">
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:.75rem;">
-                <h4 style="margin:0;">Refine</h4>
+              <div class="filter-panel-head">
+                <h4>Refine</h4>
                 <span class="fg-active-count" id="filterActiveCount"></span>
               </div>
 
@@ -324,7 +219,7 @@
                 </div>
               </div>
 
-              <button class="btn btn-ghost btn-sm" style="width:100%; margin-top:.6rem;" onclick="resetFilters()">Clear all filters</button>
+              <button class="btn btn-ghost btn-sm filter-panel-clear" onclick="resetFilters()">Clear all filters</button>
             </aside>
 
             <!-- results -->
@@ -337,7 +232,7 @@
               <div class="ex-controls">
                 <div class="ex-count" id="exCount">Showing 24 schools</div>
                 <div class="row gap-1">
-                  <select id="sortSelect" class="ms-input" style="width:auto; font-size:.82rem; padding:.35rem .6rem;" onchange="renderSchoolGrid()">
+                  <select id="sortSelect" class="ms-input schools-sort" onchange="renderSchoolGrid()">
                     <option value="relevant">Sort: Most relevant</option>
                     <option value="deadline">Deadline (soonest)</option>
                     <option value="accept">Acceptance rate (highest)</option>
@@ -363,13 +258,11 @@
         </div>
       </section>
       <!-- MY APPLICATIONS -->
-      <section class="page" id="page-applications">
+      <section class="page active" id="page-applications">
         <div class="page-wrap">
           <div class="apps-command-header">
             <div class="apps-title-block">
-              <span class="workspace-kicker">Applications</span>
-              <h1>Action queue</h1>
-              <p class="p-sub">Deadlines, missing materials, stage, and next action for every tracked school.</p>
+              <h1>Applications</h1>
             </div>
             <div class="apps-stat-strip" aria-label="Application summary">
               <div class="apps-metric">
@@ -391,13 +284,9 @@
             </div>
             <div class="apps-header-actions">
               <button class="btn btn-ghost btn-sm" onclick="gotoLegacy('stats')">
-                <svg class="icon icon-sm" viewBox="0 0 24 24" style="width:14px;height:14px;"><rect x="4" y="11" width="3" height="8" rx="1"/><rect x="10.5" y="5" width="3" height="14" rx="1"/><rect x="17" y="8" width="3" height="11" rx="1"/></svg>
+                <svg class="control-icon" viewBox="0 0 24 24"><rect x="4" y="11" width="3" height="8" rx="1"/><rect x="10.5" y="5" width="3" height="14" rx="1"/><rect x="17" y="8" width="3" height="11" rx="1"/></svg>
                 Stats
               </button>
-              <div class="view-toggle" id="appViewToggle" aria-label="Application view">
-                <button class="active" onclick="setAppView('board')" aria-label="Workspace view"><svg class="control-icon" viewBox="0 0 24 24"><rect x="4" y="5" width="6" height="14" rx="1"/><rect x="14" y="5" width="6" height="14" rx="1"/></svg>Workspace</button>
-                <button onclick="setAppView('list')" aria-label="Table view"><svg class="control-icon" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>Table</button>
-              </div>
               <button class="btn btn-primary btn-sm" onclick="goto('schools')"><svg class="control-icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Add school</button>
             </div>
           </div>
@@ -411,33 +300,16 @@
         <div class="page-wrap">
           <div class="page-title-row">
             <div>
-              <span class="workspace-kicker">Materials</span>
-              <h1>Materials command surface</h1>
-              <p class="p-sub">Essays, transcripts, recommendations, uploads, required documents, and transfer GPA planning.</p>
+              <h1>Materials</h1>
             </div>
             <div class="row gap-1">
               <div class="view-toggle" id="docsViewToggle" aria-label="Materials view">
                 <button class="active" onclick="setDocsView('grid')" aria-label="Grid view"><svg class="control-icon" viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg>Grid</button>
                 <button onclick="setDocsView('list')" aria-label="List view"><svg class="control-icon" viewBox="0 0 24 24"><path d="M8 6h12M8 12h12M8 18h12"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg>List</button>
               </div>
+              <button class="btn btn-ghost btn-sm" onclick="openEssayEditor('new')">+ Essay</button>
+              <button class="btn btn-ghost btn-sm" onclick="openLorModal()">+ Letter of rec</button>
             </div>
-          </div>
-
-          <div class="docs-overview" aria-label="Document shortcuts">
-            <button class="docs-overview-card essay-action-card" type="button" onclick="openEssayEditor('new')">
-              <span class="essay-card-art" aria-hidden="true"></span>
-              <span class="docs-action-copy">
-                <strong>Start essay</strong>
-                <span>Create a draft and keep prompts close to your applications.</span>
-              </span>
-            </button>
-            <button class="docs-overview-card lor-action-card" type="button" onclick="openLorModal()">
-              <span class="lor-card-art" aria-hidden="true"></span>
-              <span class="docs-action-copy">
-                <strong>Request LOR</strong>
-                <span>Track recommenders, status, and school requirements.</span>
-              </span>
-            </button>
           </div>
 
           <div class="docs-layout">
@@ -459,10 +331,10 @@
               <div class="doc-section" data-docs-section="essays">
                 <div class="row-between mb-2">
                   <div class="eyebrow"><span class="ds-notebook-count">0</span> notebooks · <span class="ds-count">0</span> essays</div>
-                  <button class="btn btn-ghost btn-sm" type="button" onclick="openNotebookPicker()" style="font-size:.78rem;">+ New notebook</button>
+                  <button class="btn btn-ghost btn-sm" type="button" onclick="openNotebookPicker()">+ New notebook</button>
                 </div>
                 <div class="doc-grid mb-4">
-                  <div style="color:var(--text-muted); font-size:.9rem; padding:1rem 0;">Loading essays…</div>
+                  <div class="doc-placeholder">Loading essays…</div>
                 </div>
               </div>
 
@@ -472,7 +344,7 @@
                   <div class="eyebrow">Letters of Recommendation · <span class="ds-count">0</span> requesters</div>
                 </div>
                 <div class="lor-list mb-4">
-                  <div style="color:var(--text-muted); font-size:.9rem; padding:1rem 0;">Loading recommendations…</div>
+                  <div class="doc-placeholder">Loading recommendations…</div>
                 </div>
               </div>
 
@@ -485,7 +357,7 @@
                 <!-- Required Docs / Vault split -->
                 <div class="doc-section-split" id="docVaultSplit">
                   <div>
-                    <div class="eyebrow" style="margin-bottom:.5rem; font-size:.72rem;">Required Documents</div>
+                    <div class="doc-subsection-label">Required Documents</div>
                     <div id="requiredDocsList">
                       <div class="vault-card" data-doc="transcript">
                         <div class="vc-icon pending-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg></div>
@@ -505,9 +377,9 @@
                     </div>
                   </div>
                   <div>
-                    <div class="eyebrow" style="margin-bottom:.5rem; font-size:.72rem;">Personal Vault</div>
+                    <div class="doc-subsection-label">Personal Vault</div>
                     <div class="doc-grid mb-4" id="vaultGrid">
-                      <div style="color:var(--text-muted); font-size:.85rem; padding:1rem 0;">Upload transcripts above — they'll appear here.</div>
+                      <div class="transcript-empty-hint">Upload transcripts above — they'll appear here.</div>
                     </div>
                   </div>
                 </div>
@@ -515,18 +387,18 @@
                 <!-- Transfer GPA Calculator -->
                 <div class="gpa-calc" id="gpaCalc">
                   <h4>Transfer GPA</h4>
-                  <p class="sub" style="margin-bottom:.75rem;">Calculate a transfer-specific GPA from the courses that will actually move with you.</p>
-                  <div class="gpa-row" style="margin-bottom:.3rem;">
-                    <span style="font-size:.72rem; text-transform:uppercase; letter-spacing:.04em; color:var(--text-muted); font-weight:600;">Course</span>
-                    <span style="font-size:.72rem; text-transform:uppercase; letter-spacing:.04em; color:var(--text-muted); font-weight:600;">Credits</span>
-                    <span style="font-size:.72rem; text-transform:uppercase; letter-spacing:.04em; color:var(--text-muted); font-weight:600;">Grade</span>
+                  <p class="sub">Calculate a transfer-specific GPA from the courses that will actually move with you.</p>
+                  <div class="gpa-row gpa-row-head">
+                    <span class="gpa-col-label">Course</span>
+                    <span class="gpa-col-label">Credits</span>
+                    <span class="gpa-col-label">Grade</span>
                     <span></span>
                   </div>
                   <div id="gpaRows"></div>
-                  <button class="btn btn-ghost btn-sm" onclick="addGpaRow()" style="margin-top:.5rem;"><svg class="control-icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Add course</button>
+                  <button class="btn btn-ghost btn-sm" onclick="addGpaRow()"><svg class="control-icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Add course</button>
                   <div class="gpa-result">
                     <div><div class="gr-val" id="gpaCalcResult">—</div><div class="gr-label">Transfer GPA</div></div>
-                    <div style="margin-left:auto;"><div class="gr-val" id="gpaTotalCredits">0</div><div class="gr-label">Total Credits</div></div>
+                    <div class="gpa-result-secondary"><div class="gr-val" id="gpaTotalCredits">0</div><div class="gr-label">Total Credits</div></div>
                   </div>
                 </div>
               </div>
@@ -537,7 +409,7 @@
                   <div class="eyebrow">Activities &amp; Résumé · <span class="ds-count">0</span> files</div>
                 </div>
                 <div class="doc-grid">
-                  <div style="color:var(--text-muted); font-size:.9rem; padding:1rem 0;">No activity documents yet.</div>
+                  <div class="doc-placeholder">No activity documents yet.</div>
                 </div>
               </div>
 
@@ -557,7 +429,6 @@
         <div class="page-wrap">
           <div class="page-title-row">
             <div>
-              <span class="workspace-kicker">Timeline</span>
               <h1>Timeline</h1>
               <p class="p-sub">A clean schedule of live deadlines and open tasks, ordered by what comes next.</p>
             </div>
@@ -587,15 +458,15 @@
 
           <!-- Add task form -->
           <div class="tl-add-task-form" id="tlAddTaskForm">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: .8rem;">
-              <h3 style="font-family: var(--font-heading); font-size: 1rem; margin: 0;">New task</h3>
+            <div class="tl-form-head">
+              <h3 class="tl-form-title">New task</h3>
               <button class="icon-btn" type="button" onclick="closeAddTaskForm()" aria-label="Close add task form"><svg class="icon" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
             </div>
             <div class="field">
               <label>Task name</label>
               <input type="text" id="atfName" placeholder="e.g., Request official transcript" />
             </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: .6rem;">
+            <div class="atf-grid">
               <div class="field">
                 <label>School</label>
                 <select id="atfSchool"><option value="">General</option></select>
@@ -642,16 +513,14 @@
         <div class="page-wrap">
           <div class="page-title-row">
             <div>
-              <span class="workspace-kicker">Resources</span>
               <h1>Resources</h1>
-              <p class="p-sub">Your transfer command center for portals, tools, aid, and communities.</p>
             </div>
             <button class="btn btn-ghost btn-sm" onclick="openBookmarkModal()"><svg class="control-icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Add bookmark</button>
           </div>
 
           <!-- Personal Bookmarks -->
           <div class="res-section" id="resBookmarks">
-            <div class="eyebrow" style="margin-bottom:.8rem;">Your Bookmarks</div>
+            <div class="res-section-label">Your Bookmarks</div>
             <div class="bento-grid" id="bookmarksGrid">
               <div class="res-empty compact" id="bookmarksEmpty">
                 <strong>No bookmarks yet</strong>
@@ -662,7 +531,7 @@
 
           <!-- Application Portals -->
           <div class="res-section">
-            <div class="eyebrow" style="margin-bottom:.8rem;">Application Portals</div>
+            <div class="res-section-label">Application Portals</div>
             <div class="bento-grid" id="resPortals">
               <a href="https://www.commonapp.org" target="_blank" class="res-card res-card-lg" data-res-idx="0">
                 <div class="res-card-icon">
@@ -709,7 +578,7 @@
 
           <!-- Credit & Articulation Tools -->
           <div class="res-section">
-            <div class="eyebrow" style="margin-bottom:.8rem;">Credit & Articulation Tools</div>
+            <div class="res-section-label">Credit & Articulation Tools</div>
             <div class="bento-grid" id="resCreditTools">
               <a href="https://www.transferology.com" target="_blank" class="res-card res-card-lg" data-res-idx="4">
                 <div class="res-card-icon">
@@ -756,7 +625,7 @@
 
           <!-- Financial Aid -->
           <div class="res-section">
-            <div class="eyebrow" style="margin-bottom:.8rem;">Financial Aid & Scholarships</div>
+            <div class="res-section-label">Financial Aid & Scholarships</div>
             <div class="bento-grid" id="resFinAid">
               <a href="https://studentaid.gov/h/apply-for-aid/fafsa" target="_blank" class="res-card res-card-lg" data-res-idx="8">
                 <div class="res-card-icon">
@@ -793,7 +662,7 @@
 
           <!-- Community & Intel -->
           <div class="res-section">
-            <div class="eyebrow" style="margin-bottom:.8rem;">Community & Intel</div>
+            <div class="res-section-label">Community & Intel</div>
             <div class="bento-grid" id="resCommunity">
               <a href="https://www.reddit.com/r/TransferStudents/" target="_blank" class="res-card res-card-lg" data-res-idx="11">
                 <div class="res-card-icon">
@@ -844,24 +713,24 @@
       <!-- Bookmark Add Modal -->
       <div class="modal-backdrop" id="bookmarkModal" style="display:none;" onclick="if(event.target===this) closeBookmarkModal()">
         <div class="modal modal-narrow">
-          <div class="modal-head" style="margin-bottom:1.2rem;">
+          <div class="modal-head bm-modal-head">
             <h3>Add Bookmark</h3>
             <button class="drawer-close" onclick="closeBookmarkModal()" aria-label="Close bookmark dialog"><svg class="icon" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
           </div>
           <form onsubmit="handleBookmarkSubmit(event)">
-            <div class="field" style="margin-bottom:1rem;">
+            <div class="field">
               <label>Title</label>
               <input class="ms-input" type="text" id="bmTitle" required placeholder="BU Registrar"/>
             </div>
-            <div class="field" style="margin-bottom:1rem;">
+            <div class="field">
               <label>URL</label>
               <input class="ms-input" type="url" id="bmUrl" required placeholder="https://www.bu.edu/reg/"/>
             </div>
-            <div class="field" style="margin-bottom:1.2rem;">
+            <div class="field">
               <label>Short description</label>
               <input class="ms-input" type="text" id="bmDesc" placeholder="Check transfer credit evaluations"/>
             </div>
-            <button type="submit" class="btn btn-primary" style="width:100%;">Save bookmark</button>
+            <button type="submit" class="btn btn-primary btn-full">Save bookmark</button>
           </form>
         </div>
       </div>
@@ -871,44 +740,29 @@
         <div class="page-wrap">
           <div class="page-title-row">
             <div>
-              <span class="workspace-kicker">Profile</span>
               <h1>Profile</h1>
-              <p class="p-sub">Your academic signal. Shape how TransferSpace ranks schools, frames next steps, and reads your transfer readiness.</p>
+              <p class="p-sub">Your academic signal. Drives fit ranking, deadline context, and personalized recommendations.</p>
+            </div>
+            <div class="profile-title-status">
+              <span class="profile-signal-label">Fit</span>
+              <span id="profileSignalFit" class="profile-status-val">—</span>
+              <span class="profile-status-sep">&middot;</span>
+              <span class="profile-signal-label">Cycle</span>
+              <span id="profileSignalCycle" class="profile-status-val">—</span>
             </div>
           </div>
 
-          <div class="profile-signal-overview" aria-label="Profile signal summary">
-            <div class="profile-signal-card">
-              <span class="profile-signal-label">Profile role</span>
-              <strong>Academic signal</strong>
-              <small>Feeds Schools fit, Today prompts, sidebar identity, and planning context.</small>
-            </div>
-            <div class="profile-signal-card">
-              <span class="profile-signal-label">Fit model</span>
-              <strong id="profileSignalFit">Live</strong>
-              <small>GPA, credits, home state, major, and interests update as you type.</small>
-            </div>
-            <div class="profile-signal-card">
-              <span class="profile-signal-label">Transfer cycle</span>
-              <strong id="profileSignalCycle">2025-2026</strong>
-              <small>Used to keep deadlines and recommendations grounded.</small>
-            </div>
-          </div>
+          <!-- kept for JS: renderProfileCard has null check -->
+          <div id="profileCardPreview" hidden></div>
 
           <div class="profile-overhaul">
             <div class="profile-main">
-              <div class="settings-card profile-card">
-                <div class="profile-card-head">
-                  <div>
-                    <span class="profile-card-kicker">Identity</span>
-                    <h3>Applicant basics</h3>
-                    <p class="sub">Used for the sidebar, greetings, and saved profile identity.</p>
-                  </div>
-                  <button id="profileSaveBtn" class="btn btn-primary btn-sm" onclick="saveProfile()">Apply profile</button>
-                </div>
-                <div class="profile-identity-row">
-                  <div class="avatar" id="profileAvatar" style="width: 64px; height: 64px; font-size: 1.3rem;">TS</div>
-                  <div>
+
+              <div class="profile-section">
+                <span class="profile-card-kicker">Identity</span>
+                <div class="profile-avatar-row">
+                  <div class="avatar avatar-lg" id="profileAvatar">TS</div>
+                  <div class="profile-avatar-controls">
                     <div class="avatar-colors" id="avatarColors">
                       <span class="ac-swatch" data-color="violet" onclick="profileUpdateAvatar('violet')" style="--ac: linear-gradient(135deg,#7c3aed,#a855f7);"></span>
                       <span class="ac-swatch" data-color="indigo" onclick="profileUpdateAvatar('indigo')" style="--ac: linear-gradient(135deg,#4f46e5,#6366f1);"></span>
@@ -917,23 +771,17 @@
                       <span class="ac-swatch" data-color="rose" onclick="profileUpdateAvatar('rose')" style="--ac: linear-gradient(135deg,#e11d48,#f43f5e);"></span>
                       <span class="ac-swatch" data-color="slate" onclick="profileUpdateAvatar('slate')" style="--ac: linear-gradient(135deg,#334155,#64748b);"></span>
                     </div>
-                    <button class="btn btn-ghost btn-sm" style="margin-top:.4rem; font-size:.75rem;" onclick="uploadProfilePhoto()">Upload photo</button>
+                    <button class="btn btn-ghost btn-sm profile-upload-btn" onclick="uploadProfilePhoto()">Upload photo</button>
                   </div>
                 </div>
                 <div class="field-row">
                   <div class="field"><label>Full name</label><input id="pf-name" placeholder="Your full name"/></div>
-                  <div class="field"><label>Email</label><input id="pf-email" placeholder="you@email.com" readonly style="opacity:.7;cursor:not-allowed;"/></div>
+                  <div class="field"><label>Email</label><input id="pf-email" placeholder="you@email.com" readonly /></div>
                 </div>
               </div>
 
-              <div class="settings-card profile-card">
-                <div class="profile-card-head">
-                  <div>
-                    <span class="profile-card-kicker">Academic context</span>
-                    <h3>Academic standing</h3>
-                    <p class="sub">This drives best-fit ranking, credit readiness, in-state matching, and deadline context.</p>
-                  </div>
-                </div>
+              <div class="profile-section">
+                <span class="profile-card-kicker">Academics</span>
                 <div class="profile-form-grid">
                   <div class="field"><label>Current college</label><input id="pf-school" placeholder="e.g. Boston University"/></div>
                   <div class="field"><label>Home state</label><input id="pf-home" placeholder="e.g. Massachusetts"/></div>
@@ -982,14 +830,9 @@
                 </div>
               </div>
 
-              <div class="settings-card profile-card">
-                <div class="profile-card-head">
-                  <div>
-                    <span class="profile-card-kicker">Preference signal</span>
-                    <h3>Interest signals</h3>
-                    <p class="sub">These tags nudge Schools toward options that match how you want to study and live.</p>
-                  </div>
-                </div>
+              <div class="profile-section profile-section-last">
+                <span class="profile-card-kicker">Interests</span>
+                <p class="sub settings-sub-sm">Nudges school recommendations toward how you want to study and live.</p>
                 <div id="profileInterests" class="chip-row profile-interest-row">
                   <span class="chip" onclick="this.classList.toggle('active'); syncProfileFromForm();">Research</span>
                   <span class="chip" onclick="this.classList.toggle('active'); syncProfileFromForm();">Urban campus</span>
@@ -1008,20 +851,17 @@
               <input type="hidden" id="pf-linkedin" value="" />
               <input type="hidden" id="pf-github" value="" />
               <input type="hidden" id="pf-twitter" value="" />
+
+              <div class="profile-save-row">
+                <button id="profileSaveBtn" class="btn btn-primary btn-sm" onclick="saveProfile()">Apply profile</button>
+              </div>
             </div>
 
             <aside class="profile-sidebar">
-              <div class="settings-card profile-impact-card">
+              <div class="profile-impact-section">
                 <span class="profile-card-kicker">Fit impact</span>
-                <h3>What this changes</h3>
                 <div class="profile-impact-grid" id="profileImpactGrid"></div>
                 <button class="btn btn-ghost btn-sm" onclick="applyProfileToExplore()">Open personalized Schools</button>
-              </div>
-
-              <div class="settings-card profile-preview-card">
-                <span class="profile-card-kicker">Live card</span>
-                <h3>Live preview</h3>
-                <div id="profileCardPreview"></div>
               </div>
             </aside>
           </div>
@@ -1033,230 +873,88 @@
         <div class="page-wrap">
           <div class="page-title-row">
             <div>
-              <span class="workspace-kicker">Settings</span>
               <h1>Settings</h1>
-              <p class="p-sub">A quiet control center for reminders, school defaults, account access, and interface preferences.</p>
             </div>
           </div>
 
-          <div class="settings-overview" aria-label="Settings summary">
-            <div class="settings-overview-item">
-              <span class="so-label">Workspace</span>
-              <strong id="settingsWorkspaceStatus">Private sync</strong>
-              <small>Essays, applications, bookmarks, and decisions</small>
-            </div>
-            <div class="settings-overview-item">
-              <span class="so-label">Reminders</span>
-              <strong>30 days</strong>
-              <small>Default deadline countdown window</small>
-            </div>
-            <div class="settings-overview-item">
-              <span class="so-label">Appearance</span>
-              <strong>Scholar theme</strong>
-              <small>Paper canvas, sapphire actions, precise lines</small>
-            </div>
-          </div>
+          <!-- kept for JS auth state updates -->
+          <span id="settingsWorkspaceStatus" hidden></span>
 
           <div class="settings-layout">
             <nav class="settings-tabs" aria-label="Settings sections">
               <button class="st-tab active" data-tab="notifications" onclick="setSettingsTab('notifications')">
                 <span class="st-icon"><svg class="control-icon" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg></span>
-                <span><strong>Notifications</strong><small>Reminders and digest cadence</small></span>
-              </button>
-              <button class="st-tab" data-tab="preferences" onclick="setSettingsTab('preferences')">
-                <span class="st-icon"><svg class="control-icon" viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3"/><path d="M2 14h4M10 8h4M18 16h4"/></svg></span>
-                <span><strong>Preferences</strong><small>Schools defaults and ranking hints</small></span>
-              </button>
-              <button class="st-tab" data-tab="account" onclick="setSettingsTab('account')">
-                <span class="st-icon"><svg class="control-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
-                <span><strong>Account</strong><small>Session, export, and access</small></span>
+                <span><strong>Notifications</strong></span>
               </button>
               <button class="st-tab" data-tab="appearance" onclick="setSettingsTab('appearance')">
                 <span class="st-icon"><svg class="control-icon" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9 4 4 0 0 1-4 4h-1a3 3 0 0 1-3-3v-1a4 4 0 0 0-4-4H8a4 4 0 0 1 4-5Z"/><circle cx="7.5" cy="10.5" r=".5"/><circle cx="10" cy="7.5" r=".5"/></svg></span>
-                <span><strong>Appearance</strong><small>Theme, scale, and accent</small></span>
+                <span><strong>Appearance</strong></span>
+              </button>
+              <button class="st-tab" data-tab="account" onclick="setSettingsTab('account')">
+                <span class="st-icon"><svg class="control-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+                <span><strong>Account</strong></span>
               </button>
             </nav>
 
             <div class="settings-content">
+
               <!-- notifications -->
               <div class="settings-panel active" id="panel-notifications">
                 <div class="settings-card">
-                  <div class="settings-card-head">
-                    <div>
-                      <span class="settings-card-kicker">Notification channels</span>
-                      <h3>How should TransferSpace reach you?</h3>
-                    </div>
-                    <span class="settings-status-pill">Minimal by default</span>
-                  </div>
-                  <p class="sub">Only deadline and workflow reminders. No promotional messages.</p>
+                  <span class="settings-card-kicker">Channels</span>
                   <div class="switch-row">
                     <div><div class="sr-title">Email reminders</div><div class="sr-sub">Deadline countdowns, LOR follow-ups, weekly digest.</div></div>
                     <span class="switch-pill on" data-notif="email" onclick="toggleNotifSetting(this)"></span>
                   </div>
                   <div class="switch-row">
-                    <div><div class="sr-title">In-app notifications</div><div class="sr-sub">Activity feed and browser alerts while using TransferSpace.</div></div>
+                    <div><div class="sr-title">In-app notifications</div><div class="sr-sub">Activity feed while using TransferSpace.</div></div>
                     <span class="switch-pill on" data-notif="inapp" onclick="toggleNotifSetting(this)"></span>
                   </div>
                   <div class="switch-row">
-                    <div><div class="sr-title">Weekly digest</div><div class="sr-sub">Every Sunday morning — upcoming week in one email.</div></div>
+                    <div><div class="sr-title">Weekly digest</div><div class="sr-sub">Every Sunday — upcoming week in one email.</div></div>
                     <span class="switch-pill on" data-notif="digest" onclick="toggleNotifSetting(this)"></span>
                   </div>
-                  <div class="switch-row">
-                    <div><div class="sr-title">LOR follow-up reminders</div><div class="sr-sub">Gentle nudge 14 days after you request a letter.</div></div>
+                  <div class="switch-row switch-row-last">
+                    <div><div class="sr-title">LOR follow-ups</div><div class="sr-sub">Gentle nudge 14 days after requesting a letter.</div></div>
                     <span class="switch-pill on" data-notif="lor" onclick="toggleNotifSetting(this)"></span>
-                  </div>
-                  <div class="switch-row">
-                    <div><div class="sr-title">Deadline SMS alerts</div><div class="sr-sub">Text when a deadline is within 24 hours.</div></div>
-                    <span class="switch-pill" data-notif="sms" onclick="toggleNotifSetting(this)"></span>
-                  </div>
-                  <div style="margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border);">
-                    <button class="btn btn-ghost btn-sm" onclick="sendTestNotification()">Send test email</button>
-                    <span class="sr-sub" style="margin-left:.75rem;" id="notifTestStatus"></span>
                   </div>
                 </div>
                 <div class="settings-card">
-                  <div class="settings-card-head">
-                    <div>
-                      <span class="settings-card-kicker">Reminder window</span>
-                      <h3>When should we remind you?</h3>
-                    </div>
-                  </div>
-                  <p class="sub">Choose how early we start the countdown for each deadline.</p>
+                  <span class="settings-card-kicker">Deadline window</span>
+                  <p class="sub settings-sub-sm">How early to start the countdown.</p>
                   <div class="chip-row" id="deadlineReminderChips">
                     <span class="chip" data-days="7" onclick="toggleDeadlineReminder(this)">7 days</span>
                     <span class="chip" data-days="14" onclick="toggleDeadlineReminder(this)">14 days</span>
                     <span class="chip active" data-days="30" onclick="toggleDeadlineReminder(this)">30 days</span>
                     <span class="chip" data-days="60" onclick="toggleDeadlineReminder(this)">60 days</span>
                   </div>
-                </div>
-              </div>
-
-              <!-- preferences -->
-              <div class="settings-panel" id="panel-preferences">
-                <div class="settings-card">
-                  <div class="settings-card-head">
-                    <div>
-                      <span class="settings-card-kicker">Schools defaults</span>
-                      <h3>Personalize discovery</h3>
-                    </div>
-                    <button class="btn btn-ghost btn-sm" onclick="goto('schools')">Open Schools</button>
+                  <div style="margin-top:1rem;">
+                    <button class="btn btn-ghost btn-sm" onclick="sendTestNotification()">Send test email</button>
+                    <span class="sr-sub" style="margin-left:.75rem;" id="notifTestStatus"></span>
                   </div>
-                  <p class="sub">Seed filters with sensible defaults every time you open the catalogue.</p>
-                  <div class="field"><label>Default minimum GPA filter</label><input type="number" step="0.05" value="3.5" id="prefGpaInput" onchange="savePrefGpa()"/></div>
-                  <div class="field">
-                    <label>Preferred school types</label>
-                    <div class="chip-row" id="prefTypeChips">
-                      <span class="chip" data-val="R1 Universities" onclick="togglePrefChip(this,'prefTypes')">R1 Universities</span>
-                      <span class="chip" data-val="Public flagships" onclick="togglePrefChip(this,'prefTypes')">Public flagships</span>
-                      <span class="chip" data-val="Liberal Arts" onclick="togglePrefChip(this,'prefTypes')">Liberal Arts</span>
-                      <span class="chip" data-val="Ivies" onclick="togglePrefChip(this,'prefTypes')">Ivies</span>
-                    </div>
-                  </div>
-                  <div class="field">
-                    <label>Preferred regions</label>
-                    <div class="chip-row" id="prefRegionChips">
-                      <span class="chip" data-val="Northeast" onclick="togglePrefChip(this,'prefRegions')">Northeast</span>
-                      <span class="chip" data-val="West Coast" onclick="togglePrefChip(this,'prefRegions')">West Coast</span>
-                      <span class="chip" data-val="Midwest" onclick="togglePrefChip(this,'prefRegions')">Midwest</span>
-                      <span class="chip" data-val="South" onclick="togglePrefChip(this,'prefRegions')">South</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- account -->
-              <div class="settings-panel" id="panel-account">
-                <div class="settings-card">
-                  <div class="settings-card-head">
-                    <div>
-                      <span class="settings-card-kicker">Session</span>
-                      <h3>Workspace access</h3>
-                    </div>
-                    <span class="settings-status-pill" id="settingsSessionPill">Signed in</span>
-                  </div>
-                  <p class="sub">Sign in to sync essays, documents, bookmarks, profile details, and decisions. Sign out when you are done on a shared computer.</p>
-                  <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
-                    <button class="btn btn-primary btn-sm" id="settingsSignInBtn" onclick="showAuthModal(false)">Sign in</button>
-                    <button class="btn btn-ghost btn-sm" id="settingsSignOutBtn" onclick="signOut()" style="display:none;">Log out</button>
-                  </div>
-                </div>
-                <div class="settings-card">
-                  <div class="settings-card-head">
-                    <div>
-                      <span class="settings-card-kicker">Security</span>
-                      <h3>Password</h3>
-                    </div>
-                  </div>
-                  <p class="sub" id="pwLastChanged">Last changed: never.</p>
-                  <div class="field"><label>Current password</label><input type="password" id="pwCurrent"/></div>
-                  <div class="field-row">
-                    <div class="field"><label>New password</label><input type="password" id="pwNew"/></div>
-                    <div class="field"><label>Confirm</label><input type="password" id="pwConfirm"/></div>
-                  </div>
-                  <button class="btn btn-primary btn-sm" onclick="changePassword()">Update password</button>
-                </div>
-                <div class="settings-card">
-                  <div class="settings-card-head">
-                    <div>
-                      <span class="settings-card-kicker">Portability</span>
-                      <h3>Data export</h3>
-                    </div>
-                  </div>
-                  <p class="sub">Download everything — applications, essays, documents — as JSON or CSV.</p>
-                  <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
-                    <button class="btn btn-ghost btn-sm" onclick="exportUserData()">Export JSON</button>
-                    <button class="btn btn-ghost btn-sm" onclick="exportUserDataCSV()">Export CSV</button>
-                  </div>
-                </div>
-                <div class="settings-card settings-danger-zone">
-                  <div class="settings-card-head">
-                    <div>
-                      <span class="settings-card-kicker">Danger zone</span>
-                      <h3 class="text-alert">Delete account</h3>
-                    </div>
-                  </div>
-                  <p class="sub">Permanent. This removes your profile, applications, essays, and LOR history. There&rsquo;s no undo.</p>
-                  <button class="btn btn-danger btn-sm" id="deleteAccountBtn" onclick="deleteAccountStep()">Delete my account</button>
                 </div>
               </div>
 
               <!-- appearance -->
               <div class="settings-panel" id="panel-appearance">
                 <div class="settings-card">
-                  <div class="settings-card-head">
-                    <div>
-                      <span class="settings-card-kicker">Theme</span>
-                      <h3>Canvas mode</h3>
-                    </div>
-                  </div>
-                  <p class="sub">Light is the default. Dark turns every surface inside-out.</p>
+                  <span class="settings-card-kicker">Theme</span>
                   <div class="chip-row settings-choice-row">
                     <span class="chip" id="th-light" onclick="document.documentElement.dataset.theme='light'; localStorage.setItem('ts-theme','light'); renderThemeChips(); loadAccentColor();"><svg class="control-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>Light</span>
                     <span class="chip" id="th-dark" onclick="document.documentElement.dataset.theme='dark'; localStorage.setItem('ts-theme','dark'); renderThemeChips(); loadAccentColor();"><svg class="control-icon" viewBox="0 0 24 24"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5 7 7 0 1 0 20.5 14.5z"/></svg>Dark</span>
-                    <span class="chip" id="th-sys" onclick="localStorage.removeItem('ts-theme'); document.documentElement.dataset.theme = matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'; renderThemeChips(); loadAccentColor();">Auto</span>
+                    <span class="chip" id="th-sys" onclick="localStorage.removeItem('ts-theme'); document.documentElement.dataset.theme = matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'; renderThemeChips(); loadAccentColor();">System</span>
                   </div>
                 </div>
                 <div class="settings-card">
-                  <div class="settings-card-head">
-                    <div>
-                      <span class="settings-card-kicker">Density</span>
-                      <h3>Font size</h3>
-                    </div>
-                  </div>
-                  <p class="sub">Controls base text size across the app.</p>
+                  <span class="settings-card-kicker">Text size</span>
                   <div class="chip-row settings-choice-row" id="fontSizeChips">
                     <span class="chip active" data-size="standard" onclick="setFontSize('standard')">Standard</span>
                     <span class="chip" data-size="large" onclick="setFontSize('large')">Large</span>
                   </div>
                 </div>
                 <div class="settings-card">
-                  <div class="settings-card-head">
-                    <div>
-                      <span class="settings-card-kicker">Accent</span>
-                      <h3>Action color</h3>
-                    </div>
-                  </div>
-                  <p class="sub">Subtle — only affects CTA buttons and active states.</p>
+                  <span class="settings-card-kicker">Accent color</span>
+                  <p class="sub settings-sub-sm">Buttons and active states only.</p>
                   <div class="accent-picker" id="accentPicker">
                     <div class="accent-swatch selected" data-color="#1A3EBF" style="background:#1A3EBF;" onclick="setAccentColor('#1A3EBF')"></div>
                     <div class="accent-swatch" data-color="#2D8A4E" style="background:#2D8A4E;" onclick="setAccentColor('#2D8A4E')"></div>
@@ -1266,6 +964,47 @@
                   </div>
                 </div>
               </div>
+
+              <!-- account -->
+              <div class="settings-panel" id="panel-account">
+                <div class="settings-card">
+                  <span class="settings-card-kicker">Session</span>
+                  <h3>Workspace access</h3>
+                  <p class="sub">Sign in to sync essays, documents, bookmarks, and decisions across devices.</p>
+                  <div class="settings-action-row">
+                    <button class="btn btn-primary btn-sm" id="settingsSignInBtn" onclick="showAuthModal(false)">Sign in</button>
+                    <button class="btn btn-ghost btn-sm" id="settingsSignOutBtn" onclick="signOut()" style="display:none;">Log out</button>
+                    <span class="settings-status-pill" id="settingsSessionPill">Signed out</span>
+                  </div>
+                </div>
+                <div class="settings-card">
+                  <span class="settings-card-kicker">Security</span>
+                  <h3>Password</h3>
+                  <p class="sub" id="pwLastChanged">Last changed: never.</p>
+                  <div class="field"><label>Current password</label><input type="password" id="pwCurrent"/></div>
+                  <div class="field-row">
+                    <div class="field"><label>New password</label><input type="password" id="pwNew"/></div>
+                    <div class="field"><label>Confirm</label><input type="password" id="pwConfirm"/></div>
+                  </div>
+                  <button class="btn btn-primary btn-sm" onclick="changePassword()">Update password</button>
+                </div>
+                <div class="settings-card">
+                  <span class="settings-card-kicker">Data</span>
+                  <h3>Export</h3>
+                  <p class="sub">Download your applications, essays, and documents as JSON or CSV.</p>
+                  <div class="settings-action-row">
+                    <button class="btn btn-ghost btn-sm" onclick="exportUserData()">Export JSON</button>
+                    <button class="btn btn-ghost btn-sm" onclick="exportUserDataCSV()">Export CSV</button>
+                  </div>
+                </div>
+                <div class="settings-card settings-danger-zone">
+                  <span class="settings-card-kicker">Danger zone</span>
+                  <h3 class="text-alert">Delete account</h3>
+                  <p class="sub">Permanent. Removes your profile, applications, essays, and LOR history. There&rsquo;s no undo.</p>
+                  <button class="btn btn-danger btn-sm" id="deleteAccountBtn" onclick="deleteAccountStep()">Delete my account</button>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
@@ -1285,7 +1024,7 @@
               <p class="p-sub">Aggregate numbers across every school in the catalogue.</p>
             </div>
             <button class="btn btn-ghost btn-sm" onclick="goto('schools')">
-              <svg class="icon icon-sm" viewBox="0 0 24 24" style="width:14px;height:14px;"><path d="M15 18l-6-6 6-6"/></svg>
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
               Back to Schools
             </button>
           </div>
@@ -1305,20 +1044,20 @@
               <p class="p-sub">Every tracked school plotted by minimum transfer GPA — highest at the top.</p>
             </div>
             <button class="btn btn-ghost btn-sm" onclick="goto('schools')">
-              <svg class="icon icon-sm" viewBox="0 0 24 24" style="width:14px;height:14px;"><path d="M15 18l-6-6 6-6"/></svg>
+              <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
               Back to Schools
             </button>
           </div>
 
-          <p style="color:var(--text-secondary); font-size:.9rem; margin:0 0 1rem; max-width:720px;">
-            Bars are colored by tier — <span style="color:var(--alert); font-weight:600;">competitive</span> (≥3.7),
-            <span style="color:var(--warning); font-weight:600;">moderate</span> (3.3–3.69),
-            and <span style="color:var(--success); font-weight:600;">accessible</span> (&lt;3.3).
+          <p class="gpa-legend-text">
+            Bars are colored by tier — <span class="gpa-tier-high">competitive</span> (≥3.7),
+            <span class="gpa-tier-mid">moderate</span> (3.3–3.69),
+            and <span class="gpa-tier-low">accessible</span> (&lt;3.3).
             Watch how the Ivies cluster up top and the UCs spread across the middle.
           </p>
 
-          <div class="card" style="padding:1.25rem;">
-            <div style="position:relative; width:100%;" id="gpaChartWrap">
+          <div class="card gpa-chart-card">
+            <div id="gpaChartWrap">
               <canvas id="gpaChartCanvas"></canvas>
             </div>
           </div>
@@ -1350,7 +1089,7 @@
 
 <!-- Notebook view (essays inside a notebook) -->
 <div class="modal-backdrop" id="notebookViewModal" onclick="if(event.target===this) closeNotebookView()">
-  <div class="modal notebook-view-card" style="max-width:520px; padding:0; overflow:hidden;">
+  <div class="modal notebook-view-card">
     <div class="notebook-view-head">
       <div>
         <div class="notebook-view-kicker">Notebook</div>
@@ -1375,19 +1114,23 @@
 
 <!-- New Notebook picker -->
 <div class="modal-backdrop" id="notebookPickerModal" onclick="if(event.target===this) closeNotebookPicker()">
-  <div class="modal" style="max-width:420px; padding:1.4rem 1.5rem;">
-    <div class="row-between" style="margin-bottom:.85rem;">
-      <h3 style="margin:0; font-family:var(--font-heading, var(--font-serif));">New notebook</h3>
+  <div class="modal modal-narrow">
+    <div class="notebook-picker-head">
+      <h3>New notebook</h3>
       <button class="drawer-close" onclick="closeNotebookPicker()" aria-label="Close"><svg class="icon" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     </div>
-    <p style="font-size:.85rem; color:var(--text-muted); margin:0 0 .85rem;">Pick a school. The notebook groups every essay tagged with it.</p>
-    <label style="display:block; font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color:var(--text-muted); margin-bottom:.3rem;">School</label>
-    <select id="notebookPickerSchool" style="width:100%; padding:.55rem .7rem; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--bg-surface); font-size:.95rem;"></select>
-    <div id="notebookPickerCustomWrap" style="display:none; margin-top:.6rem;">
-      <label style="display:block; font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color:var(--text-muted); margin-bottom:.3rem;">Custom name</label>
-      <input type="text" id="notebookPickerCustom" placeholder="e.g. Common App" style="width:100%; padding:.55rem .7rem; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--bg-surface); font-size:.95rem;" />
+    <p class="modal-sub">Pick a school. The notebook groups every essay tagged with it.</p>
+    <div class="field">
+      <label>School</label>
+      <select id="notebookPickerSchool" class="ms-input"></select>
     </div>
-    <div style="display:flex; gap:.5rem; justify-content:flex-end; margin-top:1.1rem;">
+    <div id="notebookPickerCustomWrap" class="notebook-picker-custom" style="display:none;">
+      <div class="field">
+        <label>Custom name</label>
+        <input type="text" id="notebookPickerCustom" class="ms-input" placeholder="e.g. Common App" />
+      </div>
+    </div>
+    <div class="modal-actions">
       <button class="btn btn-ghost btn-sm" onclick="closeNotebookPicker()">Cancel</button>
       <button class="btn btn-primary btn-sm" onclick="createNotebookFromPicker()">Create notebook</button>
     </div>
@@ -1395,24 +1138,6 @@
 </div>
 
 <div class="toast-stack" id="toastStack"></div>
-
-<!-- FAB -->
-<button class="fab" onclick="openFab()" title="Quick add school">
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="flex-shrink:0;"><path d="M10 4v12M4 10h12"/></svg>
-  <span class="fab-label">Add School</span>
-</button>
-
-<!-- FAB Flyout -->
-<div class="fab-flyout" id="fabFlyout">
-  <div class="fab-flyout-head">
-    <h3>Quick add school</h3>
-    <button class="fab-close close-glyph" onclick="closeFab()" aria-label="Close quick add school"></button>
-  </div>
-  <div class="fab-flyout-search">
-    <input type="text" id="fabSearchInput" placeholder="Search schools…" oninput="renderFabResults()" />
-  </div>
-  <div class="fab-flyout-results" id="fabResults"></div>
-</div>
 
 <!-- Confetti Canvas -->
 <canvas id="confettiCanvas"></canvas>
@@ -1432,11 +1157,11 @@
         <label>Password</label>
         <input class="ms-input" type="password" id="authPassword" required minlength="6" placeholder="Enter your password"/>
       </div>
-      <button type="submit" class="btn btn-primary" id="authSubmitBtn" style="width:100%; margin-bottom:1rem;">Sign in</button>
+      <button type="submit" class="btn btn-primary auth-submit" id="authSubmitBtn">Sign in</button>
     </form>
-    <p style="text-align:center; font-size:.85rem; color:var(--text-secondary);">
+    <p class="auth-footer">
       <span id="authToggleText">Don't have an account?</span>
-      <a href="#" onclick="toggleAuthMode(event)" style="color:var(--accent-primary); font-weight:500;" id="authToggleLink">Sign up</a>
+      <a href="#" onclick="toggleAuthMode(event)" class="link-accent" id="authToggleLink">Sign up</a>
     </p>
   </div>
 </div>
@@ -1444,7 +1169,7 @@
 <!-- Upload Modal -->
 <div class="modal-backdrop" id="uploadModal" style="display:none;" onclick="if(event.target===this) closeUploadModal()">
   <div class="modal modal-form">
-    <div class="modal-head" style="margin-bottom:1.5rem;">
+    <div class="modal-head">
       <h3>Upload Document</h3>
       <button class="drawer-close" onclick="closeUploadModal()" aria-label="Close upload dialog"><svg class="icon" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     </div>
@@ -1453,8 +1178,8 @@
       <div class="upload-dropzone-sub">PDF, DOCX, or image, up to 25MB per file</div>
       <input type="file" id="uploadFileInput" multiple accept=".pdf,.docx,.doc,.png,.jpg,.jpeg,.webp" style="display:none;" onchange="handleFileSelect(event)"/>
     </div>
-    <div id="uploadFileList" style="margin-top:1rem;"></div>
-    <div class="field" style="margin-top:1rem;">
+    <div id="uploadFileList"></div>
+    <div class="field">
       <label>Category</label>
       <select class="ms-input" id="uploadCategory">
         <option value="transcripts">Transcripts & Test Scores</option>
@@ -1463,40 +1188,40 @@
         <option value="other">Other</option>
       </select>
     </div>
-    <div class="field" style="margin-top:.8rem;">
+    <div class="field">
       <label>Tags (comma-separated)</label>
       <input class="ms-input" type="text" id="uploadTags" placeholder="Berkeley, all schools"/>
     </div>
-    <button class="btn btn-primary" id="uploadSubmitBtn" onclick="submitUpload()" style="width:100%; margin-top:1.2rem;" disabled>Upload files</button>
+    <button class="btn btn-primary btn-full" id="uploadSubmitBtn" onclick="submitUpload()" disabled>Upload files</button>
   </div>
 </div>
 
 <!-- LOR Request Modal -->
 <div class="modal-backdrop" id="lorModal" style="display:none;" onclick="if(event.target===this) closeLorModal()">
   <div class="modal modal-form">
-    <div class="modal-head" style="margin-bottom:1.5rem;">
+    <div class="modal-head">
       <h3 id="lorModalTitle">Request a Letter of Recommendation</h3>
       <button class="drawer-close" onclick="closeLorModal()" aria-label="Close recommendation dialog"><svg class="icon" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     </div>
     <form id="lorForm" onsubmit="handleLorSubmit(event)">
       <input type="hidden" id="lorEditId" value=""/>
-      <div class="field" style="margin-bottom:1rem;">
+      <div class="field">
         <label>Recommender name</label>
         <input class="ms-input" type="text" id="lorName" required placeholder="Prof. Elena Marquez"/>
       </div>
-      <div class="field" style="margin-bottom:1rem;">
+      <div class="field">
         <label>Email</label>
         <input class="ms-input" type="email" id="lorEmail" placeholder="emarquez@university.edu"/>
       </div>
-      <div class="field" style="margin-bottom:1rem;">
+      <div class="field">
         <label>Role or course</label>
         <input class="ms-input" type="text" id="lorRole" placeholder="Data structures professor"/>
       </div>
-      <div class="field" style="margin-bottom:1rem;">
+      <div class="field">
         <label>Schools, comma-separated</label>
         <input class="ms-input" type="text" id="lorSchools" placeholder="Berkeley, Stanford, CMU"/>
       </div>
-      <div class="field" style="margin-bottom:1.2rem;">
+      <div class="field">
         <label>Status</label>
         <select class="ms-input" id="lorStatus">
           <option value="not_requested">Not yet requested</option>
@@ -1505,7 +1230,7 @@
           <option value="submitted">Submitted</option>
         </select>
       </div>
-      <button type="submit" class="btn btn-primary" style="width:100%;">Save</button>
+      <button type="submit" class="btn btn-primary btn-full">Save</button>
     </form>
   </div>
 </div>
@@ -1515,10 +1240,10 @@
   <div class="modal modal-doc-preview">
     <div class="modal-head doc-preview-head">
       <div>
-        <h3 id="docPreviewTitle" style="margin:0;">Document</h3>
+        <h3 id="docPreviewTitle">Document</h3>
         <div id="docPreviewMeta" class="doc-preview-meta"></div>
       </div>
-      <div style="display:flex; gap:.5rem; align-items:center;">
+      <div class="doc-preview-actions">
         <a id="docPreviewDownload" href="#" target="_blank" class="btn btn-ghost btn-sm" rel="noopener"><svg class="control-icon" viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/><path d="M7 7H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2"/></svg>Open in tab</a>
         <button class="drawer-close" onclick="closeDocPreview()" aria-label="Close document preview"><svg class="icon" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
       </div>

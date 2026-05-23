@@ -8144,3 +8144,1778 @@ html[data-theme="dark"] .sticky-next-steps .suggest-item::before {
   font-weight: 400;
   color: var(--accent-primary);
 }
+
+/* ── Settings: editorial / document aesthetic ──────────────────────────
+   Flat sections with ruled dividers, compact left-border nav.
+   CSS-only overrides; no HTML changes required.
+   ──────────────────────────────────────────────────────────────────── */
+
+/* Overview — inline status strip */
+.settings-overview {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0;
+  margin: -.15rem 0 1.75rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.settings-overview-item {
+  display: flex;
+  align-items: baseline;
+  gap: .45rem;
+  padding: .2rem 1.5rem .2rem 0;
+  margin-right: 1.5rem;
+  border: none;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  border-right: 1px solid var(--border-soft);
+}
+
+.settings-overview-item:last-child {
+  padding-right: 0;
+  margin-right: 0;
+  border-right: none;
+}
+
+.settings-overview-item strong {
+  color: var(--ink-primary);
+  font-size: .88rem;
+  font-weight: 650;
+}
+
+.settings-overview-item small {
+  display: none;
+}
+
+/* Nav — compact left-border active indicator */
+#page-settings .settings-layout {
+  grid-template-columns: 160px minmax(0, 1fr);
+  gap: 2rem;
+}
+
+#page-settings .settings-tabs {
+  gap: 0;
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  border-right: 1px solid var(--border-soft);
+}
+
+#page-settings .st-tab {
+  display: flex;
+  align-items: center;
+  gap: .48rem;
+  min-height: 38px;
+  padding: .5rem .55rem .5rem .4rem;
+  border: none;
+  border-left: 2px solid transparent;
+  border-radius: 0;
+  color: var(--ink-secondary);
+}
+
+#page-settings .st-tab .st-icon {
+  width: 16px;
+  height: 16px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 0;
+  background: none;
+  color: inherit;
+}
+
+#page-settings .st-tab .st-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+#page-settings .st-tab small {
+  display: none;
+}
+
+#page-settings .st-tab strong {
+  font-size: .83rem;
+  font-weight: 600;
+}
+
+#page-settings .st-tab:hover {
+  background: color-mix(in srgb, var(--ink-primary) 4%, transparent);
+  border-color: transparent;
+  border-left-color: var(--border-soft);
+  box-shadow: none;
+}
+
+#page-settings .st-tab.active {
+  background: none;
+  border-color: transparent;
+  border-left-color: var(--accent-primary);
+  color: var(--ink-primary);
+  box-shadow: none;
+}
+
+#page-settings .st-tab.active .st-icon {
+  background: none;
+  color: var(--accent-primary);
+}
+
+/* Content — flat sections, ruled dividers, no card boxes */
+#page-settings .settings-panel.active {
+  display: block;
+  gap: 0;
+}
+
+#page-settings .settings-card {
+  margin: 0;
+  padding: 1.5rem 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  border: none;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+#page-settings .settings-card:last-child {
+  border-bottom: none;
+}
+
+#page-settings .settings-card h3 {
+  margin: .1rem 0 .25rem;
+  font-size: .95rem;
+  font-weight: 650;
+}
+
+/* Last toggle row in a card — no bottom border */
+#page-settings .switch-row-last {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+/* Kicker-only sections: tighter paragraph margin */
+#page-settings .settings-sub-sm {
+  margin-top: .3rem;
+  margin-bottom: .65rem;
+}
+
+/* Kicker spacing when it's the first element in a card */
+#page-settings .settings-card > .settings-card-kicker:first-child {
+  display: block;
+  margin-bottom: .5rem;
+}
+
+/* Danger zone — red rule instead of red box */
+.settings-danger-zone {
+  border: none !important;
+  border-bottom: 1px solid color-mix(in srgb, var(--danger) 35%, var(--border-soft)) !important;
+  background: none !important;
+  border-radius: 0 !important;
+}
+
+/* Mobile: strip stays horizontal, stacks only if truly cramped */
+@media (max-width: 900px) {
+  .settings-overview {
+    display: flex;
+    grid-template-columns: unset;
+  }
+
+  .settings-overview-item {
+    border-right: 1px solid var(--border-soft);
+  }
+}
+
+@media (max-width: 540px) {
+  .settings-overview {
+    flex-direction: column;
+    gap: .35rem;
+  }
+
+  .settings-overview-item {
+    padding-right: 0;
+    margin-right: 0;
+    border-right: none;
+  }
+}
+
+/* ── Profile: editorial flat sections ──────────────────────────────────
+   Removes card boxes; replaces with ruled section dividers.
+   ──────────────────────────────────────────────────────────────────── */
+
+/* Status strip in title row */
+#page-profile .page-title-row {
+  flex-wrap: wrap;
+  gap: .5rem;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+#page-profile .profile-title-status {
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  padding-top: .35rem;
+  font-size: .78rem;
+}
+
+#page-profile .profile-status-val {
+  color: var(--ink-primary);
+  font-weight: 650;
+  font-size: .82rem;
+}
+
+#page-profile .profile-status-sep {
+  color: var(--border);
+  margin: 0 .1rem;
+}
+
+/* Remove old signal overview boxes */
+.profile-signal-overview {
+  display: none;
+}
+
+/* Main column — no gaps between sections; sections self-space */
+#page-profile .profile-main {
+  gap: 0;
+}
+
+/* Flat section */
+#page-profile .profile-section {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+#page-profile .profile-section-last {
+  border-bottom: none;
+}
+
+/* Kicker first-child spacing */
+#page-profile .profile-section > .profile-card-kicker:first-child {
+  display: block;
+  margin-bottom: .65rem;
+}
+
+/* Avatar row — inline, no sub-box */
+#page-profile .profile-avatar-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: none;
+}
+
+#page-profile .profile-avatar-controls {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+}
+
+/* Strip card chrome from profile cards */
+#page-profile .profile-card,
+#page-profile .profile-impact-card,
+#page-profile .profile-preview-card {
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  border: none;
+}
+
+/* Sidebar: strip impact card box */
+#page-profile .profile-impact-section {
+  padding-top: .5rem;
+}
+
+#page-profile .profile-impact-section > .profile-card-kicker {
+  display: block;
+  margin-bottom: .65rem;
+}
+
+/* Impact grid items — keep small boxes (they're data, not chrome) */
+#page-profile .profile-impact-grid {
+  margin: 0 0 .9rem;
+}
+
+/* Save row */
+#page-profile .profile-save-row {
+  padding-top: 1.5rem;
+}
+
+/* Sidebar layout — tighten width now that preview card is gone */
+#page-profile .profile-overhaul {
+  grid-template-columns: minmax(0, 1fr) 280px;
+}
+
+@media (max-width: 900px) {
+  #page-profile .profile-title-status {
+    display: none;
+  }
+
+  #page-profile .profile-overhaul {
+    grid-template-columns: 1fr;
+  }
+
+  #page-profile .profile-sidebar {
+    position: static;
+  }
+}
+
+/* ── Timeline: editorial aesthetic ─────────────────────────────────────
+   Summary cards → inline stat strip.
+   View toggle pill → plain underline tabs.
+   ──────────────────────────────────────────────────────────────────── */
+
+/* Summary bar — inline stat strip */
+#page-timeline .tl-summary-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0;
+  margin-bottom: 1.25rem;
+  padding-bottom: .85rem;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+#page-timeline .tl-summary-card {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: .38rem;
+  padding: .1rem 1.5rem .1rem 0;
+  margin-right: 1.5rem;
+  border: none;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  border-right: 1px solid var(--border-soft);
+}
+
+#page-timeline .tl-summary-card:last-child {
+  padding-right: 0;
+  margin-right: 0;
+  border-right: none;
+}
+
+#page-timeline .tl-sc-val {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 650;
+  line-height: 1;
+  letter-spacing: -.01em;
+}
+
+#page-timeline .tl-sc-val em {
+  font-style: normal;
+}
+
+#page-timeline .tl-sc-lbl {
+  font-size: .74rem;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--ink-secondary);
+  font-weight: 400;
+}
+
+/* View toggle — plain underline tabs */
+#page-timeline .tl-view-toggle {
+  display: flex;
+  gap: .6rem;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+}
+
+#page-timeline .tl-view-toggle button {
+  padding: .2rem 0;
+  border-radius: 0;
+  border-bottom: 1.5px solid transparent;
+  color: var(--ink-secondary);
+  font-size: .8rem;
+  font-weight: 500;
+  background: none;
+  box-shadow: none;
+  transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+
+#page-timeline .tl-view-toggle button:hover {
+  background: none;
+  color: var(--ink-primary);
+  box-shadow: none;
+}
+
+#page-timeline .tl-view-toggle button.active {
+  background: none;
+  color: var(--ink-primary);
+  border-bottom-color: var(--accent-primary);
+  box-shadow: none;
+}
+
+/* Add task form — clean h3 */
+.tl-form-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: .8rem;
+}
+
+.tl-form-title {
+  font-family: var(--font-sans);
+  font-size: .9rem;
+  font-weight: 650;
+  margin: 0;
+  color: var(--ink-primary);
+  letter-spacing: -.01em;
+}
+
+@media (max-width: 540px) {
+  #page-timeline .tl-summary-bar {
+    gap: .5rem 0;
+  }
+}
+
+/* ── Materials: editorial aesthetic ────────────────────────────────────
+   View toggle pill → underline tabs.
+   Sidebar container → flat left-border nav.
+   GPA calc box → flat ruled section.
+   ──────────────────────────────────────────────────────────────────── */
+
+/* View toggle — underline tabs */
+#page-documents .view-toggle {
+  display: flex;
+  gap: .6rem;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+}
+
+#page-documents .view-toggle button {
+  padding: .2rem 0;
+  border-radius: 0;
+  border-bottom: 1.5px solid transparent;
+  background: none;
+  box-shadow: none;
+  color: var(--ink-secondary);
+  font-size: .8rem;
+  font-weight: 500;
+  transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+
+#page-documents .view-toggle button:hover {
+  background: none;
+  color: var(--ink-primary);
+  box-shadow: none;
+}
+
+#page-documents .view-toggle button.active {
+  background: none;
+  color: var(--ink-primary);
+  border-bottom-color: var(--accent-primary);
+  box-shadow: none;
+}
+
+/* Sidebar — flat left-border nav */
+#page-documents .docs-sidebar {
+  background: none;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  border-right: 1px solid var(--border-soft);
+}
+
+#page-documents .doc-cat-item {
+  border-radius: 0;
+  border-left: 2px solid transparent;
+  padding: .5rem .65rem .5rem .45rem;
+}
+
+#page-documents .doc-cat-item:hover {
+  background: color-mix(in srgb, var(--ink-primary) 4%, transparent);
+  border-left-color: var(--border-soft);
+  color: var(--ink-primary);
+}
+
+#page-documents .doc-cat-item.active {
+  background: none;
+  color: var(--ink-primary);
+  border-left-color: var(--accent-primary);
+  font-weight: 650;
+}
+
+#page-documents .doc-cat-item.active .count {
+  color: var(--accent-primary);
+}
+
+/* GPA calc — flat section */
+#page-documents .gpa-calc {
+  background: none;
+  border: none;
+  border-top: 1px solid var(--border-soft);
+  border-radius: 0;
+  padding: 1.25rem 0 0;
+}
+
+#page-documents .gpa-result {
+  background: none;
+  border: none;
+  border-top: 1px solid var(--border-soft);
+  border-radius: 0;
+  padding: .85rem 0;
+  margin-top: .85rem;
+}
+
+.gpa-result-secondary {
+  margin-left: auto;
+}
+
+/* GPA column header labels */
+.gpa-col-label {
+  font-size: .7rem;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--ink-tertiary);
+  font-weight: 600;
+}
+
+.gpa-row-head {
+  margin-bottom: .3rem;
+}
+
+/* Subsection labels (Required Documents, Personal Vault) */
+.doc-subsection-label {
+  font-family: var(--font-mono);
+  font-size: .68rem;
+  font-weight: 650;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-secondary);
+  margin-bottom: .5rem;
+}
+
+/* Placeholder / loading text */
+.doc-placeholder {
+  color: var(--ink-muted);
+  font-size: .88rem;
+  padding: .75rem 0;
+}
+
+/* ── Applications: editorial aesthetic ─────────────────────────────────
+   Stat strip outer box → inline strip with pipe separators.
+   View toggle pill → underline tabs.
+   ──────────────────────────────────────────────────────────────────── */
+
+/* Stat strip — remove outer box, become inline strip */
+#page-applications .apps-stat-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0;
+  border: none;
+  border-radius: 0;
+  background: none;
+  overflow: visible;
+  padding-bottom: .75rem;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+#page-applications .apps-metric {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: .4rem;
+  min-height: unset;
+  padding: .1rem 1.5rem .1rem 0;
+  margin-right: 1.5rem;
+  border: none;
+  border-right: 1px solid var(--border-soft);
+  border-radius: 0;
+  background: none;
+}
+
+#page-applications .apps-metric:last-child {
+  padding-right: 0;
+  margin-right: 0;
+  border-right: none;
+}
+
+#page-applications .apps-metric strong {
+  font-size: 1rem;
+  font-weight: 650;
+  line-height: 1;
+  min-width: unset;
+}
+
+#page-applications .apps-metric span {
+  margin: 0;
+  font-size: .74rem;
+  letter-spacing: 0;
+  text-transform: none;
+  font-weight: 400;
+  color: var(--ink-secondary);
+}
+
+/* View toggle — underline tabs */
+#page-applications .view-toggle {
+  display: flex;
+  gap: .6rem;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+}
+
+#page-applications .view-toggle button {
+  padding: .2rem 0;
+  border-radius: 0;
+  border-bottom: 1.5px solid transparent;
+  background: none;
+  box-shadow: none;
+  color: var(--ink-secondary);
+  font-size: .8rem;
+  font-weight: 500;
+  transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+
+#page-applications .view-toggle button:hover {
+  background: none;
+  color: var(--ink-primary);
+  box-shadow: none;
+}
+
+#page-applications .view-toggle button.active {
+  background: none;
+  color: var(--ink-primary);
+  border-bottom-color: var(--accent-primary);
+  box-shadow: none;
+}
+
+@media (max-width: 600px) {
+  #page-applications .apps-stat-strip {
+    gap: .4rem 0;
+  }
+}
+
+/* ── Applications workspace: editorial aesthetic ──────────────────────
+   Strip card panels → flat sections with ruled dividers.
+   Focus cards → flat rows. Modules → flat sections. Table → plain rows.
+   ──────────────────────────────────────────────────────────────────── */
+
+/* Fix double border: stat strip owns the bottom divider */
+#page-applications .apps-command-header {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 1rem;
+}
+
+/* Workspace: collapse gap between panels */
+#page-applications .apps-workspace {
+  gap: 0;
+}
+
+/* Strip card chrome from all three panels */
+#page-applications .apps-focus-panel,
+#page-applications .apps-side-panel,
+#page-applications .apps-table-panel {
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* Focus panel: pad right; use border-right as column divider */
+#page-applications .apps-focus-panel {
+  padding: 0 1.5rem 0 0;
+  border-right: 1px solid var(--border-soft);
+}
+
+/* Side panel: pad left; flat flex column */
+#page-applications .apps-side-panel {
+  padding: 0 0 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Panel head: flat section label */
+#page-applications .apps-panel-head {
+  padding-top: .1rem;
+  margin-bottom: .6rem;
+}
+
+#page-applications .apps-panel-head h3 {
+  font-family: var(--font-sans);
+  font-size: .88rem;
+  font-weight: 650;
+  letter-spacing: -.01em;
+}
+
+/* Strip live count pill → plain inline count */
+#page-applications .apps-live-count {
+  background: none;
+  border-radius: 0;
+  padding: 0;
+  font-size: .74rem;
+  font-weight: 400;
+  color: var(--ink-secondary);
+}
+
+/* Focus list: tight, no top gap */
+#page-applications .apps-focus-list {
+  gap: 0;
+  margin-top: .35rem;
+}
+
+/* Focus cards: flat rows with border-bottom */
+#page-applications .apps-focus-card {
+  border: none;
+  border-radius: 0;
+  background: none;
+  border-bottom: 1px solid var(--border-soft);
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: .75rem;
+  padding-bottom: .75rem;
+}
+
+#page-applications .apps-focus-list > .apps-focus-card:last-child,
+#page-applications .apps-focus-list > :last-child {
+  border-bottom: none;
+}
+
+#page-applications .apps-focus-card:hover {
+  transform: none;
+  box-shadow: none;
+  background: color-mix(in srgb, var(--ink-primary) 3%, transparent);
+}
+
+/* School photo: keep image, reduce radius */
+#page-applications .apps-school-photo {
+  border-radius: 4px;
+}
+
+/* Fit label: plain colored text, no pill */
+#page-applications .apps-focus-card .kc-label {
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .02em;
+}
+
+#page-applications .apps-focus-card .kc-label.safety { color: var(--success); }
+#page-applications .apps-focus-card .kc-label.match  { color: var(--accent-primary); }
+#page-applications .apps-focus-card .kc-label.reach  { color: var(--accent-warm); }
+
+/* Material pills: strip background → inline text tags */
+#page-applications .material-pill {
+  background: none;
+  border-radius: 0;
+  padding: 0 .3rem 0 0;
+  font-size: .71rem;
+}
+
+#page-applications .material-pill.done    { background: none; }
+#page-applications .material-pill.missing { background: none; color: var(--ink-tertiary); }
+
+/* Side modules: flat sections with border-bottom dividers */
+#page-applications .apps-module {
+  border: none;
+  border-radius: 0;
+  background: none;
+  padding: .75rem 0;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+#page-applications .apps-module:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+#page-applications .apps-module h4 {
+  font-family: var(--font-mono);
+  font-size: .68rem;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--ink-secondary);
+  margin-bottom: .5rem;
+}
+
+/* Table panel: full-width section below, separated by top rule */
+#page-applications .apps-table-panel {
+  border-top: 1px solid var(--border-soft);
+  margin-top: 1.25rem;
+  overflow: visible;
+}
+
+/* Table head: strip fill */
+#page-applications .apps-table-head {
+  background: none;
+  padding-left: 0;
+  padding-right: 0;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+/* Table rows: flush left */
+#page-applications .apps-table-row {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+#page-applications .apps-table-thumb {
+  border-radius: 3px;
+}
+
+/* Status pill in table → plain colored text */
+#page-applications .alr-status {
+  background: none;
+  border-radius: 0;
+  padding: 0;
+  font-size: .78rem;
+  font-weight: 600;
+}
+
+/* List view thumb: reduce radius */
+#page-applications .alr-thumb {
+  border-radius: 4px;
+}
+
+/* Responsive: stack columns on narrow screens */
+@media (max-width: 1320px) {
+  #page-applications .apps-focus-panel {
+    border-right: none;
+    border-bottom: 1px solid var(--border-soft);
+    padding-right: 0;
+    padding-bottom: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+
+  #page-applications .apps-side-panel {
+    padding-left: 0;
+  }
+}
+
+/* ── Resources: editorial aesthetic ───────────────────────────────────
+   Bento grid → flat link list. Section boxes → ruled dividers.
+   Side-stripe bookmark border → removed.
+   ──────────────────────────────────────────────────────────────────── */
+
+/* Section structure: flat sections with border-bottom */
+#page-resources .res-section {
+  margin-bottom: 0;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+#page-resources .res-section:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+/* Section label: mono uppercase, consistent with Materials/Profile */
+.res-section-label {
+  font-family: var(--font-mono);
+  font-size: .68rem;
+  font-weight: 650;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-secondary);
+  margin-bottom: .6rem;
+}
+
+/* Bento grid → flat list */
+#page-resources .bento-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  grid-template-columns: none;
+}
+
+/* Resource cards → flat rows */
+#page-resources .res-card {
+  border: none;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  padding: .6rem 0;
+  border-bottom: 1px solid var(--border-soft);
+  animation: none;
+  opacity: 1;
+  align-items: center;
+  gap: .75rem;
+}
+
+#page-resources .res-card:last-child {
+  border-bottom: none;
+}
+
+#page-resources .res-card:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: transparent;
+  background: color-mix(in srgb, var(--ink-primary) 3%, transparent);
+}
+
+/* Large cards: no grid span in flex context */
+#page-resources .res-card-lg {
+  grid-column: unset;
+}
+
+/* Icon: strip the background box */
+#page-resources .res-card-icon {
+  width: 22px;
+  height: 22px;
+  background: none;
+  border-radius: 0;
+  flex-shrink: 0;
+}
+
+#page-resources .res-card-icon img {
+  width: 16px;
+  height: 16px;
+  filter: grayscale(20%);
+}
+
+#page-resources .res-card:hover .res-card-icon img {
+  filter: grayscale(0%);
+}
+
+/* Arrow: always visible, flush right */
+#page-resources .res-card-link {
+  position: static;
+  opacity: 1;
+  color: var(--ink-tertiary);
+  font-size: .8rem;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+#page-resources .res-card:hover .res-card-link {
+  color: var(--accent-primary);
+}
+
+/* Bookmark cards: strip side-stripe border */
+#page-resources .res-card-bm {
+  border-left: none;
+}
+
+/* Bookmarks empty state: flat inline message */
+#page-resources .res-empty.compact {
+  background: none;
+  border: none;
+  border-radius: 0;
+  min-height: unset;
+  padding: .5rem 0;
+  color: var(--ink-tertiary);
+}
+
+#page-resources .res-empty.compact strong {
+  color: var(--ink-secondary);
+  font-weight: 500;
+}
+
+/* Bookmark modal: header spacing via class */
+.bm-modal-head {
+  margin-bottom: 1.2rem;
+}
+
+/* Full-width submit button */
+.btn-full {
+  width: 100%;
+}
+
+/* ── Schools: editorial aesthetic ─────────────────────────────────────
+   Filter panel card → flat sidebar with border-right.
+   View toggle pill → underline tabs. Cards: strip radius/shadow.
+   Table: strip outer box. Search bar: flat border.
+   ──────────────────────────────────────────────────────────────────── */
+
+/* Filter panel: strip card → flat sidebar column */
+#page-schools .filter-panel {
+  background: none;
+  border: none;
+  border-radius: 0;
+  border-right: 1px solid var(--border-soft);
+  padding: 0 1.25rem 0 0;
+}
+
+/* Filter panel header row */
+.filter-panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: .75rem;
+}
+
+#page-schools .filter-panel h4 {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: .82rem;
+  font-weight: 650;
+  letter-spacing: 0;
+}
+
+/* Clear filters button: full width + top gap */
+.filter-panel-clear {
+  width: 100%;
+  margin-top: .6rem;
+}
+
+/* Chips: reduce radius, strip background fill */
+#page-schools .chip {
+  border-radius: 3px;
+  background: none;
+  border-color: var(--border-soft);
+  font-size: .75rem;
+  padding: .2rem .5rem;
+}
+
+#page-schools .chip:hover {
+  border-color: var(--border);
+  background: none;
+}
+
+#page-schools .chip.active {
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+  color: #fff;
+}
+
+/* Sort select */
+.schools-sort {
+  width: auto;
+  font-size: .82rem;
+  padding: .35rem .6rem;
+}
+
+/* View toggle → underline tabs */
+#page-schools .view-toggle {
+  display: flex;
+  gap: .6rem;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 0;
+}
+
+#page-schools .view-toggle button {
+  padding: .2rem 0;
+  border-radius: 0;
+  border-bottom: 1.5px solid transparent;
+  background: none;
+  box-shadow: none;
+  color: var(--ink-secondary);
+  font-size: .8rem;
+  font-weight: 500;
+}
+
+#page-schools .view-toggle button:hover {
+  background: none;
+  color: var(--ink-primary);
+  box-shadow: none;
+}
+
+#page-schools .view-toggle button.active {
+  background: none;
+  color: var(--ink-primary);
+  border-bottom-color: var(--accent-primary);
+  box-shadow: none;
+}
+
+/* Search bar: flatten */
+#page-schools .ex-search {
+  border-radius: 0;
+  border-color: var(--border-soft);
+  background: none;
+}
+
+#page-schools .ex-search:focus-within {
+  border-color: var(--accent-primary);
+  box-shadow: none;
+  border-bottom-width: 2px;
+}
+
+#page-schools .ex-search .search-clear {
+  background: none;
+  border-radius: 0;
+}
+
+/* School cards: strip heavy chrome, keep structure */
+#page-schools .school-card {
+  border-radius: 0;
+  border-color: var(--border-soft);
+  box-shadow: none;
+}
+
+#page-schools .school-card:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: var(--border);
+}
+
+/* School table: strip outer card box */
+#page-schools .school-table {
+  border-radius: 0;
+  background: none;
+  border: none;
+  border-top: 1px solid var(--border-soft);
+}
+
+#page-schools .school-table th,
+#page-schools .school-table td {
+  border-bottom-color: var(--border-soft);
+}
+
+#page-schools .school-table thead th {
+  background: none;
+}
+
+#page-schools .school-table tbody tr:last-child td {
+  border-bottom: 1px solid var(--border-soft);
+}
+
+/* Tab note: strip card box */
+#page-schools .ex-tab-note {
+  border-radius: 0;
+  border-color: var(--border-soft);
+  background: color-mix(in srgb, var(--accent-primary) 4%, var(--bg-canvas));
+}
+
+/* Tab badges: strip pill */
+#page-schools .ex-tab .badge {
+  background: none;
+  border-radius: 0;
+  padding: 0 0 0 .2rem;
+  color: var(--ink-tertiary);
+}
+
+/* Empty state: strip dashed box */
+#page-schools .empty-state {
+  background: none;
+  border: none;
+  border-radius: 0;
+  padding-top: 2.5rem;
+}
+
+#page-schools .empty-state .es-glyph {
+  background: none;
+  border-radius: 0;
+}
+
+/* ── Today (Dashboard): editorial aesthetic ───────────────────────────
+   Deadline cards → inline pipe strip. Progress items → flat rows.
+   Suggest items → strip side-stripe. Sticky note → flat section.
+   Quick actions → flat row with border-bottom separators.
+   ──────────────────────────────────────────────────────────────────── */
+
+/* Deadline cards: strip boxes → inline pipe-separated entries */
+#page-dashboard .today-deadlines-hero .udl-card {
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  flex: 0 0 auto;
+  min-width: 180px;
+  padding: .5rem 1.5rem .5rem 0;
+  margin-right: 1.5rem;
+  border-right: 1px solid var(--border-soft);
+}
+
+#page-dashboard .today-deadlines-hero .udl-card:last-child {
+  border-right: none;
+  margin-right: 0;
+  padding-right: 0;
+}
+
+#page-dashboard .today-deadlines-hero .udl-card:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: transparent;
+  border-right-color: var(--border-soft);
+}
+
+/* Urgent: strip side-stripe → keep colored countdown text only */
+#page-dashboard .udl-card.urgent {
+  border-left: none;
+}
+
+/* Progress items: flat rows */
+#page-dashboard .progress-item {
+  border-radius: 0;
+  border: none;
+  border-top: 1px solid var(--border-soft);
+  background: none;
+  box-shadow: none;
+  padding: .72rem 0;
+  min-height: unset;
+}
+
+#page-dashboard .progress-item:hover {
+  transform: none;
+  box-shadow: none;
+  background: color-mix(in srgb, var(--ink-primary) 3%, transparent);
+}
+
+/* Progress percent: strip pill */
+#page-dashboard .progress-percent {
+  background: none;
+  border-radius: 0;
+  padding: 0;
+  color: var(--accent-primary);
+}
+
+/* Suggest items: strip side-stripe → flat rows with border-bottom */
+#page-dashboard .suggest-item {
+  border-left: none;
+  border-radius: 0;
+  background: none;
+  padding: .55rem 0;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+#page-dashboard .sticky-next-steps .suggest-item {
+  border-left: none;
+  border-radius: 0;
+  background: none;
+  padding: .45rem 0 .45rem 1.55rem;
+}
+
+/* Sticky note: strip skeuomorphic chrome → flat section */
+#page-dashboard .sticky-next-steps {
+  background: none;
+  border: none;
+  border-radius: 0;
+  border-top: 1px solid var(--border-soft);
+  box-shadow: none;
+  transform: none !important;
+  width: 100%;
+  height: auto;
+  min-height: unset;
+  padding: 1rem 0 .85rem;
+  margin-top: 0;
+  margin-right: 0;
+  overflow: visible;
+}
+
+#page-dashboard .sticky-next-steps:hover {
+  transform: none !important;
+  box-shadow: none;
+}
+
+/* Hide tape + folded corner */
+#page-dashboard .sticky-next-steps .sticky-tape {
+  display: none;
+}
+
+#page-dashboard .sticky-next-steps::after {
+  display: none;
+}
+
+/* Restore text colors in de-yellowed sticky */
+#page-dashboard .sticky-next-steps .card-head h3 {
+  color: var(--ink-primary);
+  font-family: var(--font-sans);
+  font-size: .88rem;
+  font-weight: 650;
+}
+
+#page-dashboard .sticky-next-steps .suggest-item b {
+  color: var(--ink-primary);
+}
+
+#page-dashboard .sticky-next-steps .suggest-item > div {
+  color: var(--ink-secondary);
+}
+
+#page-dashboard .sticky-next-steps .suggest-item::before {
+  background: var(--border-soft);
+}
+
+#page-dashboard .sticky-next-steps .suggest-item.primary::before {
+  background: var(--accent-primary);
+}
+
+/* Suggest count tag: strip pill */
+#page-dashboard .sticky-next-steps .tag {
+  background: none;
+  border-radius: 0;
+  padding: 0;
+  font-size: .74rem;
+  color: var(--ink-secondary);
+}
+
+/* Quick actions: flat rows with border-bottom */
+#page-dashboard .quick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  margin: 0 0 1.25rem;
+}
+
+#page-dashboard .qa-btn {
+  flex: 1 1 0;
+  min-width: 140px;
+  border-radius: 0;
+  border: none;
+  border-bottom: 1px solid var(--border-soft);
+  background: none;
+  box-shadow: none;
+  justify-content: flex-start;
+  padding: .7rem 0;
+  gap: .6rem;
+}
+
+#page-dashboard .qa-btn:hover {
+  background: color-mix(in srgb, var(--ink-primary) 3%, transparent);
+  transform: none;
+  border-color: transparent;
+  border-bottom-color: var(--border-soft);
+}
+
+#page-dashboard .qa-btn .qa-icon {
+  background: none;
+  border-radius: 0;
+  color: var(--accent-primary);
+}
+
+/* Calendar inline style replacements */
+.cal-day-detail {
+  margin-top: .6rem;
+  font-size: .82rem;
+  min-height: 1.4em;
+}
+
+.cal-legend {
+  margin-top: .75rem;
+  font-size: .78rem;
+  color: var(--ink-tertiary);
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.cal-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent-warm);
+  margin-right: .3rem;
+  vertical-align: middle;
+}
+
+/* Dark mode: restore sticky suggest item colors */
+html[data-theme="dark"] #page-dashboard .sticky-next-steps {
+  background: none;
+}
+
+html[data-theme="dark"] #page-dashboard .sticky-next-steps .suggest-item,
+html[data-theme="dark"] #page-dashboard .sticky-next-steps .suggest-item b,
+html[data-theme="dark"] #page-dashboard .sticky-next-steps .card-head h3 {
+  color: var(--ink-primary);
+}
+
+/* ── Sidebar: editorial aesthetic ── */
+
+/* Active item: drop the floating card — just accent color */
+.nav-item.active,
+.sidebar .nav-item.active,
+.app-shell.collapsed .sidebar .nav-item.active,
+.app-shell.collapsed .sidebar:hover .nav-item.active {
+  background: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  color: var(--accent-primary);
+  font-weight: 600;
+}
+.nav-item.active .nav-icon,
+.sidebar .nav-item.active .nav-icon,
+.app-shell.collapsed .sidebar .nav-item.active .nav-icon {
+  background: none !important;
+  color: var(--accent-primary);
+}
+
+/* Hover: match editorial 4% ink tint used across all pages */
+.nav-item:hover {
+  background: color-mix(in srgb, var(--ink-primary) 4%, transparent);
+  color: var(--ink-primary);
+}
+.nav-item:hover .nav-icon {
+  background: none;
+  color: var(--ink-primary);
+}
+
+/* Remove saturation filter — not needed on flat items */
+.nav-item,
+.sb-user,
+.sb-collapse-btn {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* Tighter nav rhythm + remove micro-shift */
+@media (min-width: 861px) {
+  .nav { gap: 2px; }
+
+  .nav-item,
+  .app-shell.collapsed .nav-item,
+  .app-shell.collapsed .sidebar:not(:hover) .nav-item,
+  .app-shell.collapsed .sidebar:hover .nav-item {
+    transform: none;
+  }
+
+  /* Utility group (Profile, Settings): divider instead of float */
+  .nav-item:not(.nav-utility) + .nav-item.nav-utility {
+    margin-top: .45rem;
+    padding-top: .55rem;
+    border-top: 1px solid var(--border-soft);
+  }
+}
+
+/* Restore utility item to full opacity — they're peers now */
+.nav-item.nav-utility { opacity: 1; }
+
+/* Logo mark: strip gradient and shadow, keep flat bordered square */
+.ts-logo-mark {
+  background: none;
+  box-shadow: none;
+  border-color: var(--border-soft);
+}
+
+/* Avatar: flat accent instead of gradient */
+.avatar {
+  background: var(--accent-primary);
+  border-radius: 8px;
+}
+
+/* User area hover: consistent with editorial ink tint */
+.sb-user:hover {
+  background: color-mix(in srgb, var(--ink-primary) 4%, transparent);
+}
+
+/* ── Topbar: editorial aesthetic ── */
+
+/* Flat opaque canvas — no frosted glass */
+.topbar {
+  background: var(--bg-canvas);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* Search: bare bordered input, no card */
+.top-search {
+  background: none;
+  box-shadow: none;
+  border-color: var(--border-soft);
+  border-radius: 4px;
+}
+.top-search:hover {
+  border-color: var(--border);
+  background: none;
+}
+
+/* kbd pill: no background, just a soft bordered label */
+.top-search .kbd {
+  background: none;
+  border-color: var(--border-soft);
+  color: var(--ink-tertiary);
+}
+
+/* Icon buttons: editorial hover tint */
+.icon-btn:hover {
+  background: color-mix(in srgb, var(--ink-primary) 4%, transparent);
+  color: var(--ink-primary);
+}
+
+/* Notification icons: drop the colored circle, keep icon color */
+.notif-icon {
+  background: none;
+  border-radius: 0;
+}
+
+/* Notification item hover: editorial tint */
+.notif-item:hover {
+  background: color-mix(in srgb, var(--ink-primary) 4%, transparent);
+}
+
+/* Auth status dot: no glow ring */
+.auth-status-dot {
+  box-shadow: none;
+}
+
+/* ── Polish: inline style replacements ── */
+
+/* Notebook picker modal layout */
+.notebook-picker-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: .85rem;
+}
+.notebook-picker-head h3 { margin: 0; font-family: var(--font-heading, var(--font-sans)); }
+.notebook-picker-custom { margin-top: .6rem; }
+
+/* Modal action rows — default top breathing room */
+.modal-actions { margin-top: 1.25rem; }
+
+/* Auth modal */
+.modal-auth .auth-submit { width: 100%; margin-bottom: 1rem; }
+.auth-footer { margin: 0; text-align: center; font-size: .85rem; color: var(--ink-secondary); }
+.link-accent { color: var(--accent-primary); font-weight: 500; }
+
+/* Profile */
+.avatar-lg { width: 56px; height: 56px; font-size: 1.15rem; }
+.profile-upload-btn { margin-top: .35rem; font-size: .75rem; }
+input[readonly] { opacity: .65; cursor: not-allowed; }
+
+/* Settings */
+.settings-choice-row { margin-top: .6rem; }
+.settings-action-row { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
+
+/* Timeline add-task form */
+.atf-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: .6rem; }
+
+/* GPA chart legend */
+.gpa-legend-text { color: var(--text-secondary); font-size: .9rem; margin: 0 0 1rem; max-width: 720px; }
+.gpa-tier-high { color: var(--alert); font-weight: 600; }
+.gpa-tier-mid  { color: var(--warning); font-weight: 600; }
+.gpa-tier-low  { color: var(--success); font-weight: 600; }
+
+/* Notebook view modal */
+.notebook-view-card.modal { max-width: 520px; padding: 0; overflow: hidden; }
+
+/* FAB icon no-shrink */
+.fab svg { flex-shrink: 0; }
+
+/* Nav item transition no longer needs box-shadow */
+.nav-item { transition: background-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease); }
+.gpa-chart-card { padding: 1.25rem; }
+.doc-preview-head h3 { margin: 0; }
+.doc-preview-actions { display: flex; gap: .5rem; align-items: center; }
+/* modal-head used in upload/lor: space below before form content */
+.modal-head { margin-bottom: 1.5rem; }
+/* Scope modal-head margin to form modals only */
+.modal-head { margin-bottom: 0; }
+.modal-form .modal-head { margin-bottom: 1.5rem; }
+#uploadFileList { margin-top: 1rem; }
+.modal-form .upload-dropzone ~ .field { margin-top: 1rem; margin-bottom: 0; }
+.modal-form .upload-dropzone ~ .field + .field { margin-top: .8rem; }
+#uploadSubmitBtn { margin-top: 1.2rem; }
+.transcript-empty-hint { color: var(--text-muted); font-size: .85rem; padding: 1rem 0; }
+#gpaChartWrap { position: relative; width: 100%; }
+
+/* ── Spacing fixes (from screenshots) ── */
+
+/* Fix 1: deadline card — put days counter beside the info, not below it */
+#page-dashboard .today-deadlines-hero .udl-card {
+  display: grid;
+  grid-template-areas:
+    "top  days"
+    "school days";
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  column-gap: 1rem;
+  row-gap: 0;
+}
+#page-dashboard .today-deadlines-hero .udl-card .udl-topline { grid-area: top; align-self: end; }
+#page-dashboard .today-deadlines-hero .udl-card .udl-school  { grid-area: school; align-self: start; }
+#page-dashboard .today-deadlines-hero .udl-card .udl-bottom  {
+  grid-area: days;
+  margin-top: 0;
+  align-self: center;
+  justify-content: center;
+}
+
+/* Fix 2: quick-action buttons — explicit center alignment, remove stale min-height */
+#page-dashboard .qa-btn {
+  align-items: center;
+  min-height: unset;
+}
+
+/* Fix 3: applications header — more breathing room between Stats / tabs / Add school */
+#page-applications .apps-header-actions {
+  gap: .85rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LAYOUT FIXES (Screenshots 4-6 + interruption fixes)
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Fix 4: GPA row — uniform input + select height so columns are flush */
+.gpa-row input,
+.gpa-row select {
+  height: 36px;
+  box-sizing: border-box;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* Fix 5 (new): quick-actions — top border mirrors bottom so content is centered between both lines */
+#page-dashboard .quick-actions {
+  border-top: 1px solid var(--border-soft);
+}
+
+/* Fix 6 (new): sticky next-steps items — bordered separators, no trailing line on last item */
+#page-dashboard .sticky-next-steps .suggest-item {
+  border-bottom: 1px solid var(--border-soft);
+  padding: .45rem 0 .45rem 0;
+}
+#page-dashboard .sticky-next-steps .suggest-item:last-child {
+  border-bottom: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   HOVER ANIMATIONS — interactability signal pass
+   Duration: 150-160ms; ease-out; transform + background only; no layout props
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Flat editorial rows: smooth background tint */
+#page-dashboard .progress-item,
+#page-applications .apps-focus-card,
+#page-dashboard .suggest-item,
+#page-dashboard .sticky-next-steps .suggest-item {
+  transition: background-color 155ms ease-out;
+}
+
+/* Suggest items: hover tint + pointer */
+#page-dashboard .suggest-item:hover,
+#page-dashboard .sticky-next-steps .suggest-item:hover {
+  background: color-mix(in srgb, var(--ink-primary) 4%, transparent);
+  cursor: pointer;
+}
+
+/* Deadline cards: tint only (no lift — editorial rows don't float) */
+.udl-card {
+  transition: background-color 155ms ease-out;
+  cursor: pointer;
+}
+.udl-card:hover {
+  background: color-mix(in srgb, var(--ink-primary) 4%, transparent);
+}
+
+/* Cards that can lift: add bg transition to existing transform transition */
+.school-card,
+.kcard,
+.dl-card,
+.res-card,
+.lor-card,
+.vault-card,
+.app-command-card,
+.nb-card {
+  transition:
+    transform var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease),
+    background-color var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease);
+}
+
+/* Form controls: border tint on hover (not focus — that's handled separately) */
+input:not([type="checkbox"]):not([type="radio"]):not([readonly]):not(:focus):hover,
+select:not(:focus):hover,
+textarea:not(:focus):hover {
+  border-color: var(--border);
+  transition: border-color 150ms ease-out;
+}
+
+/* Clickable items that currently have no cursor set */
+.lor-card,
+.vault-card,
+.res-card,
+.app-command-card,
+.nb-card,
+.kcard {
+  cursor: pointer;
+}
+
+/* Reduced-motion: honour system preference */
+@media (prefers-reduced-motion: reduce) {
+  .progress-item,
+  .apps-focus-card,
+  .suggest-item,
+  .udl-card,
+  .school-card,
+  .kcard,
+  .dl-card,
+  .res-card,
+  .lor-card,
+  .vault-card,
+  .app-command-card,
+  .nb-card,
+  .qa-btn,
+  .nav-item,
+  input,
+  select,
+  textarea {
+    transition: none !important;
+  }
+/* ═══════════════════════════════════════════════════════════════════════════
+   TRANSCRIPTS SECTION — editorial redesign + auto-detect
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Required docs list: flat editorial rows */
+#requiredDocsList {
+  display: flex;
+  flex-direction: column;
+}
+
+#requiredDocsList .vault-card {
+  background: none;
+  border: none;
+  border-radius: 0;
+  border-bottom: 1px solid var(--border-soft);
+  box-shadow: none;
+  padding: .6rem 0;
+  gap: .6rem;
+  transition: background-color 155ms ease-out;
+}
+#requiredDocsList .vault-card:last-child { border-bottom: none; }
+#requiredDocsList .vault-card:hover {
+  transform: none;
+  border-color: inherit;
+  background: color-mix(in srgb, var(--ink-primary) 3%, transparent);
+}
+#requiredDocsList .vault-card:hover { border-bottom-color: var(--border-soft) !important; }
+
+/* Icon: no background pill */
+#requiredDocsList .vault-card .vc-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 0;
+  background: none;
+  color: var(--ink-tertiary);
+}
+#requiredDocsList .vault-card .vc-icon.pending-icon { background: none; color: var(--ink-tertiary); }
+#requiredDocsList .vault-card .vc-icon.verified-icon { background: none; color: var(--success); }
+#requiredDocsList .vault-card .vc-icon svg { width: 15px; height: 15px; }
+
+/* Name + sub */
+#requiredDocsList .vault-card .vc-name { font-size: .875rem; font-weight: 500; }
+#requiredDocsList .vault-card .vc-sub  { font-size: .73rem; }
+
+/* Check toggle: small square instead of round pill */
+#requiredDocsList .vault-card .vc-check {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  border-color: var(--border);
+  flex-shrink: 0;
+}
+#requiredDocsList .vault-card.verified .vc-check {
+  border-color: var(--success);
+  background: var(--success);
+}
+
+/* Auto-detected: show subtle "auto" label next to check */
+#requiredDocsList .vault-card.verified .vc-name::after {
+  content: " · matched";
+  font-size: .68rem;
+  font-weight: 400;
+  color: var(--success);
+  font-family: var(--font-mono);
+  letter-spacing: .02em;
+}
