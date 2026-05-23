@@ -2099,6 +2099,26 @@ function toast(msg) {
   setTimeout(() => el.remove(), 3600);
 }
 
+function toastUndo(msg, undoFn, delay) {
+  delay = delay || 7000;
+  const stack = document.getElementById('toastStack');
+  const el = document.createElement('div');
+  el.className = 'toast toast-with-undo';
+  let gone = false;
+  const tid = setTimeout(() => {
+    if (!gone) { gone = true; el.style.opacity = '0'; el.style.transform = 'translateY(6px)'; el.style.transition = '.2s'; setTimeout(() => el.remove(), 250); }
+  }, delay);
+  const msgSpan = document.createElement('span');
+  msgSpan.textContent = msg;
+  const btn = document.createElement('button');
+  btn.className = 'toast-undo-btn';
+  btn.textContent = 'Undo';
+  btn.onclick = () => { if (!gone) { gone = true; clearTimeout(tid); undoFn(); el.remove(); } };
+  el.appendChild(msgSpan);
+  el.appendChild(btn);
+  stack.appendChild(el);
+}
+
 /* =============== user profile (live-synced to sidebar) =============== */
 const AVATAR_GRADIENTS = {
   violet: 'linear-gradient(135deg,#7c3aed,#a855f7)',
@@ -3656,6 +3676,19 @@ function renderKanban() {
   const appsWithSchools = USER_APPS
     .map(a => ({ app: a, school: byId(a.id), days: byId(a.id) ? schoolDeadlineDays(byId(a.id)) : 9999 }))
     .filter(x => x.school);
+  if (appsWithSchools.length === 0) {
+    kb.innerHTML = `<div class="apps-onboard">
+      <div class="apps-onboard-icon"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="5" width="26" height="37" rx="4"/><path d="M14 16h14M14 23h14M14 30h9" stroke-linecap="round"/><circle cx="36" cy="36" r="9" fill="var(--accent-primary)" stroke="none"/><path d="M32 36l3 3 5-5" stroke="#fff" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <h3>Track your first application</h3>
+      <p>Add schools you are considering. TransferSpace watches deadlines, materials, and progress so nothing slips.</p>
+      <div class="apps-onboard-actions">
+        <button class="btn btn-primary" onclick="goto('schools')"><svg class="control-icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Browse schools</button>
+        <button class="btn btn-ghost btn-sm" onclick="openCmdK()">Search by name</button>
+      </div>
+    </div>`;
+    renderAppStats();
+    return;
+  }
   const liveApps = appsWithSchools
     .filter(x => hasUpcomingSchoolDeadline(x.school) || x.app.status === 'Submitted' || x.app.status === 'Decision Received')
     .sort((a, b) => {
@@ -3685,33 +3718,7 @@ function renderKanban() {
       <div class="date-label">${x.school.short}</div>
       <div class="date-count">${deadlinePhrase(compactDeadlineDate(x.school))}</div>
     </div>`).join('') || '<div class="date-row"><div class="date-label">No live deadlines</div><div class="date-count">Clear</div></div>';
-  const tableRows = appsWithSchools.sort((a, b) => a.days - b.days).map(x => {
-    const s = x.school;
-    const a = x.app;
-    const p = computeProgress(a);
-    const img = SCHOOL_IMAGES[s.id];
-    const deadlineDate = compactDeadlineDate(s);
-    const deadline = daysTo(deadlineDate) > 0 ? deadlinePhrase(deadlineDate) : a.status === 'Submitted' ? 'Submitted' : 'Closed';
-    return `<div class="apps-table-row" onclick="openAppModal('${s.id}')">
-      <div class="apps-table-school">
-        <div class="apps-table-thumb" style="${img ? `background-image:url('${img}');` : ''}"></div>
-        <div>
-          <strong>${s.short}</strong>
-          <span>${s.state} · ${s.platform}</span>
-        </div>
-      </div>
-      <div><span class="alr-status ${a.status.toLowerCase().replace(/\s+/g, '-')}">${a.status}</span></div>
-      <div class="alr-label ${a.label.toLowerCase()}">${a.label}</div>
-      <div class="mono">${deadline}</div>
-      <div>
-        <div class="apps-progress-label"><span>${p}%</span><span>${fmtDate(deadlineDate)}</span></div>
-        <div class="apps-progress-track"><span style="width:${p}%"></span></div>
-      </div>
-      <button class="alr-remove" onclick="event.stopPropagation(); removeApp('${s.id}')" title="Remove">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-      </button>
-    </div>`;
-  }).join('');
+  const hiddenCount = Math.max(0, appsWithSchools.length - focus.length);
   kb.innerHTML = `<div class="apps-workspace">
     <section class="apps-focus-panel">
       <div class="apps-panel-head">
@@ -3730,7 +3737,7 @@ function renderKanban() {
           const materials = MATERIAL_LABELS.filter(([key]) => key !== 'transcriptReq').map(([key, label]) => {
             const done = !!a.materials?.[key];
             const short = label.replace('Application ', '').replace(' requested', '').replace(' drafted', '').replace(' secured', '').replace(' paid', '').replace(' sent', '');
-            return `<span class="material-pill ${done ? 'done' : 'missing'}">${done ? '✓' : '•'} ${short}</span>`;
+            return `<span class="material-pill ${done ? 'done' : 'missing'}">${short}</span>`;
           }).join('');
           return `<div class="apps-focus-card" draggable="true" ondragstart="onDragStart(event, '${s.id}')" ondragend="onDragEnd(event)" onclick="openAppModal('${s.id}')">
             <div class="apps-school-photo ${img ? '' : 'no-image'}" style="--brand:${s.color};--brand2:${brand2};${img ? `background-image:url('${img}');` : ''}">${img ? '' : initials}</div>
@@ -3749,6 +3756,7 @@ function renderKanban() {
           </div>`;
         }).join('') : '<div class="empty-state" style="padding:1.5rem;"><p>No live applications. Add schools from Schools to start planning.</p></div>'}
       </div>
+      ${hiddenCount > 0 ? `<div class="apps-focus-footer"><span>${hiddenCount} more school${hiddenCount === 1 ? '' : 's'} tracked</span><button class="btn-link" onclick="goto('timeline')">View all in Timeline</button></div>` : ''}
     </section>
     <aside class="apps-side-panel">
       <div class="apps-module">
@@ -3764,10 +3772,6 @@ function renderKanban() {
         ${datesHtml}
       </div>
     </aside>
-    <section class="apps-table-panel">
-      <div class="apps-table-head"><span>School</span><span>Status</span><span>Fit</span><span>Deadline</span><span>Progress</span><span></span></div>
-      ${tableRows || '<div class="timeline-list-row"><strong>No schools tracked yet.</strong><span class="timeline-event-kicker">Schools</span></div>'}
-    </section>
   </div>`;
   renderAppStats();
   // Apply decision styling
@@ -3827,17 +3831,24 @@ function onDrop(e, col) {
 function removeApp(id) {
   const s = byId(id);
   const name = s ? s.short : id;
-  if (!confirm(`Remove ${name} from your applications?`)) return;
   const idx = USER_APPS.findIndex(a => a.id === id);
-  if (idx >= 0) {
-    USER_APPS.splice(idx, 1);
-    EX_FAVS.delete(id);
-    saveUserApps();
-  }
-  toast(`${name} removed.`);
+  if (idx < 0) return;
+  const snapshot = JSON.parse(JSON.stringify(USER_APPS[idx]));
+  const wasFav = EX_FAVS.has(id);
+  USER_APPS.splice(idx, 1);
+  EX_FAVS.delete(id);
+  saveUserApps();
   renderKanban();
   renderAppList();
   renderAppStats();
+  toastUndo(`${name} removed.`, () => {
+    USER_APPS.splice(idx, 0, snapshot);
+    if (wasFav) EX_FAVS.add(id);
+    saveUserApps();
+    renderKanban();
+    renderAppList();
+    renderAppStats();
+  });
 }
 
 /* =============== app view toggle =============== */
@@ -3848,7 +3859,7 @@ function setAppView(mode) {
   const kb = document.getElementById('kanban');
   const list = document.getElementById('appList');
   const toggle = document.getElementById('appViewToggle');
-  if (!kb || !list) return;
+  if (!kb || !list || !toggle) return;
 
   toggle.querySelectorAll('button').forEach(b => b.classList.remove('active'));
   if (mode === 'list') {

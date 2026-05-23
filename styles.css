@@ -3304,6 +3304,75 @@ html[data-theme="dark"] .kcard .kc-label.reach { color: var(--accent-warm); }
   display: flex; align-items: center; gap: .6rem;
 }
 @keyframes slideIn { from { opacity: 0; transform: translate(20px, 10px); } to { opacity: 1; transform: none; } }
+.toast-with-undo { display: flex; align-items: center; gap: .75rem; }
+.toast-undo-btn {
+  flex-shrink: 0;
+  padding: .28rem .6rem;
+  border-radius: 5px;
+  background: rgba(255,255,255,0.18);
+  color: inherit;
+  font-size: .8rem;
+  font-weight: 650;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.25);
+  transition: background .12s;
+}
+.toast-undo-btn:hover { background: rgba(255,255,255,0.3); }
+
+/* Applications: onboarding empty state */
+.apps-onboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 5rem 2rem;
+  gap: .9rem;
+  max-width: 480px;
+  margin: 0 auto;
+}
+.apps-onboard-icon {
+  width: 64px;
+  height: 64px;
+  color: var(--ink-tertiary);
+}
+.apps-onboard-icon svg { width: 100%; height: 100%; }
+.apps-onboard h3 {
+  font-family: var(--font-sans);
+  font-size: 1.25rem;
+  font-weight: 650;
+  color: var(--ink-primary);
+  margin: 0;
+}
+.apps-onboard p {
+  color: var(--ink-secondary);
+  font-size: .9rem;
+  line-height: 1.6;
+  margin: 0;
+  max-width: 42ch;
+}
+.apps-onboard-actions {
+  display: flex;
+  gap: .65rem;
+  align-items: center;
+  margin-top: .4rem;
+}
+
+/* Applications: focus panel footer */
+.apps-focus-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .6rem .75rem;
+  margin-top: .55rem;
+  border-top: 1px solid var(--border-soft);
+  color: var(--ink-tertiary);
+  font-size: .78rem;
+}
+.apps-focus-footer .btn-link {
+  font-size: .78rem;
+  color: var(--accent-primary);
+}
 
 /* ============ Insights (Stats, GPA Chart) + Recommended (Explore) ============ */
 
