@@ -4448,30 +4448,40 @@ html[data-theme="dark"] {
   gap: 0;
 }
 
-.nav { gap: .18rem; }
+.nav { gap: .1rem; }
 .nav-item {
-  min-height: 42px;
+  min-height: 38px;
   border-radius: var(--radius-control);
-  padding: .36rem .44rem;
-  gap: .55rem;
-  font-size: .86rem;
+  padding: .3rem .42rem;
+  gap: .52rem;
+  font-size: .855rem;
+  letter-spacing: -.008em;
   transition: background-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
 }
 .nav-item .nav-icon {
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   border-radius: var(--radius-control);
   background: transparent;
+  color: var(--text-muted);
+  transition: color var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease);
 }
-.nav-item:hover { background: color-mix(in srgb, var(--bg-card) 72%, transparent); }
+.nav-item:hover {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+.nav-item:hover .nav-icon {
+  color: var(--text-secondary);
+}
 .nav-item.active {
-  background: var(--bg-card);
-  color: var(--ink-primary);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  font-weight: 600;
   box-shadow: var(--shadow-xs);
 }
 .nav-item.active .nav-icon {
   color: var(--accent-primary);
-  background: var(--info-soft);
+  background: color-mix(in srgb, var(--accent-primary) 11%, transparent);
 }
 .nav-item.active::before { display: none; }
 .sb-user { border-radius: var(--radius-control); }
@@ -5131,10 +5141,6 @@ html[data-theme="dark"] {
 
 .os-tool-button:active {
   transform: translateY(0) scale(.99);
-}
-
-.nav-item.nav-utility {
-  opacity: .86;
 }
 
 .schools-title-row {
@@ -5914,7 +5920,7 @@ html[data-theme="light"] {
   }
 
   .nav-item.active .nav-icon {
-    background: var(--info-soft);
+    background: color-mix(in srgb, var(--accent-primary) 11%, transparent);
     color: var(--accent-primary);
   }
 
@@ -5923,14 +5929,15 @@ html[data-theme="light"] {
   }
 
   .nav-item:not(.nav-utility) + .nav-item.nav-utility {
-    margin-top: .9rem;
-    box-shadow: inset 0 1px 0 var(--border-soft);
-    padding-top: .72rem;
-    min-height: 50px;
+    margin-top: .6rem;
+    padding-top: .6rem;
+    border-top: 1px solid var(--border-soft);
+    min-height: auto;
+    box-shadow: none;
   }
 
   .nav-item.nav-utility {
-    opacity: .92;
+    opacity: 1;
   }
 
   .sb-spacer {
@@ -8177,27 +8184,17 @@ html[data-theme="dark"] .sticky-next-steps .suggest-item::before {
   box-shadow: 0 0 0 4px color-mix(in srgb, currentColor 15%, transparent);
 }
 
-/* H1 — serif, single size, no per-page overrides */
+/* H1 — sans, consistent across all pages */
 .page .page-title-row h1,
 .page .apps-command-header h1,
 .page .os-workspace-hero .greeting h2 {
   margin: 0 !important;
-  font-family: var(--font-serif, "Fraunces", Georgia, serif);
-  font-size: clamp(1.7rem, 2.6vw, 2.2rem) !important;
-  font-weight: 500 !important;
-  line-height: 1.1 !important;
-  letter-spacing: -.005em !important;
-  color: var(--text-primary);
-}
-
-/* Utility pages: sans heading feels more appropriate than editorial serif */
-#page-applications .apps-command-header h1,
-#page-timeline .page-title-row h1,
-#page-resources .page-title-row h1,
-#page-profile .page-title-row h1,
-#page-settings .page-title-row h1 {
   font-family: var(--font-sans);
-  letter-spacing: -.02em;
+  font-size: clamp(1.7rem, 2.6vw, 2.2rem) !important;
+  font-weight: 600 !important;
+  line-height: 1.1 !important;
+  letter-spacing: -.025em !important;
+  color: var(--text-primary);
 }
 
 /* Subtitle */
@@ -9815,34 +9812,31 @@ html[data-theme="dark"] #page-dashboard .sticky-next-steps .card-head h3 {
   color: var(--ink-primary);
 }
 
-/* ── Sidebar: editorial aesthetic ── */
+/* ── Sidebar: active + hover ── */
 
-/* Active item: drop the floating card — just accent color */
 .nav-item.active,
 .sidebar .nav-item.active,
 .app-shell.collapsed .sidebar .nav-item.active,
 .app-shell.collapsed .sidebar:hover .nav-item.active {
-  background: none !important;
-  border-color: transparent !important;
-  box-shadow: none !important;
-  color: var(--accent-primary);
+  background: var(--bg-elevated) !important;
+  box-shadow: var(--shadow-xs) !important;
+  color: var(--text-primary) !important;
   font-weight: 600;
 }
 .nav-item.active .nav-icon,
 .sidebar .nav-item.active .nav-icon,
 .app-shell.collapsed .sidebar .nav-item.active .nav-icon {
-  background: none !important;
-  color: var(--accent-primary);
+  background: color-mix(in srgb, var(--accent-primary) 11%, transparent) !important;
+  color: var(--accent-primary) !important;
 }
 
-/* Hover: match editorial 4% ink tint used across all pages */
 .nav-item:hover {
-  background: color-mix(in srgb, var(--ink-primary) 4%, transparent);
-  color: var(--ink-primary);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
 }
 .nav-item:hover .nav-icon {
   background: none;
-  color: var(--ink-primary);
+  color: var(--text-secondary);
 }
 
 /* Remove saturation filter — not needed on flat items */
