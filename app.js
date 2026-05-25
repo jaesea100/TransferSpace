@@ -1830,6 +1830,7 @@ function toggleTheme() {
   const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
   html.dataset.theme = next;
   try { localStorage.setItem('ts-theme', next); } catch(e){}
+  renderExploreGlobePreview();
 }
 (function initTheme(){
   try {
@@ -2777,6 +2778,7 @@ const EXPLORE_GLOBE = {
   modalRaf: null,
   renderRaf: null,
   focusRaf: null,
+  autoSpinRaf: null,
   pins: [],
   selectedId: null,
   hoveredId: null,
@@ -3099,6 +3101,21 @@ function drawSchoolPins(ctx, schools, centerLon, centerLat, cx, cy, r, compact) 
   });
   EXPLORE_GLOBE.pins = pins;
 }
+function stopAutoSpin() {
+  if (EXPLORE_GLOBE.autoSpinRaf) cancelAnimationFrame(EXPLORE_GLOBE.autoSpinRaf);
+  EXPLORE_GLOBE.autoSpinRaf = null;
+}
+function startAutoSpin() {
+  stopAutoSpin();
+  const step = () => {
+    if (!EXPLORE_GLOBE.isDragging && Math.abs(EXPLORE_GLOBE.previewVelocity) < .06) {
+      EXPLORE_GLOBE.previewLon = normLon(EXPLORE_GLOBE.previewLon + .12);
+      renderExploreGlobePreview();
+    }
+    EXPLORE_GLOBE.autoSpinRaf = requestAnimationFrame(step);
+  };
+  EXPLORE_GLOBE.autoSpinRaf = requestAnimationFrame(step);
+}
 function stopPreviewSpin() {
   if (EXPLORE_GLOBE.raf) cancelAnimationFrame(EXPLORE_GLOBE.raf);
   EXPLORE_GLOBE.raf = null;
@@ -3130,12 +3147,20 @@ function renderExploreGlobePreview() {
   const count = document.getElementById('globeSchoolCount');
   if (count) count.textContent = `${schools.length} school${schools.length === 1 ? '' : 's'}`;
   const { ctx, w, h } = setupCanvas(canvas);
-  ctx.clearRect(0, 0, w, h);
+  const isDark = isDarkTheme();
+  ctx.fillStyle = isDark ? '#040d16' : '#b8ccda';
+  ctx.fillRect(0, 0, w, h);
   const cx = w / 2;
-  const cy = h * .38;
-  const r = Math.min(w * .28, h * .31);
+  const cy = h * .50;
+  const r = Math.min(w * .32, h * .43);
+  // corner vignette to tie the globe into the card
+  const vignette = ctx.createRadialGradient(cx, cy, r * 1.5, cx, cy, Math.hypot(w, h) * .72);
+  vignette.addColorStop(0, 'rgba(0,0,0,0)');
+  vignette.addColorStop(1, isDark ? 'rgba(0,0,0,.48)' : 'rgba(0,20,40,.18)');
+  ctx.fillStyle = vignette;
+  ctx.fillRect(0, 0, w, h);
   EXPLORE_GLOBE.previewHit = { cx, cy, r };
-  drawGlobeShell(ctx, cx, cy, r, EXPLORE_GLOBE.previewLon, EXPLORE_GLOBE.previewLat, true, true);
+  drawGlobeShell(ctx, cx, cy, r, EXPLORE_GLOBE.previewLon, EXPLORE_GLOBE.previewLat, true, false);
   drawSchoolPins(ctx, schools, EXPLORE_GLOBE.previewLon, EXPLORE_GLOBE.previewLat, cx, cy, r, true);
 }
 function initExploreGlobe() {
@@ -3190,9 +3215,7 @@ function initExploreGlobe() {
       EXPLORE_GLOBE.moved = false;
     }
   });
-  renderExploreGlobePreview();
-  requestAnimationFrame(renderExploreGlobePreview);
-  setTimeout(renderExploreGlobePreview, 120);
+  startAutoSpin();
 }
 function openExploreGlobe() {
   if (EXPLORE_GLOBE.moved) {

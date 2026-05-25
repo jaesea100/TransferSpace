@@ -126,6 +126,7 @@
           <div class="page-title-row schools-title-row">
             <div class="schools-title-copy">
               <h1>Schools</h1>
+              <p class="p-sub">Research transfer programs, compare your fit, and build your application list.</p>
               <div class="schools-action-cluster" aria-label="School catalogue actions">
                 <button class="btn btn-ghost btn-sm" onclick="gotoLegacy('gpachart')">
                   <svg class="control-icon" viewBox="0 0 24 24"><path d="M3 5h12M3 10h18M3 15h8M3 20h14"/></svg>
@@ -143,11 +144,12 @@
             </div>
             <button class="catalogue-globe-preview" type="button" id="globePreview" onclick="openExploreGlobe()" aria-label="Open interactive school globe">
               <canvas id="globePreviewCanvas" width="340" height="230" aria-label="Spinning school globe preview"></canvas>
-              <span class="globe-hint">Drag to spin</span>
+              <div class="cgp-footer">
+                <span class="cgp-count" id="globeSchoolCount">44 schools</span>
+                <span class="cgp-cta">Data Atlas →</span>
+              </div>
             </button>
           </div>
-
-          <span class="sr-only" id="globeSchoolCount">44 schools</span>
 
           <div class="ex-tabs" id="exTabs"></div>
           <div class="ex-tab-note" id="exTabNote" hidden></div>
