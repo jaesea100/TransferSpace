@@ -5181,21 +5181,58 @@ html[data-theme="dark"] {
 }
 .apps-focus-list { display:grid; gap:.55rem; margin-top:.7rem; }
 .apps-focus-card {
-  display:grid;
-  grid-template-columns:86px minmax(0,1fr) minmax(142px,.22fr);
-  gap:.78rem;
-  align-items:stretch;
+  display:block;
   padding:.62rem;
   border:1px solid var(--border-soft);
   border-radius:var(--radius-card);
   background:var(--bg-canvas);
-  cursor:pointer;
-  transition:transform var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+  transition:border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
 }
-.apps-focus-card:hover {
-  transform:translateY(-1px);
-  border-color:var(--border-hard);
-  box-shadow:var(--shadow-sm);
+.apps-focus-card:hover { border-color:var(--border-hard); box-shadow:var(--shadow-sm); }
+.apps-focus-card.expanded { border-color:var(--border-hard); }
+.apps-fc-header {
+  display:grid;
+  grid-template-columns:86px minmax(0,1fr) minmax(142px,.22fr);
+  gap:.78rem;
+  align-items:stretch;
+  cursor:pointer;
+}
+.apps-fc-body {
+  display:none;
+  border-top:1px solid var(--border-soft);
+  margin-top:.65rem;
+  padding-top:.65rem;
+}
+.apps-focus-card.expanded .apps-fc-body { display:block; }
+.apps-fc-checks {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:.18rem .75rem;
+  margin-bottom:.65rem;
+}
+.apps-fc-checks .check-row {
+  font-size:.82rem;
+  padding:.22rem 0;
+}
+.apps-fc-stage-row {
+  display:flex;
+  gap:.35rem;
+  flex-wrap:wrap;
+  padding-bottom:.6rem;
+  margin-bottom:.6rem;
+  border-bottom:1px solid var(--border-soft);
+}
+.apps-fc-foot {
+  display:flex;
+  gap:.5rem;
+  align-items:center;
+}
+.apps-fc-remove { margin-left:auto; }
+.apps-focus-empty {
+  padding:1.5rem;
+  color:var(--ink-secondary);
+  font-size:.88rem;
+  text-align:center;
 }
 .apps-school-photo {
   width:86px;
@@ -5409,9 +5446,10 @@ html[data-theme="dark"] {
 }
 @media (max-width:700px) {
   .apps-stat-strip { grid-template-columns:repeat(2, minmax(0,1fr)); }
-  .apps-focus-card { grid-template-columns:1fr; }
+  .apps-fc-header { grid-template-columns:1fr; }
   .apps-school-photo { width:100%; min-height:120px; }
   .apps-focus-deadline { align-items:flex-start; text-align:left; }
+  .apps-fc-checks { grid-template-columns:1fr; }
   .apps-table-row { grid-template-columns:1fr; }
 }
 

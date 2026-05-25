@@ -3657,11 +3657,19 @@ const MATERIAL_LABELS = [
   ['transcriptSent', 'Transcript sent'],
   ['essay1', 'Essay 1 drafted'],
   ['essay2', 'Essay 2 drafted'],
-  ['lor1', 'LOR 1 secured'],
-  ['lor2', 'LOR 2 secured'],
+  ['lor1', 'Rec letter 1 secured'],
+  ['lor2', 'Rec letter 2 secured'],
   ['feePaid', 'Application fee paid'],
   ['submitted', 'Application submitted'],
 ];
+
+const APPS_EXPANDED = new Set();
+
+function toggleFocusCard(id) {
+  if (APPS_EXPANDED.has(id)) { APPS_EXPANDED.delete(id); } else { APPS_EXPANDED.add(id); }
+  const card = document.getElementById('apps-card-' + id);
+  if (card) card.classList.toggle('expanded', APPS_EXPANDED.has(id));
+}
 
 function computeProgress(app) {
   const vals = Object.values(app.materials || {});
@@ -3723,8 +3731,8 @@ function renderKanban() {
     <section class="apps-focus-panel">
       <div class="apps-panel-head">
         <div>
-          <h3>Focus queue</h3>
-          <p>Schools with live deadlines, sorted by urgency. Open a row to manage materials and notes.</p>
+          <h3>Active applications</h3>
+          <p>Schools with upcoming deadlines, sorted by urgency. Click a row to check off materials.</p>
         </div>
         <span class="apps-live-count">${activeLive.length} live</span>
       </div>
@@ -3733,28 +3741,45 @@ function renderKanban() {
           const a = x.app, s = x.school, p = computeProgress(a);
           const img = SCHOOL_IMAGES[s.id];
           const brand2 = s.accent && s.accent !== '#FFFFFF' && s.accent.length > 1 ? s.accent : '#3B67D8';
-          const initials = s.short.replace(/UC\\s*/,'UC ').split(' ').map(w => w[0]).join('').slice(0,3);
-          const materials = MATERIAL_LABELS.filter(([key]) => key !== 'transcriptReq').map(([key, label]) => {
+          const initials = s.short.replace(/UC\s*/,'UC ').split(' ').map(w => w[0]).join('').slice(0,3);
+          const pills = MATERIAL_LABELS.filter(([key]) => key !== 'transcriptReq').map(([key, label]) => {
             const done = !!a.materials?.[key];
             const short = label.replace('Application ', '').replace(' requested', '').replace(' drafted', '').replace(' secured', '').replace(' paid', '').replace(' sent', '');
             return `<span class="material-pill ${done ? 'done' : 'missing'}">${short}</span>`;
           }).join('');
-          return `<div class="apps-focus-card" draggable="true" ondragstart="onDragStart(event, '${s.id}')" ondragend="onDragEnd(event)" onclick="openAppModal('${s.id}')">
-            <div class="apps-school-photo ${img ? '' : 'no-image'}" style="--brand:${s.color};--brand2:${brand2};${img ? `background-image:url('${img}');` : ''}">${img ? '' : initials}</div>
-            <div class="apps-focus-main">
-              <div class="apps-school-line"><strong>${s.name}</strong><span class="kc-label ${a.label.toLowerCase()}">${a.label}</span></div>
-              <div class="apps-meta-line">${a.status} · ${s.platform} · ${compactDeadlineType(s)}</div>
-              <div class="apps-materials">${materials}</div>
+          const inlineChecks = MATERIAL_LABELS.map(([k, lbl]) => {
+            const done = !!a.materials?.[k];
+            return `<label class="check-row ${done ? 'done' : ''}" onclick="event.stopPropagation()"><input type="checkbox" ${done ? 'checked' : ''} onchange="toggleMaterial('${s.id}','${k}',this.checked)"/><span>${lbl}</span></label>`;
+          }).join('');
+          const inlineStages = KANBAN_COLS.map(stage => `<button type="button" class="app-stage-step ${a.status === stage ? 'active' : ''}" onclick="event.stopPropagation(); setAppStage('${s.id}','${stage}')" aria-pressed="${a.status === stage}">${stage}</button>`).join('');
+          const isExpanded = APPS_EXPANDED.has(s.id);
+          return `<div class="apps-focus-card${isExpanded ? ' expanded' : ''}" id="apps-card-${s.id}">
+            <div class="apps-fc-header" draggable="true" ondragstart="onDragStart(event, '${s.id}')" ondragend="onDragEnd(event)" onclick="toggleFocusCard('${s.id}')">
+              <div class="apps-school-photo ${img ? '' : 'no-image'}" style="--brand:${s.color};--brand2:${brand2};${img ? `background-image:url('${img}');` : ''}">${img ? '' : initials}</div>
+              <div class="apps-focus-main">
+                <div class="apps-school-line"><strong>${s.name}</strong><span class="kc-label ${a.label.toLowerCase()}">${a.label}</span></div>
+                <div class="apps-meta-line">${a.status} · ${s.platform} · ${compactDeadlineType(s)}</div>
+                <div class="apps-materials">${pills}</div>
+              </div>
+              <div class="apps-focus-deadline">
+                <div class="deadline-chip"><strong>${deadlinePhrase(compactDeadlineDate(s))}</strong><span>${fmtDate(compactDeadlineDate(s))}</span></div>
+                <div class="apps-progress-wrap">
+                  <div class="apps-progress-label"><span>Progress</span><span>${p}%</span></div>
+                  <div class="apps-progress-track"><span style="width:${p}%"></span></div>
+                </div>
+              </div>
             </div>
-            <div class="apps-focus-deadline">
-              <div class="deadline-chip"><strong>${deadlinePhrase(compactDeadlineDate(s))}</strong><span>${fmtDate(compactDeadlineDate(s))}</span></div>
-              <div class="apps-progress-wrap">
-                <div class="apps-progress-label"><span>Progress</span><span>${p}%</span></div>
-                <div class="apps-progress-track"><span style="width:${p}%"></span></div>
+            <div class="apps-fc-body">
+              <div class="apps-fc-checks">${inlineChecks}</div>
+              <div class="apps-fc-stage-row" role="group" aria-label="Application stage">${inlineStages}</div>
+              <div class="apps-fc-foot">
+                <button class="btn btn-ghost btn-sm" onclick="openAppModal('${s.id}')">Stats &amp; notes</button>
+                ${a.status === 'Submitted' ? `<button class="btn btn-success btn-sm" onclick="openDecisionForm('${s.id}')">Record decision</button>` : ''}
+                <button class="btn btn-ghost btn-sm apps-fc-remove" onclick="removeApp('${s.id}')">Remove</button>
               </div>
             </div>
           </div>`;
-        }).join('') : '<div class="empty-state" style="padding:1.5rem;"><p>No live applications. Add schools from Schools to start planning.</p></div>'}
+        }).join('') : '<div class="apps-focus-empty"><p>No upcoming deadlines. Add more schools or check the pipeline for your tracked applications.</p></div>'}
       </div>
       ${hiddenCount > 0 ? `<div class="apps-focus-footer"><span>${hiddenCount} more school${hiddenCount === 1 ? '' : 's'} tracked</span><button class="btn-link" onclick="goto('timeline')">View all in Timeline</button></div>` : ''}
     </section>
@@ -4174,7 +4199,7 @@ function setAppStage(id, stage) {
   saveUserApps();
   renderKanban();
   renderAppList();
-  openAppModal(id);
+  if (document.getElementById('appModal').classList.contains('active')) openAppModal(id);
   toast(`${byId(id).short} stage set to ${stage}`);
 }
 
@@ -4185,7 +4210,7 @@ function toggleMaterial(id, key, val) {
   app.materials[key] = val;
   app.progress = computeProgress(app);
   saveUserApps();
-  openAppModal(id);
+  if (document.getElementById('appModal').classList.contains('active')) openAppModal(id);
   renderKanban();
   renderAppList();
 }
