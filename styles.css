@@ -2943,7 +2943,7 @@ html[data-theme="dark"] .kcard .kc-label.reach { color: var(--accent-warm); }
   right: .85rem;
   bottom: .85rem;
   width: min(380px, calc(100vw - 2rem));
-  border: 1px solid rgba(255,255,255,.08);
+  border: 1px solid var(--border-soft);
   border-radius: 10px;
   background: var(--bg-surface);
   box-shadow: 0 8px 32px rgba(0,0,0,.45), 0 2px 8px rgba(0,0,0,.3);

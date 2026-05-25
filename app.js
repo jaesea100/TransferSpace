@@ -2840,7 +2840,7 @@ function globeThemePalette() {
     land: dark ? '#1c3550' : '#a8bdb8',
     coast: dark ? 'rgba(120, 180, 225, .52)' : 'rgba(100, 130, 125, .55)',
     grid: dark ? 'rgba(120, 180, 225, .12)' : 'rgba(100, 130, 125, .16)',
-    ring: dark ? 'rgba(90, 180, 240, .40)' : 'rgba(80, 120, 150, .45)',
+    ring: dark ? 'rgba(90, 180, 240, .40)' : 'rgba(60, 110, 150, .55)',
     atmosphere: dark ? 'rgba(50, 130, 220, .22)' : 'rgba(70, 130, 200, .18)'
   };
 }
@@ -3051,21 +3051,24 @@ function drawMapPin(ctx, x, y, color, selected, compact, hovered) {
     const dark = isDarkTheme();
     ctx.save();
     ctx.beginPath();
-    ctx.arc(x, y, dark ? 3.6 : 3.2, 0, Math.PI * 2);
+    ctx.arc(x, y, dark ? 3.6 : 3.4, 0, Math.PI * 2);
     ctx.fillStyle = color;
     ctx.fill();
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = dark ? 'rgba(8, 20, 36, .55)' : 'rgba(247, 251, 255, .65)';
+    ctx.lineWidth = 1.1;
+    // Dark ring in dark mode keeps fill visible; medium-slate ring in light mode
+    // separates pins (especially grey reach) from pale ocean
+    ctx.strokeStyle = dark ? 'rgba(8, 20, 36, .55)' : 'rgba(50, 70, 90, .45)';
     ctx.stroke();
     ctx.restore();
     return;
   }
   const headY = y - h * .58;
   const headR = w * .48;
+  const dark = isDarkTheme();
   ctx.save();
-  ctx.shadowColor = 'rgba(0, 0, 0, .2)';
-  ctx.shadowBlur = 1.5;
-  ctx.shadowOffsetY = 1;
+  ctx.shadowColor = dark ? 'rgba(0, 0, 0, .22)' : 'rgba(0, 0, 0, .32)';
+  ctx.shadowBlur = dark ? 1.5 : 3;
+  ctx.shadowOffsetY = dark ? 1 : 1.5;
   ctx.beginPath();
   ctx.moveTo(x, y);
   ctx.bezierCurveTo(x - w * .56, y - h * .32, x - w * .62, y - h * .7, x, y - h);
