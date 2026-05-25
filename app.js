@@ -485,7 +485,7 @@ async function handleLorSubmit(e) {
     const { data: inserted, error } = await sb.from('lors').insert(data).select().single();
     if (error) { toast('Couldn\'t save. Try again.'); return; }
     DB_LORS.unshift(inserted);
-    toast('LOR request saved.');
+    toast('Rec letter request saved.');
   }
   closeLorModal();
   renderDocumentsPage();
@@ -4951,16 +4951,17 @@ function openHelpModal(opts) {
   var isSignedOut = !!opts.signedOut;
   var box = document.getElementById('appModalBox');
   box.className = 'modal';
+  const _kbdLabel = /Mac|iPhone|iPad/i.test(navigator.platform + ' ' + navigator.userAgent) ? '⌘K' : 'Ctrl+K';
   box.innerHTML = '<div style="padding:2rem;">'
     + '<h2 style="font-family:var(--font-display); margin-bottom:.3rem;">' + (isOnboarding || isSignedOut ? 'Welcome to TransferSpace' : 'How to use TransferSpace') + '</h2>'
     + '<p class="sub" style="margin-bottom:1.5rem;">' + (isSignedOut ? 'Sign in when you are ready to save a private transfer workspace.' : isOnboarding ? 'A quick first-run tour so the workspace feels less mysterious.' : 'Quick guide to get the most out of your transfer tracker.') + '</p>'
     + '<div style="display:flex; flex-direction:column; gap:1.2rem;">'
     + '<div><div style="font-weight:600; margin-bottom:.2rem;">Schools</div><div style="color:var(--text-secondary); font-size:.88rem;">Browse schools and use the Refine panel on the left to filter by GPA, region, deadline type, and more. Click any card to see detailed info, then save schools to your list.</div></div>'
-    + '<div><div style="font-weight:600; margin-bottom:.2rem;">Applications</div><div style="color:var(--text-secondary); font-size:.88rem;">Track your apps on the kanban board or list view. Drag cards between columns to update status. Click a card to check off materials like transcripts, essays, and LORs.</div></div>'
-    + '<div><div style="font-weight:600; margin-bottom:.2rem;">Materials</div><div style="color:var(--text-secondary); font-size:.88rem;">Write and version your essays with the built-in editor (word count tracking included). Upload transcripts, manage LOR requests, and keep everything organized in one vault.</div></div>'
+    + '<div><div style="font-weight:600; margin-bottom:.2rem;">Applications</div><div style="color:var(--text-secondary); font-size:.88rem;">Track your apps on the kanban board or list view. Drag cards between columns to update status. Click a card to check off materials like transcripts, essays, and rec letters.</div></div>'
+    + '<div><div style="font-weight:600; margin-bottom:.2rem;">Materials</div><div style="color:var(--text-secondary); font-size:.88rem;">Write and version your essays with the built-in editor (word count tracking included). Upload transcripts, manage rec letter requests, and keep everything organized in one vault.</div></div>'
     + '<div><div style="font-weight:600; margin-bottom:.2rem;">Timeline</div><div style="color:var(--text-secondary); font-size:.88rem;">See all your deadlines on a Gantt-style chart. Zoom between 2-week, 6-month, and full-year views. The "Next 14 days" panel shows your most urgent tasks.</div></div>'
     + '<div><div style="font-weight:600; margin-bottom:.2rem;">CSV Import</div><div style="color:var(--text-secondary); font-size:.88rem;">On the Schools page, click "Import CSV" to add custom schools. Your CSV needs at minimum a <code>name</code> column. Optional columns: <code>state</code>, <code>accept</code>, <code>gpa</code>, <code>deadline</code>, <code>platform</code>, <code>fee</code>.</div></div>'
-    + '<div><div style="font-weight:600; margin-bottom:.2rem;">Keyboard shortcuts</div><div style="color:var(--text-secondary); font-size:.88rem;"><kbd style="padding:.15rem .4rem; background:var(--bg-inset); border:1px solid var(--border); border-radius:4px; font-size:.75rem;">⌘K</kbd> — Quick search &amp; actions</div></div>'
+    + '<div><div style="font-weight:600; margin-bottom:.2rem;">Keyboard shortcuts</div><div style="color:var(--text-secondary); font-size:.88rem;"><kbd style="padding:.15rem .4rem; background:var(--bg-inset); border:1px solid var(--border); border-radius:4px; font-size:.75rem;">' + _kbdLabel + '</kbd>: Quick search &amp; actions</div></div>'
     + '</div>'
     + '<div style="margin-top:1.5rem; display:flex; justify-content:flex-end; gap:.5rem; flex-wrap:wrap;">'
     + (isSignedOut ? '<button class="btn btn-ghost btn-sm" onclick="closeAppModal()">Browse first</button><button class="btn btn-primary btn-sm" onclick="closeAppModal(); showAuthModal(false)">Sign in</button>' : '<button class="btn btn-primary btn-sm" onclick="closeAppModal()">Got it</button>')
