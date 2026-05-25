@@ -3354,17 +3354,18 @@ function renderGlobeDetailPanel() {
   const d = daysTo(deadlineDate);
   const onList = USER_APPS.some(a => a.id === s.id);
   const fit = globeFitTier(s);
+  const fitColor = globeFitColor(s);
   panel.innerHTML = `
     <div class="globe-school-panel">
       <div class="globe-panel-head">
         <button class="globe-panel-close" onclick="clearGlobeSelection()" title="Close"><svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-        <span class="tag">${fit}</span>
+        <span class="globe-panel-tier" style="color:${fitColor};--fit-color:${fitColor}"><span class="globe-panel-tier-dot"></span>${fit}</span>
         <h3>${s.name}</h3>
         <p>${s.location ? s.location + ', ' : ''}${s.state} · ${s.platform}</p>
       </div>
       <div class="modal-body">
         <div class="sd-stats">
-        <div class="sd-stat"><div class="sd-v">${formatAcceptance(s)}</div><div class="sd-l">Accept</div></div>
+          <div class="sd-stat"><div class="sd-v">${formatAcceptance(s)}</div><div class="sd-l">Accept</div></div>
           <div class="sd-stat"><div class="sd-v">${formatGpa(s)}</div><div class="sd-l">Avg GPA</div></div>
           <div class="sd-stat"><div class="sd-v">${s.undergrad ? (s.undergrad/1000).toFixed(1)+'k' : '-'}</div><div class="sd-l">Undergrads</div></div>
         </div>
@@ -3372,7 +3373,7 @@ function renderGlobeDetailPanel() {
           <div class="sd-row"><span>${compactDeadlineType(s)}</span><b class="mono">${d > 0 ? d + ' days' : fmtDate(deadlineDate)}</b></div>
           <div class="sd-row"><span>Out-of-state tuition</span><b class="mono">$${s.tuition.out.toLocaleString()}/yr</b></div>
           <div class="sd-row"><span>Application fee</span><b class="mono">${formatFee(s)}${s.waiver ? ' · waiver' : ''}</b></div>
-          <div class="sd-row"><span>Major areas</span><span style="font-size:.85rem; color:var(--text-secondary); text-align:right; max-width:190px;">${s.majors.slice(0, 3).join(', ')}</span></div>
+          <div class="sd-row"><span>Major areas</span><span class="sd-majors">${s.majors.slice(0, 3).join(', ')}</span></div>
         </div>
       </div>
       <div class="modal-foot">
