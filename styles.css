@@ -1698,8 +1698,8 @@ html[data-theme="dark"] .tag.warm { color: var(--accent-warm); }
   display: flex; align-items: center; gap: .6rem; margin-bottom: 1.2rem; flex-wrap: wrap;
 }
 .tl-search {
-  flex: 1; min-width: 180px; max-width: 320px;
-  padding: .5rem .75rem .5rem 2.2rem; border: 1px solid var(--border);
+  display: block; width: 100%;
+  padding: .5rem .75rem .5rem 2.25rem; border: 1px solid var(--border);
   border-radius: var(--radius-sm); font-size: .85rem; background: var(--bg-surface);
   font-family: var(--font-ui); color: var(--text-primary); transition: border-color .15s;
 }

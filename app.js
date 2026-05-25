@@ -172,7 +172,7 @@ async function signOut() {
   closeUserMenu();
   const { error } = await sb.auth.signOut();
   if (error) {
-    toast('Sign out failed: ' + error.message);
+    toast('Sign out failed. Try again.');
     return;
   }
   CURRENT_USER = null;
@@ -250,7 +250,7 @@ async function createEssay(data = {}) {
     version: 1,
   };
   const { data: inserted, error } = await sb.from('essays').insert(row).select().single();
-  if (error) { toast('Error creating essay: ' + error.message); return null; }
+  if (error) { toast('Couldn\'t create essay. Try again.'); return null; }
   // Save initial version
   await sb.from('essay_versions').insert({
     essay_id: inserted.id, version: 1, body: inserted.body,
@@ -264,7 +264,7 @@ async function createEssay(data = {}) {
 async function updateEssay(id, updates) {
   updates.updated_at = new Date().toISOString();
   const { data: updated, error } = await sb.from('essays').update(updates).eq('id', id).select().single();
-  if (error) { toast('Error saving: ' + error.message); return null; }
+  if (error) { toast('Couldn\'t save. Try again.'); return null; }
   const idx = DB_ESSAYS.findIndex(e => e.id === id);
   if (idx >= 0) DB_ESSAYS[idx] = updated;
   return updated;
@@ -402,7 +402,7 @@ async function submitUpload() {
     const ext = file.name.split('.').pop().toLowerCase();
     const storagePath = `${CURRENT_USER.id}/${Date.now()}_${file.name}`;
     const { error: upErr } = await sb.storage.from('documents').upload(storagePath, file);
-    if (upErr) { toast(`Upload failed for ${file.name}: ${upErr.message}`); continue; }
+    if (upErr) { toast(`Upload failed for ${file.name}. Try again.`); continue; }
 
     const { data: docRow, error: dbErr } = await sb.from('documents').insert({
       user_id: CURRENT_USER.id,
@@ -476,14 +476,14 @@ async function handleLorSubmit(e) {
 
   if (editId) {
     const { data: updated, error } = await sb.from('lors').update(data).eq('id', editId).select().single();
-    if (error) { toast('Error: ' + error.message); return; }
+    if (error) { toast('Couldn\'t save. Try again.'); return; }
     const idx = DB_LORS.findIndex(l => l.id === editId);
     if (idx >= 0) DB_LORS[idx] = updated;
-    toast('LOR updated.');
+    toast('Rec letter updated.');
   } else {
     data.user_id = CURRENT_USER.id;
     const { data: inserted, error } = await sb.from('lors').insert(data).select().single();
-    if (error) { toast('Error: ' + error.message); return; }
+    if (error) { toast('Couldn\'t save. Try again.'); return; }
     DB_LORS.unshift(inserted);
     toast('LOR request saved.');
   }
@@ -795,7 +795,7 @@ async function deleteNotebookFromView() {
   // Delete each essay row in Supabase, then refresh once at the end.
   for (const essay of group.essays) {
     const { error } = await sb.from('essays').delete().eq('id', essay.id);
-    if (error) { toast('Error deleting essay: ' + error.message); return; }
+    if (error) { toast('Couldn\'t delete. Try again.'); return; }
     DB_ESSAYS = DB_ESSAYS.filter(e => e.id !== essay.id);
   }
   closeNotebookView();
@@ -1053,7 +1053,7 @@ async function openEssayEditor(id) {
         </div>
 
         <div class="mt-2" style="display:flex; gap: .4rem; flex-direction: column;">
-          <button class="btn btn-danger btn-sm" onclick="if(confirm('Delete this essay permanently?')) deleteEssay('${id}')">🗑 Delete essay</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteEssay('${id}')">Delete essay</button>
         </div>
       </aside>
     </div>
@@ -3586,11 +3586,20 @@ function toggleFav(id) {
   const s = byId(id);
   const idx = USER_APPS.findIndex(a => a.id === id);
   if (idx >= 0) {
-    if (!confirm(`Remove ${s?.short || 'this school'} from your applications?`)) return;
+    const snapshot = JSON.parse(JSON.stringify(USER_APPS[idx]));
+    const wasFav = EX_FAVS.has(id);
     USER_APPS.splice(idx, 1);
     EX_FAVS.delete(id);
     saveUserApps();
-    toast(`${s?.short || 'School'} removed from applications.`);
+    toastUndo(`${s?.short || 'School'} removed.`, () => {
+      USER_APPS.splice(idx, 0, snapshot);
+      if (wasFav) EX_FAVS.add(id);
+      saveUserApps();
+      renderKanban();
+      renderAppList();
+      renderAppStats();
+      renderTimeline();
+    });
   } else {
     addSchoolToList(id, { open: false });
     toast(`${s?.short || 'School'} added to applications.`);
@@ -5161,7 +5170,7 @@ async function changePassword() {
   if (newPw.length < 6) { toast('Password must be at least 6 characters.'); return; }
   try {
     const { error } = await sb.auth.updateUser({ password: newPw });
-    if (error) { toast('Error: ' + error.message); return; }
+    if (error) { toast('Couldn\'t update password. Try again.'); return; }
     document.getElementById('pwCurrent').value = '';
     document.getElementById('pwNew').value = '';
     document.getElementById('pwConfirm').value = '';
@@ -5376,7 +5385,7 @@ async function saveProfile() {
   };
 
   const { data, error } = await sb.from('profiles').upsert({ id: CURRENT_USER.id, ...profileData }).select().single();
-  if (error) { toast('Error saving profile: ' + error.message); return; }
+  if (error) { toast('Couldn\'t save profile. Try again.'); return; }
   DB_PROFILE = data;
   // Sync back
   USER_PROFILE.name = data.full_name;
@@ -5483,7 +5492,7 @@ async function uploadProfilePhoto() {
     if (!file || !CURRENT_USER) return;
     const path = `${CURRENT_USER.id}/avatar_${Date.now()}.${file.name.split('.').pop()}`;
     const { error: upErr } = await sb.storage.from('documents').upload(path, file);
-    if (upErr) { toast('Upload failed: ' + upErr.message); return; }
+    if (upErr) { toast('Upload failed. Try again.'); return; }
     const { data: urlData } = sb.storage.from('documents').getPublicUrl(path);
     if (urlData?.publicUrl) {
       await sb.from('profiles').update({ avatar_url: urlData.publicUrl }).eq('id', CURRENT_USER.id);
@@ -5603,7 +5612,7 @@ async function handleBookmarkSubmit(e) {
     description: document.getElementById('bmDesc').value.trim(),
   };
   const { data, error } = await sb.from('bookmarks').insert(row).select().single();
-  if (error) { toast('Error: ' + error.message); return; }
+  if (error) { toast('Couldn\'t save bookmark. Try again.'); return; }
   DB_BOOKMARKS.unshift(data);
   closeBookmarkModal();
   renderBookmarks();
@@ -5808,6 +5817,10 @@ function patchKanbanCards() {
 
 /* =============== init =============== */
 document.addEventListener('DOMContentLoaded', async () => {
+  const kbdEl = document.querySelector('.kbd');
+  if (kbdEl && !/Mac|iPhone|iPad/i.test(navigator.platform + ' ' + navigator.userAgent)) {
+    kbdEl.textContent = 'Ctrl+K';
+  }
   updateAuthUI();
   normalizeExploreFilterDefaults();
   initSettings();
