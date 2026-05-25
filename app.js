@@ -3442,11 +3442,11 @@ function renderModalGlobe() {
   const r = Math.min(w * (panelOpen ? .82 : 1), h) * .34 * EXPLORE_GLOBE.zoom;
   // Atmospheric background — deep slate that makes the globe pop
   const isDark = isDarkTheme();
-  ctx.fillStyle = isDark ? '#040d16' : '#131f2d';
+  ctx.fillStyle = isDark ? '#040d16' : '#b8ccda';
   ctx.fillRect(0, 0, w, h);
   const vignette = ctx.createRadialGradient(cx, cy, r * 1.6, cx, cy, Math.hypot(w, h) * 0.85);
   vignette.addColorStop(0, 'rgba(0,0,0,0)');
-  vignette.addColorStop(1, 'rgba(0,0,0,0.42)');
+  vignette.addColorStop(1, isDark ? 'rgba(0,0,0,0.42)' : 'rgba(0,20,40,0.14)');
   ctx.fillStyle = vignette;
   ctx.fillRect(0, 0, w, h);
   EXPLORE_GLOBE.modalHit = { cx, cy, r };

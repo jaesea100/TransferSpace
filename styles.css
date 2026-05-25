@@ -2761,10 +2761,8 @@ html[data-theme="dark"] .kcard .kc-label.reach { color: var(--accent-warm); }
   display: flex;
   align-items: center;
   padding: .72rem 1rem;
-  border-bottom: 1px solid rgba(255,255,255,.06);
-  background: rgba(12, 23, 36, .95);
-  backdrop-filter: blur(16px) saturate(1.3);
-  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-surface);
 }
 .globe-modal-title {
   display: flex;
@@ -2774,11 +2772,11 @@ html[data-theme="dark"] .kcard .kc-label.reach { color: var(--accent-warm); }
 .globe-modal .modal-head h3 {
   font-size: .96rem;
   letter-spacing: .01em;
-  color: rgba(230, 238, 248, .92);
+  color: var(--text-primary);
   font-weight: 500;
 }
 .globe-modal .modal-head .mh-sub {
-  color: rgba(170, 190, 210, .65);
+  color: var(--text-muted);
   font-size: .76rem;
 }
 .globe-topbar {
@@ -2793,9 +2791,9 @@ html[data-theme="dark"] .kcard .kc-label.reach { color: var(--accent-warm); }
   align-items: center;
   gap: .3rem;
   padding: .2rem .28rem;
-  border: 1px solid rgba(255,255,255,.1);
+  border: 1px solid var(--border);
   border-radius: 999px;
-  background: rgba(255,255,255,.05);
+  background: var(--bg-elevated);
 }
 .globe-fit-key {
   display: flex;
@@ -2803,7 +2801,7 @@ html[data-theme="dark"] .kcard .kc-label.reach { color: var(--accent-warm); }
   gap: .38rem;
   padding: .18rem .44rem;
   border-radius: 999px;
-  color: rgba(200, 218, 238, .72);
+  color: var(--text-secondary);
   font-size: .71rem;
   white-space: nowrap;
 }
@@ -2816,22 +2814,22 @@ html[data-theme="dark"] .kcard .kc-label.reach { color: var(--accent-warm); }
   box-shadow: 0 0 4px var(--fit);
 }
 .globe-modal .drawer-close {
-  color: rgba(200, 218, 238, .8);
-  background: rgba(255,255,255,.07);
-  border: 1px solid rgba(255,255,255,.1);
+  color: var(--text-secondary);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
 }
 .globe-modal .drawer-close:hover {
-  background: rgba(255,255,255,.12);
-  color: #fff;
+  background: var(--bg-canvas);
+  color: var(--text-primary);
 }
 .globe-zoom-controls {
   display: flex;
   align-items: center;
   gap: 1px;
   padding: 2px;
-  border: 1px solid rgba(255,255,255,.1);
+  border: 1px solid var(--border);
   border-radius: 8px;
-  background: rgba(255,255,255,.05);
+  background: var(--bg-elevated);
 }
 .globe-zoom-controls button {
   width: 30px;
@@ -2839,7 +2837,7 @@ html[data-theme="dark"] .kcard .kc-label.reach { color: var(--accent-warm); }
   border: 0;
   border-radius: 6px;
   background: transparent;
-  color: rgba(200, 218, 238, .8);
+  color: var(--text-secondary);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -2847,8 +2845,8 @@ html[data-theme="dark"] .kcard .kc-label.reach { color: var(--accent-warm); }
 }
 .globe-zoom-controls button svg { width: 14px; height: 14px; }
 .globe-zoom-controls button:hover {
-  background: rgba(255,255,255,.1);
-  color: #fff;
+  background: var(--bg-canvas);
+  color: var(--text-primary);
 }
 .globe-modal-body {
   position: relative;
@@ -2864,32 +2862,32 @@ html[data-theme="dark"] .kcard .kc-label.reach { color: var(--accent-warm); }
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  background: rgba(5,12,22,.97);
-  border-right: 1px solid rgba(255,255,255,.07);
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border);
   overflow: hidden;
   z-index: 3;
 }
 .gsl-search {
   padding: .6rem .7rem;
-  border-bottom: 1px solid rgba(255,255,255,.07);
+  border-bottom: 1px solid var(--border);
   flex-shrink: 0;
 }
 .gsl-search input {
   width: 100%;
   box-sizing: border-box;
-  background: rgba(255,255,255,.06);
-  border: 1px solid rgba(255,255,255,.1);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
   border-radius: 6px;
   padding: .36rem .6rem;
   font-size: .78rem;
-  color: rgba(200,222,248,.85);
+  color: var(--text-primary);
   outline: none;
   transition: border-color .15s, background .15s;
 }
-.gsl-search input::placeholder { color: rgba(110,150,200,.45); }
+.gsl-search input::placeholder { color: var(--text-muted); }
 .gsl-search input:focus {
-  border-color: rgba(255,255,255,.22);
-  background: rgba(255,255,255,.09);
+  border-color: var(--border-soft);
+  background: var(--bg-canvas);
 }
 .gsl-items {
   flex: 1;
@@ -2898,14 +2896,14 @@ html[data-theme="dark"] .kcard .kc-label.reach { color: var(--accent-warm); }
 }
 .gsl-items::-webkit-scrollbar { width: 4px; }
 .gsl-items::-webkit-scrollbar-track { background: transparent; }
-.gsl-items::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 2px; }
+.gsl-items::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 .gsl-group-label {
   padding: .6rem .75rem .2rem;
   font-size: .67rem;
   font-weight: 600;
   letter-spacing: .06em;
   text-transform: uppercase;
-  color: rgba(110,150,195,.5);
+  color: var(--text-muted);
   pointer-events: none;
 }
 .gsl-item {
@@ -2916,18 +2914,18 @@ html[data-theme="dark"] .kcard .kc-label.reach { color: var(--accent-warm); }
   padding: .38rem .75rem;
   border: 0;
   background: transparent;
-  color: rgba(175,205,240,.72);
+  color: var(--text-secondary);
   cursor: pointer;
   text-align: left;
   transition: background .1s, color .1s;
 }
 .gsl-item:hover {
-  background: rgba(255,255,255,.05);
-  color: rgba(210,230,255,.9);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
 }
 .gsl-item.active {
-  background: rgba(255,255,255,.09);
-  color: rgba(228,242,255,.96);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
 }
 .gsl-dot {
   width: 7px;
@@ -2952,7 +2950,7 @@ html[data-theme="dark"] .kcard .kc-label.reach { color: var(--accent-warm); }
 }
 .gsl-meta {
   font-size: .69rem;
-  color: rgba(100,140,185,.6);
+  color: var(--text-muted);
   white-space: nowrap;
 }
 .gsl-tier {
@@ -2962,7 +2960,7 @@ html[data-theme="dark"] .kcard .kc-label.reach { color: var(--accent-warm); }
   padding: 2rem 1rem;
   text-align: center;
   font-size: .8rem;
-  color: rgba(100,140,185,.5);
+  color: var(--text-muted);
 }
 @media (max-width: 760px) {
   .globe-school-list { display: none; }
@@ -2973,7 +2971,7 @@ html[data-theme="dark"] .kcard .kc-label.reach { color: var(--accent-warm); }
   height: 100%;
   border: 0;
   border-radius: 0;
-  background: #08131e;
+  background: var(--bg-canvas);
   overflow: hidden;
   touch-action: none;
   cursor: grab;
@@ -3063,23 +3061,21 @@ html[data-theme="dark"] .kcard .kc-label.reach { color: var(--accent-warm); }
   font-size: .72rem;
   pointer-events: none;
 }
-/* Detail panel — always dark, matching left sidebar */
 .globe-detail-panel {
   position: absolute;
   top: .85rem;
   right: .85rem;
   bottom: .85rem;
   width: min(380px, calc(100vw - 2rem));
-  border: 1px solid rgba(255,255,255,.09);
+  border: 1px solid var(--border-soft);
   border-radius: 10px;
-  background: rgba(7,15,28,.97);
-  box-shadow: 0 8px 32px rgba(0,0,0,.55), 0 2px 8px rgba(0,0,0,.35);
+  background: var(--bg-surface);
+  box-shadow: var(--shadow-md);
   overflow: auto;
   transform: translateX(calc(100% + 1.5rem));
   opacity: 0;
   transition: transform .3s cubic-bezier(.22, 1, .36, 1), opacity .22s var(--ease);
   z-index: 4;
-  color: rgba(220,235,255,.9);
 }
 .globe-detail-panel.active {
   transform: translateX(0);
@@ -3090,14 +3086,14 @@ html[data-theme="dark"] .kcard .kc-label.reach { color: var(--accent-warm); }
   display: grid;
   place-items: center;
   padding: 2rem;
-  color: rgba(110,150,195,.55);
+  color: var(--text-muted);
   text-align: center;
   font-size: .86rem;
 }
 .globe-panel-head {
   position: relative;
   padding: 1rem 3rem 1rem 1rem;
-  border-bottom: 1px solid rgba(255,255,255,.08);
+  border-bottom: 1px solid var(--border);
 }
 .globe-panel-tier {
   display: flex;
@@ -3123,40 +3119,40 @@ html[data-theme="dark"] .kcard .kc-label.reach { color: var(--accent-warm); }
   font-family: var(--font-heading);
   font-size: 1.12rem;
   line-height: 1.15;
-  color: rgba(228,240,255,.94);
+  color: var(--text-primary);
 }
 .globe-panel-head p {
   margin: .35rem 0 0;
-  color: rgba(120,158,210,.62);
+  color: var(--text-secondary);
   font-size: .81rem;
 }
 .globe-school-panel .modal-body { padding: 1rem; }
 .globe-school-panel .modal-foot {
   padding: .85rem 1rem 1rem;
-  border-color: rgba(255,255,255,.08);
+  border-color: var(--border);
 }
 .globe-school-panel .sd-stats {
   grid-template-columns: repeat(3, 1fr);
-  background: rgba(255,255,255,.04);
-  border-color: rgba(255,255,255,.08);
+  background: var(--bg-elevated);
+  border-color: var(--border);
 }
 .globe-school-panel .sd-grid {
   grid-template-columns: 1fr;
 }
 .globe-school-panel .sd-stat .sd-v,
 .globe-school-panel .sd-row b {
-  color: rgba(220,235,255,.92);
+  color: var(--text-primary);
 }
 .globe-school-panel .sd-stat .sd-l {
-  color: rgba(110,148,200,.6);
+  color: var(--text-muted);
 }
 .globe-school-panel .sd-row span,
 .globe-school-panel .sd-notes {
-  color: rgba(120,158,210,.62);
+  color: var(--text-secondary);
 }
 .globe-school-panel .sd-majors {
   font-size: .83rem;
-  color: rgba(140,175,220,.68);
+  color: var(--text-secondary);
   text-align: right;
   max-width: 190px;
 }
@@ -3164,16 +3160,7 @@ html[data-theme="dark"] .kcard .kc-label.reach { color: var(--accent-warm); }
 .globe-school-panel .sd-block,
 .globe-school-panel .chip {
   background: transparent;
-  border-color: rgba(255,255,255,.08);
-}
-.globe-detail-panel .btn-ghost {
-  background: rgba(255,255,255,.07);
-  border-color: rgba(255,255,255,.13);
-  color: rgba(185,215,255,.82);
-}
-.globe-detail-panel .btn-ghost:hover {
-  background: rgba(255,255,255,.12);
-  color: rgba(215,235,255,.95);
+  border-color: var(--border);
 }
 .globe-panel-close {
   position: absolute;
@@ -3183,16 +3170,16 @@ html[data-theme="dark"] .kcard .kc-label.reach { color: var(--accent-warm); }
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  border: 1px solid rgba(255,255,255,.1);
-  background: rgba(255,255,255,.06);
-  color: rgba(175,205,245,.8);
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
   display: grid;
   place-items: center;
   cursor: pointer;
 }
 .globe-panel-close:hover {
-  background: rgba(255,255,255,.12);
-  color: rgba(215,235,255,.95);
+  background: var(--bg-canvas);
+  color: var(--text-primary);
 }
 @media (max-width: 900px) {
   .explore-globe-panel { grid-template-columns: 1fr; }
