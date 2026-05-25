@@ -3285,7 +3285,7 @@ function updateGlobeInfoCard() {
   const fitColor = globeFitColor(s);
   card.innerHTML = `
     <div class="gic-name">${s.name}</div>
-    <div class="gic-meta"><span class="gic-fit-dot" style="background:${fitColor}"></span>${fit} · GPA ${globeGpaRange(s)}</div>
+    <div class="gic-meta"><span class="gic-fit-dot" style="background:${fitColor};--fit-color:${fitColor}"></span>${fit} · GPA ${globeGpaRange(s)}</div>
     <div class="gic-stats"><span>${formatAcceptance(s)} accept.</span><span>${s.location || s.state}</span></div>
   `;
   card.hidden = false;

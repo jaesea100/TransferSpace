@@ -2879,49 +2879,68 @@ html[data-theme="dark"] .kcard .kc-label.reach { color: var(--accent-warm); }
 }
 .globe-info-card {
   position: absolute;
-  min-width: 172px;
-  max-width: 224px;
-  padding: .52rem .64rem;
-  border: 1px solid var(--border-soft);
-  border-radius: 9px;
-  background: color-mix(in srgb, var(--bg-surface) 88%, transparent);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: var(--shadow-md);
-  color: var(--text-primary);
+  min-width: 176px;
+  max-width: 230px;
+  padding: .56rem .72rem .54rem;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 10px;
+  background: rgba(8,18,30,.95);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  box-shadow: 0 6px 24px rgba(0,0,0,.55), 0 1px 0 rgba(255,255,255,.05) inset;
+  color: rgba(220,232,248,.9);
   pointer-events: none;
-  transform: translate(-50%, calc(-100% - 14px));
+  transform: translate(-50%, calc(-100% - 18px));
   transition: opacity .15s var(--ease);
   z-index: 4;
+}
+.globe-info-card::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 8px;
+  height: 8px;
+  background: rgba(8,18,30,.95);
+  border-right: 1px solid rgba(255,255,255,.1);
+  border-bottom: 1px solid rgba(255,255,255,.1);
 }
 .globe-info-card[hidden] { display: none; }
 .globe-info-card .gic-name {
   font-family: var(--font-heading);
-  font-size: .88rem;
-  line-height: 1.1;
-  margin-bottom: .28rem;
+  font-size: .87rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: rgba(230,240,255,.95);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: .3rem;
 }
 .globe-info-card .gic-meta {
   display: flex;
   align-items: center;
-  gap: .35rem;
-  color: var(--text-secondary);
-  font-size: .74rem;
+  gap: .32rem;
+  font-size: .73rem;
+  color: rgba(155,185,218,.72);
 }
 .globe-info-card .gic-fit-dot {
   display: inline-block;
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   flex-shrink: 0;
+  box-shadow: 0 0 6px var(--fit-color, currentColor);
 }
 .globe-info-card .gic-stats {
   display: flex;
-  gap: .55rem;
-  margin-top: .38rem;
-  color: var(--text-muted);
-  font-size: .72rem;
-  flex-wrap: wrap;
+  gap: .6rem;
+  margin-top: .36rem;
+  padding-top: .36rem;
+  border-top: 1px solid rgba(255,255,255,.07);
+  color: rgba(110,145,185,.65);
+  font-size: .71rem;
 }
 .globe-stage-note {
   position: absolute;
