@@ -5227,7 +5227,7 @@ html[data-theme="dark"] {
   gap:.5rem;
   align-items:center;
 }
-.apps-fc-remove { margin-left:auto; }
+.apps-fc-remove { margin-left:auto; color:var(--danger); }
 .apps-focus-empty {
   padding:1.5rem;
   color:var(--ink-secondary);

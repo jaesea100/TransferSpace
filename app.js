@@ -281,13 +281,25 @@ async function saveEssayVersion(essayId, body) {
   await updateEssay(essayId, { version: newVersion, body });
 }
 
-async function deleteEssay(id) {
-  const { error } = await sb.from('essays').delete().eq('id', id);
-  if (error) { toast('Error deleting: ' + error.message); return; }
+function deleteEssay(id) {
+  const idx = DB_ESSAYS.findIndex(e => e.id === id);
+  if (idx < 0) return;
+  const snapshot = DB_ESSAYS[idx];
   DB_ESSAYS = DB_ESSAYS.filter(e => e.id !== id);
   closeEssayEditor();
   renderDocumentsPage();
-  toast('Essay deleted.');
+  let undone = false;
+  toastUndo('Essay deleted.', () => {
+    undone = true;
+    DB_ESSAYS.splice(idx, 0, snapshot);
+    renderDocumentsPage();
+  });
+  setTimeout(async () => {
+    if (!undone) {
+      const { error } = await sb.from('essays').delete().eq('id', id);
+      if (error) { DB_ESSAYS.splice(idx, 0, snapshot); renderDocumentsPage(); toast('Could not delete essay. Restored.'); }
+    }
+  }, 7500);
 }
 
 async function loadEssayVersions(essayId) {
@@ -479,11 +491,21 @@ async function handleLorSubmit(e) {
   renderDocumentsPage();
 }
 
-async function deleteLor(id) {
-  await sb.from('lors').delete().eq('id', id);
+function deleteLor(id) {
+  const idx = DB_LORS.findIndex(l => l.id === id);
+  if (idx < 0) return;
+  const snapshot = DB_LORS[idx];
   DB_LORS = DB_LORS.filter(l => l.id !== id);
   renderDocumentsPage();
-  toast('LOR removed.');
+  let undone = false;
+  toastUndo('Rec letter removed.', () => {
+    undone = true;
+    DB_LORS.splice(idx, 0, snapshot);
+    renderDocumentsPage();
+  });
+  setTimeout(async () => {
+    if (!undone) await sb.from('lors').delete().eq('id', id);
+  }, 7500);
 }
 
 function lorStatusTag(status) {
@@ -5588,11 +5610,21 @@ async function handleBookmarkSubmit(e) {
   toast('Bookmark saved.');
 }
 
-async function deleteBookmark(id) {
-  await sb.from('bookmarks').delete().eq('id', id);
+function deleteBookmark(id) {
+  const idx = DB_BOOKMARKS.findIndex(b => b.id === id);
+  if (idx < 0) return;
+  const snapshot = DB_BOOKMARKS[idx];
   DB_BOOKMARKS = DB_BOOKMARKS.filter(b => b.id !== id);
   renderBookmarks();
-  toast('Bookmark removed.');
+  let undone = false;
+  toastUndo('Bookmark removed.', () => {
+    undone = true;
+    DB_BOOKMARKS.splice(idx, 0, snapshot);
+    renderBookmarks();
+  });
+  setTimeout(async () => {
+    if (!undone) await sb.from('bookmarks').delete().eq('id', id);
+  }, 7500);
 }
 
 // Copy link to clipboard utility
