@@ -2836,11 +2836,12 @@ function isDarkTheme() {
 function globeThemePalette() {
   const dark = isDarkTheme();
   return {
-    ocean: dark ? '#06111d' : 'rgba(231, 239, 240, .62)',
-    land: dark ? '#172632' : 'rgba(112, 132, 126, .18)',
-    coast: dark ? 'rgba(174, 199, 205, .28)' : 'rgba(72, 91, 88, .38)',
-    grid: dark ? 'rgba(174, 199, 205, .1)' : 'rgba(72, 91, 88, .14)',
-    ring: dark ? 'rgba(142, 220, 232, .2)' : 'rgba(72, 91, 88, .34)'
+    ocean: dark ? '#07121e' : '#c8dce8',
+    land: dark ? '#162433' : '#a8bdb8',
+    coast: dark ? 'rgba(140, 180, 210, .38)' : 'rgba(100, 130, 125, .55)',
+    grid: dark ? 'rgba(140, 180, 210, .10)' : 'rgba(100, 130, 125, .16)',
+    ring: dark ? 'rgba(100, 180, 230, .28)' : 'rgba(80, 120, 150, .45)',
+    atmosphere: dark ? 'rgba(56, 140, 220, .14)' : 'rgba(70, 130, 200, .18)'
   };
 }
 function pointerInsideGlobe(e, hit) {
@@ -2908,19 +2909,19 @@ function drawProjectedPath(ctx, points, centerLon, centerLat, cx, cy, r, closePa
 }
 function drawLandMasses(ctx, cx, cy, r, centerLon, centerLat, compact) {
   const palette = globeThemePalette();
-  const land = compact ? 'transparent' : palette.land;
+  const land = compact
+    ? (isDarkTheme() ? 'rgba(18, 38, 55, .94)' : 'rgba(145, 165, 158, .32)')
+    : palette.land;
   const coast = compact
-    ? (isDarkTheme() ? 'rgba(218, 214, 200, .44)' : 'rgba(88, 84, 73, .38)')
+    ? (isDarkTheme() ? 'rgba(140, 180, 210, .42)' : 'rgba(100, 130, 125, .55)')
     : palette.coast;
   const projection = globeProjection(centerLon, centerLat, cx, cy, r);
   if (projection && window.d3?.geoPath) {
     const path = d3.geoPath(projection, ctx);
     ctx.beginPath();
     path(worldLandGeoJson());
-    if (!compact) {
-      ctx.fillStyle = land;
-      ctx.fill();
-    }
+    ctx.fillStyle = land;
+    ctx.fill();
     ctx.strokeStyle = coast;
     ctx.lineWidth = compact ? .7 : .65;
     ctx.stroke();
@@ -2930,7 +2931,7 @@ function drawLandMasses(ctx, cx, cy, r, centerLon, centerLat, compact) {
     ctx.beginPath();
     const result = drawProjectedPath(ctx, points, centerLon, centerLat, cx, cy, r, true);
     if (!result.visibleCount) return;
-    if (!compact && !result.broken) {
+    if (!result.broken) {
       ctx.fillStyle = land;
       ctx.fill();
     }
@@ -3008,17 +3009,31 @@ function drawGlobeStand(ctx, cx, cy, r, compact) {
 function drawGlobeShell(ctx, cx, cy, r, centerLon, centerLat, compact, showStand = true) {
   const palette = globeThemePalette();
   const ocean = palette.ocean;
+  // Atmosphere halo — subtle radial glow behind the sphere
+  const atm = ctx.createRadialGradient(cx, cy, r * .88, cx, cy, r * 1.22);
+  atm.addColorStop(0, palette.atmosphere);
+  atm.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(cx, cy, r * 1.22, 0, Math.PI * 2);
+  ctx.fillStyle = atm;
+  ctx.fill();
+  ctx.restore();
   if (showStand) drawGlobeStand(ctx, cx, cy, r, compact);
   ctx.save();
   ctx.beginPath();
   ctx.arc(cx, cy, r, 0, Math.PI * 2);
   ctx.clip();
-  if (!compact) {
-    ctx.fillStyle = ocean;
-    ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
-  }
+  ctx.fillStyle = ocean;
+  ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
   drawLandMasses(ctx, cx, cy, r, centerLon, centerLat, compact);
   drawGlobeGrid(ctx, cx, cy, r, centerLon, centerLat, compact);
+  // Specular highlight — top-left rim to suggest spherical form
+  const spec = ctx.createRadialGradient(cx - r * .3, cy - r * .3, 0, cx, cy, r);
+  spec.addColorStop(0, isDarkTheme() ? 'rgba(255,255,255,.04)' : 'rgba(255,255,255,.18)');
+  spec.addColorStop(.55, 'rgba(0,0,0,0)');
+  ctx.fillStyle = spec;
+  ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
   ctx.restore();
   ctx.beginPath();
   ctx.arc(cx, cy, r, 0, Math.PI * 2);
@@ -3134,6 +3149,7 @@ function renderExploreGlobePreview() {
   const r = Math.min(w * .28, h * .31);
   EXPLORE_GLOBE.previewHit = { cx, cy, r };
   drawGlobeShell(ctx, cx, cy, r, EXPLORE_GLOBE.previewLon, EXPLORE_GLOBE.previewLat, true, true);
+  drawSchoolPins(ctx, schools, EXPLORE_GLOBE.previewLon, EXPLORE_GLOBE.previewLat, cx, cy, r, true);
 }
 function initExploreGlobe() {
   const wrap = document.getElementById('globePreview');
@@ -3204,29 +3220,35 @@ function openExploreGlobe() {
   box.className = 'modal globe-modal';
   box.innerHTML = `
     <div class="modal-head">
-      <div>
+      <div class="globe-modal-title">
         <h3>Data Atlas</h3>
-        <div class="mh-sub">${schools.length} visible school${schools.length === 1 ? '' : 's'} from current Schools filters</div>
+        <span class="mh-sub">${schools.length} school${schools.length === 1 ? '' : 's'}</span>
       </div>
       <div class="globe-topbar" aria-label="GPA fit legend">
-        <span class="globe-fit-key"><i style="--fit:#3fd58f"></i>Competitive</span>
-        <span class="globe-fit-key"><i style="--fit:#f2c94c"></i>Borderline</span>
-        <span class="globe-fit-key"><i style="--fit:#9aa3ad"></i>Reach</span>
-        <div class="globe-zoom-controls" aria-label="Globe zoom controls">
-          <button type="button" onclick="setGlobeZoom(-.2)" title="Zoom out" aria-label="Zoom out">-</button>
-          <button type="button" onclick="setGlobeZoom(.2)" title="Zoom in" aria-label="Zoom in">+</button>
+        <div class="globe-fit-legend" aria-label="Fit tier legend">
+          <span class="globe-fit-key"><i style="--fit:#3fd58f"></i>Competitive</span>
+          <span class="globe-fit-key"><i style="--fit:#f2c94c"></i>Borderline</span>
+          <span class="globe-fit-key"><i style="--fit:#9aa3ad"></i>Reach</span>
         </div>
-        <button class="drawer-close" onclick="closeAppModal()" title="Close"><svg class="icon" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+        <div class="globe-zoom-controls" aria-label="Globe zoom controls">
+          <button type="button" onclick="setGlobeZoom(-.2)" title="Zoom out" aria-label="Zoom out">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="3" y1="8" x2="13" y2="8"/></svg>
+          </button>
+          <button type="button" onclick="setGlobeZoom(.2)" title="Zoom in" aria-label="Zoom in">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/></svg>
+          </button>
+        </div>
+        <button class="drawer-close" onclick="closeAppModal()" title="Close" aria-label="Close Data Atlas"><svg class="icon" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
       </div>
     </div>
     <div class="globe-modal-body">
       <div class="globe-stage" id="globeStage">
         <canvas id="globeModalCanvas"></canvas>
         <div class="globe-info-card" id="globeInfoCard" hidden></div>
-        <span class="globe-stage-note">Drag to rotate. Use + / - to zoom.</span>
+        <span class="globe-stage-note">Drag to rotate · scroll to zoom</span>
       </div>
       <aside class="globe-detail-panel" id="globeDetailPanel">
-        <div class="globe-panel-empty">Select a school pin for transfer fit, deadline, and cost.</div>
+        <div class="globe-panel-empty">Click a school pin to see fit, deadline, and cost.</div>
       </aside>
     </div>
   `;
@@ -3240,7 +3262,7 @@ function updateGlobeInfoCard() {
   const card = document.getElementById('globeInfoCard');
   const stage = document.getElementById('globeStage');
   const activeId = EXPLORE_GLOBE.hoveredId;
-  if (!card || !stage || !activeId) {
+  if (!card || !stage || !activeId || EXPLORE_GLOBE.selectedId) {
     if (card) card.hidden = true;
     return;
   }
@@ -3255,9 +3277,12 @@ function updateGlobeInfoCard() {
   const top = Math.min(stageRect.height - 28, Math.max(76, pin.p.y));
   card.style.left = `${left}px`;
   card.style.top = `${top}px`;
+  const fit = globeFitTier(s);
+  const fitColor = globeFitColor(s);
   card.innerHTML = `
     <div class="gic-name">${s.name}</div>
-    <div class="gic-meta">GPA ${globeGpaRange(s)}</div>
+    <div class="gic-meta"><span class="gic-fit-dot" style="background:${fitColor}"></span>${fit} · GPA ${globeGpaRange(s)}</div>
+    <div class="gic-stats"><span>${formatAcceptance(s)} accept.</span><span>${s.location || s.state}</span></div>
   `;
   card.hidden = false;
 }
@@ -3269,7 +3294,7 @@ function renderGlobeDetailPanel() {
     if (!panel.classList.contains('active') && panel.dataset.schoolId === '') return;
     panel.dataset.schoolId = '';
     panel.classList.remove('active');
-    panel.innerHTML = '<div class="globe-panel-empty">Select a school pin for transfer fit, deadline, and cost.</div>';
+    panel.innerHTML = '<div class="globe-panel-empty">Click a school pin to see fit, deadline, and cost.</div>';
     return;
   }
   if (panel.dataset.schoolId === s.id) return;
@@ -3362,7 +3387,16 @@ function renderModalGlobe() {
   const panelOpen = !!EXPLORE_GLOBE.selectedId && w > 900;
   const cx = panelOpen ? w * .37 : w * .5;
   const cy = h * .5;
-  const r = Math.min(w * (panelOpen ? .82 : 1), h) * .3 * EXPLORE_GLOBE.zoom;
+  const r = Math.min(w * (panelOpen ? .82 : 1), h) * .34 * EXPLORE_GLOBE.zoom;
+  // Atmospheric background — deep slate that makes the globe pop
+  const isDark = isDarkTheme();
+  ctx.fillStyle = isDark ? '#060f18' : '#131f2d';
+  ctx.fillRect(0, 0, w, h);
+  const vignette = ctx.createRadialGradient(cx, cy, r * 1.6, cx, cy, Math.hypot(w, h) * 0.85);
+  vignette.addColorStop(0, 'rgba(0,0,0,0)');
+  vignette.addColorStop(1, 'rgba(0,0,0,0.42)');
+  ctx.fillStyle = vignette;
+  ctx.fillRect(0, 0, w, h);
   EXPLORE_GLOBE.modalHit = { cx, cy, r };
   drawGlobeShell(ctx, cx, cy, r, EXPLORE_GLOBE.lon, EXPLORE_GLOBE.lat, false, false);
   drawSchoolPins(ctx, schools, EXPLORE_GLOBE.lon, EXPLORE_GLOBE.lat, cx, cy, r, false);
