@@ -2934,6 +2934,7 @@ html[data-theme="dark"] .kcard .kc-label.reach { color: var(--accent-warm); }
   height: 7px;
   border-radius: 50%;
   flex-shrink: 0;
+  box-shadow: 0 0 5px var(--fit-color, currentColor);
 }
 .gsl-info {
   display: flex;
@@ -2953,6 +2954,9 @@ html[data-theme="dark"] .kcard .kc-label.reach { color: var(--accent-warm); }
   font-size: .69rem;
   color: rgba(100,140,185,.6);
   white-space: nowrap;
+}
+.gsl-tier {
+  font-weight: 500;
 }
 .gsl-empty {
   padding: 2rem 1rem;

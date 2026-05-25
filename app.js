@@ -3086,14 +3086,14 @@ function drawMapPin(ctx, x, y, color, selected, compact, hovered) {
 function globeFitTier(s) {
   const userGpa = Number(USER_PROFILE.gpa) || 3.5;
   const diff = userGpa - Number(s.gpa || 0);
-  if (diff >= .3) return 'competitive';
-  if (diff >= -.05) return 'borderline';
+  if (diff >= .3) return 'safety';
+  if (diff >= -.05) return 'target';
   return 'reach';
 }
 function globeFitColor(s) {
   const tier = globeFitTier(s);
-  if (tier === 'competitive') return '#3fd58f';
-  if (tier === 'borderline') return '#f2c94c';
+  if (tier === 'safety') return '#3fd58f';
+  if (tier === 'target') return '#f2c94c';
   return '#9aa3ad';
 }
 function globeGpaRange(s) {
@@ -3230,8 +3230,8 @@ function openExploreGlobe() {
       </div>
       <div class="globe-topbar" aria-label="GPA fit legend">
         <div class="globe-fit-legend" aria-label="Fit tier legend">
-          <span class="globe-fit-key"><i style="--fit:#3fd58f"></i>Competitive</span>
-          <span class="globe-fit-key"><i style="--fit:#f2c94c"></i>Borderline</span>
+          <span class="globe-fit-key"><i style="--fit:#3fd58f"></i>Safety</span>
+          <span class="globe-fit-key"><i style="--fit:#f2c94c"></i>Target</span>
           <span class="globe-fit-key"><i style="--fit:#9aa3ad"></i>Reach</span>
         </div>
         <div class="globe-zoom-controls" aria-label="Globe zoom controls">
@@ -3274,9 +3274,9 @@ function renderGlobeSchoolList(query) {
   const filtered = q
     ? schools.filter(s => s.name.toLowerCase().includes(q) || (s.state || '').toLowerCase().includes(q) || (s.location || '').toLowerCase().includes(q))
     : schools;
-  const tierOrder = ['competitive', 'borderline', 'reach'];
-  const tierLabel = { competitive: 'Competitive', borderline: 'Borderline', reach: 'Reach' };
-  const grouped = { competitive: [], borderline: [], reach: [] };
+  const tierOrder = ['safety', 'target', 'reach'];
+  const tierLabel = { safety: 'Safety', target: 'Target', reach: 'Reach' };
+  const grouped = { safety: [], target: [], reach: [] };
   filtered.forEach(s => grouped[globeFitTier(s)].push(s));
   tierOrder.forEach(t => grouped[t].sort((a, b) => a.name.localeCompare(b.name)));
   if (filtered.length === 0) {
@@ -3291,13 +3291,12 @@ function renderGlobeSchoolList(query) {
     grouped[tier].forEach(s => {
       const color = globeFitColor(s);
       const accept = formatAcceptance(s);
-      const loc = s.location || s.state || '';
       const isActive = s.id === activeId;
       html += `<button class="gsl-item${isActive ? ' active' : ''}" data-id="${s.id}" onclick="focusGlobeOnSchool('${s.id}')">
-        <span class="gsl-dot" style="background:${color}"></span>
+        <span class="gsl-dot" style="background:${color};--fit-color:${color}"></span>
         <span class="gsl-info">
           <span class="gsl-name">${s.name}</span>
-          <span class="gsl-meta">${loc}${accept !== '—' ? ' · ' + accept : ''}</span>
+          <span class="gsl-meta"><span class="gsl-tier" style="color:${color}">${tierLabel[tier]}</span>${accept !== '—' ? ' · ' + accept : ''}</span>
         </span>
       </button>`;
     });
@@ -3345,7 +3344,7 @@ function updateGlobeInfoCard() {
   const fitColor = globeFitColor(s);
   card.innerHTML = `
     <div class="gic-name">${s.name}</div>
-    <div class="gic-meta"><span class="gic-fit-dot" style="background:${fitColor};--fit-color:${fitColor}"></span>${fit} · GPA ${globeGpaRange(s)}</div>
+    <div class="gic-meta"><span class="gic-fit-dot" style="background:${fitColor};--fit-color:${fitColor}"></span><span style="color:${fitColor}">${fit}</span> · GPA ${globeGpaRange(s)}</div>
     <div class="gic-stats"><span>${formatAcceptance(s)} accept.</span><span>${s.location || s.state}</span></div>
   `;
   card.hidden = false;
