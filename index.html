@@ -144,12 +144,11 @@
             </div>
             <button class="catalogue-globe-preview" type="button" id="globePreview" onclick="openExploreGlobe()" aria-label="Open interactive school globe">
               <canvas id="globePreviewCanvas" width="340" height="230" aria-label="Spinning school globe preview"></canvas>
-              <div class="cgp-footer">
-                <span class="cgp-count" id="globeSchoolCount">44 schools</span>
-                <span class="cgp-cta">Data Atlas →</span>
-              </div>
+              <span class="globe-hint">Drag to spin · click to open Atlas</span>
             </button>
           </div>
+
+          <span class="sr-only" id="globeSchoolCount">44 schools</span>
 
           <div class="ex-tabs" id="exTabs"></div>
           <div class="ex-tab-note" id="exTabNote" hidden></div>

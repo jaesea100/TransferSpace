@@ -2763,7 +2763,7 @@ const EXPLORE_GLOBE = {
   zoom: 1.95,
   targetZoom: 1.95,
   previewLon: -98,
-  previewLat: 18,
+  previewLat: 34,
   previewVelocity: 0,
   modalVelocityLon: 0,
   modalVelocityLat: 0,
@@ -3147,20 +3147,12 @@ function renderExploreGlobePreview() {
   const count = document.getElementById('globeSchoolCount');
   if (count) count.textContent = `${schools.length} school${schools.length === 1 ? '' : 's'}`;
   const { ctx, w, h } = setupCanvas(canvas);
-  const isDark = isDarkTheme();
-  ctx.fillStyle = isDark ? '#040d16' : '#b8ccda';
-  ctx.fillRect(0, 0, w, h);
+  ctx.clearRect(0, 0, w, h);
   const cx = w / 2;
-  const cy = h * .50;
-  const r = Math.min(w * .32, h * .43);
-  // corner vignette to tie the globe into the card
-  const vignette = ctx.createRadialGradient(cx, cy, r * 1.5, cx, cy, Math.hypot(w, h) * .72);
-  vignette.addColorStop(0, 'rgba(0,0,0,0)');
-  vignette.addColorStop(1, isDark ? 'rgba(0,0,0,.48)' : 'rgba(0,20,40,.18)');
-  ctx.fillStyle = vignette;
-  ctx.fillRect(0, 0, w, h);
+  const cy = h * .38;
+  const r = Math.min(w * .28, h * .31);
   EXPLORE_GLOBE.previewHit = { cx, cy, r };
-  drawGlobeShell(ctx, cx, cy, r, EXPLORE_GLOBE.previewLon, EXPLORE_GLOBE.previewLat, true, false);
+  drawGlobeShell(ctx, cx, cy, r, EXPLORE_GLOBE.previewLon, EXPLORE_GLOBE.previewLat, true, true);
   drawSchoolPins(ctx, schools, EXPLORE_GLOBE.previewLon, EXPLORE_GLOBE.previewLat, cx, cy, r, true);
 }
 function initExploreGlobe() {
@@ -3215,7 +3207,9 @@ function initExploreGlobe() {
       EXPLORE_GLOBE.moved = false;
     }
   });
-  startAutoSpin();
+  renderExploreGlobePreview();
+  requestAnimationFrame(renderExploreGlobePreview);
+  setTimeout(renderExploreGlobePreview, 120);
 }
 function openExploreGlobe() {
   if (EXPLORE_GLOBE.moved) {
