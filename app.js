@@ -2908,37 +2908,30 @@ function drawProjectedPath(ctx, points, centerLon, centerLat, cx, cy, r, closePa
   return { visibleCount, broken };
 }
 function drawLandMasses(ctx, cx, cy, r, centerLon, centerLat, compact) {
-  const palette = globeThemePalette();
-  const land = compact
-    ? (isDarkTheme() ? 'rgba(28, 53, 80, .96)' : 'rgba(145, 165, 158, .32)')
-    : palette.land;
   const coast = compact
-    ? (isDarkTheme() ? 'rgba(120, 180, 225, .55)' : 'rgba(100, 130, 125, .55)')
-    : palette.coast;
-  const projection = globeProjection(centerLon, centerLat, cx, cy, r);
-  if (projection && window.d3?.geoPath) {
-    const path = d3.geoPath(projection, ctx);
-    ctx.beginPath();
-    path(worldLandGeoJson());
-    ctx.fillStyle = land;
-    ctx.fill();
-    ctx.strokeStyle = coast;
-    ctx.lineWidth = compact ? .7 : .65;
-    ctx.stroke();
-    return;
-  }
+    ? (isDarkTheme() ? 'rgba(120, 180, 225, .48)' : 'rgba(100, 130, 125, .52)')
+    : globeThemePalette().coast;
+  const stride = compact ? 4 : 2;
+  ctx.beginPath();
   WORLD_LAND.forEach(points => {
-    ctx.beginPath();
-    const result = drawProjectedPath(ctx, points, centerLon, centerLat, cx, cy, r, true);
-    if (!result.visibleCount) return;
-    if (!result.broken) {
-      ctx.fillStyle = land;
-      ctx.fill();
+    let started = false;
+    let prev = null;
+    for (let i = 0; i < points.length; i += stride) {
+      const [lat, lon] = points[i];
+      const p = globeProject(lat, lon, centerLon, centerLat, cx, cy, r);
+      if (!p.visible || (prev && Math.hypot(p.x - prev.x, p.y - prev.y) > r * .45)) {
+        started = false;
+        prev = p;
+        continue;
+      }
+      started ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y);
+      started = true;
+      prev = p;
     }
-    ctx.strokeStyle = coast;
-    ctx.lineWidth = compact ? .7 : .65;
-    ctx.stroke();
   });
+  ctx.strokeStyle = coast;
+  ctx.lineWidth = compact ? .8 : .6;
+  ctx.stroke();
 }
 function drawGlobeGrid(ctx, cx, cy, r, centerLon, centerLat, compact) {
   const palette = globeThemePalette();
@@ -2946,36 +2939,26 @@ function drawGlobeGrid(ctx, cx, cy, r, centerLon, centerLat, compact) {
     ? (isDarkTheme() ? 'rgba(218, 214, 200, .20)' : 'rgba(88, 84, 73, .18)')
     : palette.grid;
   ctx.lineWidth = compact ? .75 : .65;
-  const projection = globeProjection(centerLon, centerLat, cx, cy, r);
-  if (projection && window.d3?.geoPath && window.d3?.geoGraticule10) {
-    const path = d3.geoPath(projection, ctx);
-    ctx.beginPath();
-    path(d3.geoGraticule10());
-    ctx.stroke();
-    return;
-  }
+  ctx.beginPath();
   for (let lat = -60; lat <= 60; lat += 30) {
-    ctx.beginPath();
     let started = false;
-    for (let lon = -180; lon <= 180; lon += 3) {
+    for (let lon = -180; lon <= 180; lon += 5) {
       const p = globeProject(lat, lon, centerLon, centerLat, cx, cy, r);
       if (!p.visible) { started = false; continue; }
       started ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y);
       started = true;
     }
-    ctx.stroke();
   }
   for (let lon = -150; lon <= 180; lon += 30) {
-    ctx.beginPath();
     let started = false;
-    for (let lat = -80; lat <= 80; lat += 3) {
+    for (let lat = -80; lat <= 80; lat += 5) {
       const p = globeProject(lat, lon, centerLon, centerLat, cx, cy, r);
       if (!p.visible) { started = false; continue; }
       started ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y);
       started = true;
     }
-    ctx.stroke();
   }
+  ctx.stroke();
 }
 function drawGlobeStand(ctx, cx, cy, r, compact) {
   const dark = isDarkTheme();
@@ -3309,6 +3292,8 @@ function filterGlobeList(value) {
 function syncGlobePinListSelection() {
   renderGlobeDetailPanel();
   const activeId = EXPLORE_GLOBE.selectedId;
+  if (EXPLORE_GLOBE._lastSyncedId === activeId) return;
+  EXPLORE_GLOBE._lastSyncedId = activeId;
   const items = document.querySelectorAll('.gsl-item');
   let activeEl = null;
   items.forEach(item => {
@@ -3327,26 +3312,29 @@ function updateGlobeInfoCard() {
   const activeId = EXPLORE_GLOBE.hoveredId;
   if (!card || !stage || !activeId || EXPLORE_GLOBE.selectedId) {
     if (card) card.hidden = true;
+    EXPLORE_GLOBE._lastInfoCardId = null;
     return;
   }
   const pin = EXPLORE_GLOBE.pins.find(item => item.s.id === activeId);
   if (!pin) {
     card.hidden = true;
+    EXPLORE_GLOBE._lastInfoCardId = null;
     return;
   }
-  const s = pin.s;
   const stageRect = stage.getBoundingClientRect();
-  const left = Math.min(stageRect.width - 124, Math.max(124, pin.p.x));
-  const top = Math.min(stageRect.height - 28, Math.max(76, pin.p.y));
-  card.style.left = `${left}px`;
-  card.style.top = `${top}px`;
-  const fit = globeFitTier(s);
-  const fitColor = globeFitColor(s);
-  card.innerHTML = `
-    <div class="gic-name">${s.name}</div>
-    <div class="gic-meta"><span class="gic-fit-dot" style="background:${fitColor};--fit-color:${fitColor}"></span><span style="color:${fitColor}">${fit}</span> · GPA ${globeGpaRange(s)}</div>
-    <div class="gic-stats"><span>${formatAcceptance(s)} accept.</span><span>${s.location || s.state}</span></div>
-  `;
+  card.style.left = `${Math.min(stageRect.width - 124, Math.max(124, pin.p.x))}px`;
+  card.style.top  = `${Math.min(stageRect.height - 28, Math.max(76, pin.p.y))}px`;
+  if (EXPLORE_GLOBE._lastInfoCardId !== activeId) {
+    EXPLORE_GLOBE._lastInfoCardId = activeId;
+    const s = pin.s;
+    const fit = globeFitTier(s);
+    const fitColor = globeFitColor(s);
+    card.innerHTML = `
+      <div class="gic-name">${s.name}</div>
+      <div class="gic-meta"><span class="gic-fit-dot" style="background:${fitColor};--fit-color:${fitColor}"></span><span style="color:${fitColor}">${fit}</span> · GPA ${globeGpaRange(s)}</div>
+      <div class="gic-stats"><span>${formatAcceptance(s)} accept.</span><span>${s.location || s.state}</span></div>
+    `;
+  }
   card.hidden = false;
 }
 function renderGlobeDetailPanel() {
