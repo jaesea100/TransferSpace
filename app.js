@@ -2836,12 +2836,12 @@ function isDarkTheme() {
 function globeThemePalette() {
   const dark = isDarkTheme();
   return {
-    ocean: dark ? '#07121e' : '#c8dce8',
-    land: dark ? '#162433' : '#a8bdb8',
-    coast: dark ? 'rgba(140, 180, 210, .38)' : 'rgba(100, 130, 125, .55)',
-    grid: dark ? 'rgba(140, 180, 210, .10)' : 'rgba(100, 130, 125, .16)',
-    ring: dark ? 'rgba(100, 180, 230, .28)' : 'rgba(80, 120, 150, .45)',
-    atmosphere: dark ? 'rgba(56, 140, 220, .14)' : 'rgba(70, 130, 200, .18)'
+    ocean: dark ? '#0d2438' : '#c8dce8',
+    land: dark ? '#1c3550' : '#a8bdb8',
+    coast: dark ? 'rgba(120, 180, 225, .52)' : 'rgba(100, 130, 125, .55)',
+    grid: dark ? 'rgba(120, 180, 225, .12)' : 'rgba(100, 130, 125, .16)',
+    ring: dark ? 'rgba(90, 180, 240, .40)' : 'rgba(80, 120, 150, .45)',
+    atmosphere: dark ? 'rgba(50, 130, 220, .22)' : 'rgba(70, 130, 200, .18)'
   };
 }
 function pointerInsideGlobe(e, hit) {
@@ -2910,10 +2910,10 @@ function drawProjectedPath(ctx, points, centerLon, centerLat, cx, cy, r, closePa
 function drawLandMasses(ctx, cx, cy, r, centerLon, centerLat, compact) {
   const palette = globeThemePalette();
   const land = compact
-    ? (isDarkTheme() ? 'rgba(18, 38, 55, .94)' : 'rgba(145, 165, 158, .32)')
+    ? (isDarkTheme() ? 'rgba(28, 53, 80, .96)' : 'rgba(145, 165, 158, .32)')
     : palette.land;
   const coast = compact
-    ? (isDarkTheme() ? 'rgba(140, 180, 210, .42)' : 'rgba(100, 130, 125, .55)')
+    ? (isDarkTheme() ? 'rgba(120, 180, 225, .55)' : 'rgba(100, 130, 125, .55)')
     : palette.coast;
   const projection = globeProjection(centerLon, centerLat, cx, cy, r);
   if (projection && window.d3?.geoPath) {
@@ -3048,13 +3048,14 @@ function drawMapPin(ctx, x, y, color, selected, compact, hovered) {
   const h = (selected ? 10 : compact ? 0 : 8) * scale;
   const w = (selected ? 6.5 : compact ? 0 : 5) * scale;
   if (compact) {
+    const dark = isDarkTheme();
     ctx.save();
     ctx.beginPath();
-    ctx.arc(x, y, 3.2, 0, Math.PI * 2);
+    ctx.arc(x, y, dark ? 3.6 : 3.2, 0, Math.PI * 2);
     ctx.fillStyle = color;
     ctx.fill();
     ctx.lineWidth = 1;
-    ctx.strokeStyle = 'rgba(247, 251, 255, .72)';
+    ctx.strokeStyle = dark ? 'rgba(8, 20, 36, .55)' : 'rgba(247, 251, 255, .65)';
     ctx.stroke();
     ctx.restore();
     return;
@@ -3390,7 +3391,7 @@ function renderModalGlobe() {
   const r = Math.min(w * (panelOpen ? .82 : 1), h) * .34 * EXPLORE_GLOBE.zoom;
   // Atmospheric background — deep slate that makes the globe pop
   const isDark = isDarkTheme();
-  ctx.fillStyle = isDark ? '#060f18' : '#131f2d';
+  ctx.fillStyle = isDark ? '#040d16' : '#131f2d';
   ctx.fillRect(0, 0, w, h);
   const vignette = ctx.createRadialGradient(cx, cy, r * 1.6, cx, cy, Math.hypot(w, h) * 0.85);
   vignette.addColorStop(0, 'rgba(0,0,0,0)');
