@@ -3246,6 +3246,12 @@ function openExploreGlobe() {
       </div>
     </div>
     <div class="globe-modal-body">
+      <aside class="globe-school-list" id="globeSchoolList">
+        <div class="gsl-search">
+          <input type="text" id="globeListSearch" placeholder="Filter schools…" oninput="filterGlobeList(this.value)" autocomplete="off" spellcheck="false">
+        </div>
+        <div class="gsl-items" id="globeListItems"></div>
+      </aside>
       <div class="globe-stage" id="globeStage">
         <canvas id="globeModalCanvas"></canvas>
         <div class="globe-info-card" id="globeInfoCard" hidden></div>
@@ -3258,9 +3264,63 @@ function openExploreGlobe() {
   `;
   document.getElementById('appModal').classList.add('active');
   initModalGlobe();
+  renderGlobeSchoolList('');
+}
+function renderGlobeSchoolList(query) {
+  const container = document.getElementById('globeListItems');
+  if (!container) return;
+  const q = (query || '').toLowerCase().trim();
+  const schools = globeSchools();
+  const filtered = q
+    ? schools.filter(s => s.name.toLowerCase().includes(q) || (s.state || '').toLowerCase().includes(q) || (s.location || '').toLowerCase().includes(q))
+    : schools;
+  const tierOrder = ['competitive', 'borderline', 'reach'];
+  const tierLabel = { competitive: 'Competitive', borderline: 'Borderline', reach: 'Reach' };
+  const grouped = { competitive: [], borderline: [], reach: [] };
+  filtered.forEach(s => grouped[globeFitTier(s)].push(s));
+  tierOrder.forEach(t => grouped[t].sort((a, b) => a.name.localeCompare(b.name)));
+  if (filtered.length === 0) {
+    container.innerHTML = `<div class="gsl-empty">No schools match "${q}"</div>`;
+    return;
+  }
+  const activeId = EXPLORE_GLOBE.selectedId;
+  let html = '';
+  tierOrder.forEach(tier => {
+    if (!grouped[tier].length) return;
+    html += `<div class="gsl-group-label">${tierLabel[tier]}</div>`;
+    grouped[tier].forEach(s => {
+      const color = globeFitColor(s);
+      const accept = formatAcceptance(s);
+      const loc = s.location || s.state || '';
+      const isActive = s.id === activeId;
+      html += `<button class="gsl-item${isActive ? ' active' : ''}" data-id="${s.id}" onclick="focusGlobeOnSchool('${s.id}')">
+        <span class="gsl-dot" style="background:${color}"></span>
+        <span class="gsl-info">
+          <span class="gsl-name">${s.name}</span>
+          <span class="gsl-meta">${loc}${accept !== '—' ? ' · ' + accept : ''}</span>
+        </span>
+      </button>`;
+    });
+  });
+  container.innerHTML = html;
+}
+function filterGlobeList(value) {
+  renderGlobeSchoolList(value);
 }
 function syncGlobePinListSelection() {
   renderGlobeDetailPanel();
+  const activeId = EXPLORE_GLOBE.selectedId;
+  const items = document.querySelectorAll('.gsl-item');
+  let activeEl = null;
+  items.forEach(item => {
+    const isActive = item.dataset.id === activeId;
+    item.classList.toggle('active', isActive);
+    if (isActive) activeEl = item;
+  });
+  if (activeEl && EXPLORE_GLOBE._lastScrolledId !== activeId) {
+    EXPLORE_GLOBE._lastScrolledId = activeId;
+    activeEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
 }
 function updateGlobeInfoCard() {
   const card = document.getElementById('globeInfoCard');
